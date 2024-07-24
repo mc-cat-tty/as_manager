@@ -1,0 +1,2 @@
+# AS Manager
+**Autonomous State Manager** is a ROS2 node conceived to orchestrate autonomous driving nodes of a self-driving Formula Student car stack. It directly integrates safety-critical code portions such as the EBS Supervisor and the ASSI Manager.
