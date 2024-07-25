@@ -6,12 +6,8 @@
 #include <common/common_type.hpp>
 
 namespace hal {
-  using namespace as;
+    using namespace as;
   
-  class Hal {
-    public:
-    Hal() = default;
-
     SdcState read_sdc();
     bool read_asms_status() ;
 
@@ -36,7 +32,6 @@ namespace hal {
     void send_brake_pressure_percentage(float percentage);
     void send_current_state(EbsSupervisorState state);
 
-    private:
     double random_number();
-  };
+
 };

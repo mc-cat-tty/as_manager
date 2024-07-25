@@ -1,7 +1,7 @@
 #include <hal/hal.hpp>
 
-using namespace as::hal
-        double Hal::random_number() {
+namespace hal{
+        double random_number() {
             // Crea un generatore di numeri casuali
             std::random_device rd; // Seed random
             std::mt19937 gen(rd()); // Generatore Mersenne Twister
@@ -11,7 +11,7 @@ using namespace as::hal
             
         }
 
-        float Hal::read_ebs1_pressure(){
+        float read_ebs1_pressure(){
             if ( random_number() > 1.0)
                 return 1.0f;
             else
@@ -19,7 +19,7 @@ using namespace as::hal
 
         }
 
-        float Hal::read_ebs2_pressure(){
+        float read_ebs2_pressure(){
             if ( random_number() > 1.0)
                 return 1.0f;
             else
@@ -27,7 +27,7 @@ using namespace as::hal
 
         }
 
-        float  Hal::read_brake_pressure_front(){
+        float  read_brake_pressure_front(){
             if ( random_number() > 1.8)
                 return 3.0;
             else
@@ -36,7 +36,7 @@ using namespace as::hal
         }
 
 
-        float Hal::read_brake_pressure_rear(){
+        float read_brake_pressure_rear(){
             if ( random_number() > 1.8)
                 return 1.0;
             else
@@ -44,17 +44,17 @@ using namespace as::hal
 
         }
 
-        void Hal::toggle_watchdog_state(){
+        void toggle_watchdog_state(){
         }
 
-        SdcState Hal::read_sdc(){
+        SdcState read_sdc(){
             if (random_number() > 0.2)
                 return SdcState::Open;
             else
                 return SdcState::Closed;
         }
 
-        int Hal::read_rpm(){
+        int read_rpm(){
             if (random_number() > 0.8)
                 return 4000;
             else
@@ -62,35 +62,35 @@ using namespace as::hal
         }
 
 
-        ResState Hal::read_res_state(){
+        ResState read_res_state(){
             if (random_number() > 1.8)
                 return ResState::Operational;
             else
                 return ResState::Error;
         }
 
-        void  Hal::toggle_actuator1_state(ActuatorState state){
+        void  toggle_actuator1_state(ActuatorState state){
 
         }
-        void  Hal::toggle_actuator2_state(ActuatorState state){
+        void  toggle_actuator2_state(ActuatorState state){
 
         }
 
-        void Hal::toggle_sdc_state(SdcState state){
+        void toggle_sdc_state(SdcState state){
         
         }
 
-        void Hal::set_assi_Y_state(AssiState state){
+        void set_assi_Y_state(AssiState state){
 
         }
-        void Hal::set_assi_B_state(AssiState state){
+        void set_assi_B_state(AssiState state){
             
         }
-        void Hal::set_buzzer_state(BuzzerState state){
+        void set_buzzer_state(BuzzerState state){
             
         }
 
-        uint8_t Hal::read_res_bit_vector(){
+        uint8_t read_res_bit_vector(){
             if (random_number() < 0.6)
                 return 0x00;
             else if (random_number() > 0.6 && random_number() < 1.2)
@@ -99,21 +99,21 @@ using namespace as::hal
                 return 0x03;
         }
 
-        bool Hal::read_asms_status(){
+        bool read_asms_status(){
             if (random_number() > 0.4)
                 return true;
             else
                 return false;
         }
 
-        bool Hal::read_stop_message(){
+        bool read_stop_message(){
             if (random_number() > 1.8)
                 return true;
             else
                 return false;
         }
 
-        uint8_t Hal::read_motors_bit_vector(){
+        uint8_t read_motors_bit_vector(){
             if (random_number() < 0.6)
                 return 0x00;
             else if (random_number() > 0.6 && random_number() < 1.2)
@@ -121,13 +121,12 @@ using namespace as::hal
             else
                 return 0x03;
         }
-        void Hal::send_brake_pressure_percentage(float percentage){
+        void send_brake_pressure_percentage(float percentage){
 
         }
-        void Hal::send_current_state(EbsSupervisorState state){
+        void send_current_state(EbsSupervisorState state){
 
         }
 
 
-    }
 }
