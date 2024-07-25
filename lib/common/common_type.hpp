@@ -10,7 +10,7 @@ enum class SdcState {
 
 enum class ActuatorState {
     Braking,
-    Released
+    Unbrake
 };
 
 enum class AssiState{

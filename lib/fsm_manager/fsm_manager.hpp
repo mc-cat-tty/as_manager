@@ -38,7 +38,7 @@ namespace as::fsm {
     std::atomic_bool errorHandlerTriggered = false;
     
     public:
-    constexpr Manager(std::array<Node, NodesNumber> nodeList, Node emergencyNode, unsigned entryIdx = 0) :
+    Manager(std::array<Node, NodesNumber> nodeList, Node emergencyNode, unsigned entryIdx = 0) :
       nodes(nodeList), emergencyNode(emergencyNode), currentNodeIdx(entryIdx) {}
     
     void run() {
