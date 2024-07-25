@@ -3,9 +3,6 @@
 #include <hal/hal.hpp>
 
 namespace hal::actions {
-  class Actions {
-    public:
-    Actions() = default;
 
     void open_sdc();
     void close_sdc();
@@ -31,7 +28,4 @@ namespace hal::actions {
     void switch_on_assi_B();
     void strobe_assi_B();
 
-    private:
-    hal::Hal hal;
-  };
 }
