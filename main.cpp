@@ -7,7 +7,7 @@
 #include <stream/ofstream.hpp>
 
 int main() {
-    auto& ofs = OfStream::getInstance();
+    auto& ofs = as::OfStream::getInstance();
     ofs.setOutputStream(std::cout);
     ofs<<"Hello world!";
     return 0;
