@@ -1,13 +1,12 @@
 #pragma once
 
-#include <time/common.hpp>
+#include <time/interfaces.hpp>
 
 namespace temporal {
-  using namespace std::chrono;
 
   struct Clock {
     static inline Tick get_time() {
-      return duration_cast<Tick>(high_resolution_clock::now().time_since_epoch());
+      return std::chrono::duration_cast<Tick>(std::chrono::high_resolution_clock::now().time_since_epoch());
     }
   };
 }
