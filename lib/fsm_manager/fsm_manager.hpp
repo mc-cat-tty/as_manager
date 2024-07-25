@@ -4,6 +4,7 @@
 #include <variant>
 #include <initializer_list>
 #include <iostream>
+#include <atomic>
 
 #include "as/exception.hpp"
 
