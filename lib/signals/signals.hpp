@@ -1,26 +1,19 @@
 #pragma once
-
+#include <signals/interfaces.hpp>
 #include <signals/low_pass_filter.hpp>
 #include <hal/hal.hpp>
-#include <signals/updater.hpp>
 #include <cassert>
 
 namespace signals {
 
 
-    template <typename T>
-    class ISignal {
-        public:
-            virtual T get_value() = 0;
-            virtual void update() = 0;
-    };
+
     using namespace signals::utils;
 
     template <typename T>
     class Signal : public ISignal<T> {
-
         public:
-            Signal( std::function<T> source,  IUpdater* updater_, float alpha=1.0f) : low_pass_filter(alpha), hal(source), updater(updater_) {
+            Signal(std::function<T> source,  IUpdater* updater_, float alpha=1.0f) : low_pass_filter(alpha), hal(source), updater(updater_) {
                 assert(alpha >= 0.0f && alpha <= 1.0f);
                 if(alpha < 1.0f) {
                     updater->registerSubscriber(this);
