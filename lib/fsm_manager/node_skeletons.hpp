@@ -5,12 +5,17 @@
 #include "fsm_manager.hpp"
 
 namespace as::fsm {
+  enum class SafetyMonitoringSwitch {
+    DISABLE = 0,
+    ENABLE
+  };
+
   /**
    * @brief Skeleton function that checks for a condition
    * to be true within a time window defined by ms.
    */
-  template <std::predicate CheckFn>
   NodeFlowCtrl assertWithTimeout(
+    std::function<bool()> predicate,
     std::chrono::milliseconds ms,
     std::string passedMsg,
     std::string failedMsg,
@@ -19,7 +24,7 @@ namespace as::fsm {
     static auto timer = Timer(Clock());
     timer.start(ms);
 
-    if (CheckFn()) {
+    if (predicate()) {
       std::cout << passedMsg << std::endl;
       timer.stop();
       return NodeFlowCtrl::NEXT;
@@ -36,5 +41,29 @@ namespace as::fsm {
     return NodeFlowCtrl::CURRENT;
   };
 
+/**
+ * @brief Skeleton function that waits until a predicate is met.
+ * Can propagate exceptions if emergency state is triggered.
+ */
+template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
+NodeFlowCtrl constexpr waitUntil(
+  std::function<bool()> predicate,
+  std::string successfulMsg,
+  std::string failedMsg
+) {
+  if (predicate()) {
+    std::cout << successfulMsg << std::endl;
+    return NodeFlowCtrl::NEXT;  // Next
+  }
+  
+  if constexpr (doSafetyMonitoring == SafetyMonitoringSwitch::ENABLE) {
+    auto c = ContinousMonitoring();
+    c.run();
+    std::cout << "Monitoring" << std::endl;
+  }
+  
+  std::cout << failedMsg << std::endl;
+  return NodeFlowCtrl::CURRENT;
+}
 
 }
