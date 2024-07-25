@@ -1,7 +1,7 @@
 #ifndef LIB_COMMON_COMMON_TYPE_HPP
 #define LIB_COMMON_COMMON_TYPE_HPP
 
-namespace ebs_supervisor {
+namespace as {
 
 enum class SdcState {
     Open,
