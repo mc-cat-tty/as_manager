@@ -41,29 +41,41 @@ namespace as::fsm {
     return NodeFlowCtrl::CURRENT;
   };
 
-/**
- * @brief Skeleton function that waits until a predicate is met.
- * Can propagate exceptions if emergency state is triggered.
- */
-template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
-NodeFlowCtrl constexpr waitUntil(
-  std::function<bool()> predicate,
-  std::string successfulMsg,
-  std::string failedMsg
-) {
-  if (predicate()) {
-    std::cout << successfulMsg << std::endl;
-    return NodeFlowCtrl::NEXT;  // Next
+  /**
+   * @brief Skeleton function that waits until a predicate is met.
+   * Can propagate exceptions if emergency state is triggered.
+   */
+  template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
+  NodeFlowCtrl constexpr waitUntil(
+    std::function<bool()> predicate,
+    std::string successfulMsg,
+    std::string failedMsg
+  ) {
+    if (predicate()) {
+      std::cout << successfulMsg << std::endl;
+      return NodeFlowCtrl::NEXT;  // Next
+    }
+    
+    if constexpr (doSafetyMonitoring == SafetyMonitoringSwitch::ENABLE) {
+      auto c = ContinousMonitoring();
+      c.run();
+      std::cout << "Monitoring" << std::endl;
+    }
+    
+    std::cout << failedMsg << std::endl;
+    return NodeFlowCtrl::CURRENT;
   }
-  
-  if constexpr (doSafetyMonitoring == SafetyMonitoringSwitch::ENABLE) {
-    auto c = ContinousMonitoring();
-    c.run();
-    std::cout << "Monitoring" << std::endl;
+
+  /**
+   * @brief Skeletion function that performs and action and hands over to the next node.
+   */
+  NodeFlowCtrl doAction(
+    std::function<void()> action,
+    std::string msg
+  ) {
+    std::cout << msg << std::endl;
+    action();
+    return NodeFlowCtrl::NEXT;
   }
-  
-  std::cout << failedMsg << std::endl;
-  return NodeFlowCtrl::CURRENT;
-}
 
 }
