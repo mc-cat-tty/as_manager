@@ -34,20 +34,20 @@ namespace as::fsm {
     private:
     std::size_t currentNodeIdx;
     std::array<Node, NodesNumber> nodes;
-    Node errorNode;
-    std::atomic_bool errorHandler;
+    Node emergencyNode;
+    std::atomic_bool errorHandlerTriggered = false;
     
     public:
-    Manager(std::array<Node, NodesNumber> nodeList, Node errorNode, unsigned entryIdx = 0) :
-      nodes(nodeList), errorNode(errorNode), currentNodeIdx(entryIdx) {}
+    constexpr Manager(std::array<Node, NodesNumber> nodeList, Node emergencyNode, unsigned entryIdx = 0) :
+      nodes(nodeList), emergencyNode(emergencyNode), currentNodeIdx(entryIdx) {}
     
     void run() {
       auto currentNode = this->nodes.at(currentNodeIdx);
       auto retState = NodeFlowCtrl::CURRENT;
 
       // If emergency occurs, FSM gets trapped in emergency state
-      if (this->errorHandler) {
-        this->errorNode();
+      if (this->errorHandlerTriggered) {
+        this->emergencyNode();
         return;
       }
 
@@ -55,14 +55,14 @@ namespace as::fsm {
         retState = currentNode();
       }
       catch (as::EmergencyException e) {
-        this->errorHandler = true;
+        this->errorHandlerTriggered = true;
         std::cout << e.what() << std::endl;
-        this->errorNode();
+        this->emergencyNode();
       }
       catch (...) {
-        this->errorHandler = true;
+        this->errorHandlerTriggered = true;
         std::cout << "Major order problem occurred" << std::endl;
-        this->errorNode();
+        this->emergencyNode();
       }
       
       switch (retState) {
