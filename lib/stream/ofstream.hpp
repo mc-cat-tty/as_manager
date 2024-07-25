@@ -1,11 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include <mutex>
 
 
 class OfStream {
 public:
+    // Metodo statico per ottenere l'istanza del singleton
     static OfStream& getInstance() {
         static OfStream instance;
         return instance;
@@ -22,10 +22,12 @@ public:
     }
 
 private:
+    // Costruttore privato per prevenire la creazione di istanze multiple
     OfStream() : outputStream(std::cout.rdbuf()) {}
 
     OfStream(const OfStream&) = delete;
     OfStream& operator=(const OfStream&) = delete;
 
+    // Stream di output
     std::ostream outputStream;
 };
