@@ -4,6 +4,7 @@
 #include <hal/hal.hpp>
 #include <signals/signals.hpp>
 #include <signals/updater.hpp>
+#include <time/clock.hpp>
 
 int main() {
 

@@ -5,9 +5,6 @@
 #include <cassert>
 
 namespace signals {
-
-
-
     using namespace signals::utils;
 
     template <typename T>
