@@ -2,9 +2,9 @@
 #include <fstream>
 #include <memory>
 
-
-class OfStream {
-public:
+namespace as {
+  class OfStream {
+    public:
     // Metodo statico per ottenere l'istanza del singleton
     static OfStream& getInstance() {
         static OfStream instance;
@@ -21,7 +21,7 @@ public:
         outputStream.rdbuf(stream.rdbuf());
     }
 
-private:
+    private:
     // Costruttore privato per prevenire la creazione di istanze multiple
     OfStream() : outputStream(std::cout.rdbuf()) {}
 
@@ -30,4 +30,5 @@ private:
 
     // Stream di output
     std::ostream outputStream;
-};
+  };
+}
