@@ -1,7 +1,6 @@
 #include <hal/hal.hpp>
 
-namespace as{
-    namespace hal{
+using namespace as::hal
         double Hal::random_number() {
             // Crea un generatore di numeri casuali
             std::random_device rd; // Seed random
@@ -10,18 +9,6 @@ namespace as{
             std::uniform_real_distribution<> dis(0.0, 2.0);
             return dis(gen);
             
-        }
-
-        Hal::Hal(){
-            /*
-                TODO: inizializza i PIN
-            */
-        count_read_ebs1_pressure = 0;
-        count_read_ebs2_pressure = 0;
-        count_read_res=0;
-        count_read_sdc=0;
-        count_read_pressure_breake_front=0;
-        count_read_pressure_breake_gear=0;
         }
 
         float Hal::read_ebs1_pressure(){

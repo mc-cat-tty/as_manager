@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include <functional>
 #include <utility>
@@ -6,7 +8,7 @@
 #include <iostream>
 #include <atomic>
 
-#include "as/exception.hpp"
+#include <as/exception.hpp>
 
 
 namespace as::fsm {

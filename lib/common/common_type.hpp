@@ -1,5 +1,4 @@
-#ifndef LIB_COMMON_COMMON_TYPE_HPP
-#define LIB_COMMON_COMMON_TYPE_HPP
+#pragma once
 
 namespace as {
 
@@ -48,5 +47,3 @@ typedef enum EbsSupervisorState {
 
 
 };
-
-#endif

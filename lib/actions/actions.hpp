@@ -1,14 +1,11 @@
-#ifndef AS_ACTIONS_ACTIONS_HPP
-#define AS_ACTIONS_ACTIONS_HPP
+#pragma once
 
 #include <hal/hal.hpp>
 
-namespace as {
-namespace actions {
-
-class Actions {
-public:
-    Actions();
+namespace hal::actions {
+  class Actions {
+    public:
+    Actions() = default;
 
     void open_sdc();
     void close_sdc();
@@ -34,11 +31,7 @@ public:
     void switch_on_assi_B();
     void strobe_assi_B();
 
-
-private:
+    private:
     hal::Hal hal;
-};
-
+  };
 }
-} 
-#endif // EBSSUPERVISOR_ACTIONS_ACTIONS_HPP

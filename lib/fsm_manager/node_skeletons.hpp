@@ -2,7 +2,9 @@
  * Collection of skeleton - template - functions that model
  * nodes of the FSM.
  */
-#include "fsm_manager.hpp"
+#pragma once
+
+#include <fsm_manger/fsm_manager.hpp>
 
 namespace as::fsm {
   enum class SafetyMonitoringSwitch {
