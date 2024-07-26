@@ -1,5 +1,5 @@
 #include <temporal/timer.hpp>
-#include <actions/actions.hpp>
+#include <hal/hal.hpp>
 
 namespace watchdog {
     using namespace temporal;
@@ -30,7 +30,7 @@ namespace watchdog {
                 hal::write_watchdog_state(pinState);
             }
 
-            void stop_togglinf() {
+            void stop_toggling() {
                 isToggling = false;
             }
 

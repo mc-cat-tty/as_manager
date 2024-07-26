@@ -90,6 +90,10 @@ namespace hal{
             
         }
 
+        void write_watchdog_state(bool pinState){
+            
+        }
+
         uint8_t read_res_bit_vector(){
             if (random_number() < 0.6)
                 return 0x00;

@@ -52,6 +52,10 @@ namespace hal::actions {
     hal::set_assi_Y_state(AssiState::Strobe);
   }
 
+  void brake_with_maxon(){
+    hal::send_brake_pressure_percentage(20);
+  }
+
   void switch_off_assi_B(){
     hal::set_assi_B_state(AssiState::Off);
   }

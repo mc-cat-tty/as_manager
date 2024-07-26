@@ -13,6 +13,7 @@ namespace hal::actions {
     void unbrake_act1();
     void unbrake_act2();
     void unbrake_all_act();
+    void brake_with_maxon();
 
     void active_buzzer();
     void disabled_buzzer();

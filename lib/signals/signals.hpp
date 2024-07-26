@@ -3,6 +3,7 @@
 #include <signals/low_pass_filter.hpp>
 #include <hal/hal.hpp>
 #include <cassert>
+#include <type_traits>
 
 namespace signals {
     using namespace signals::utils;
@@ -18,10 +19,15 @@ namespace signals {
                 }
             };
             T get_value() {
-                if( isFiltred )
+                /*if( isFiltred )
                     return low_pass_filter.get_value();
                 else
+                    return hal();*/
+                if constexpr (std::is_same_v<T, float>) {
+                    return low_pass_filter.get_value();
+                }else{
                     return hal();
+                }
             }
 
             void update() override {
