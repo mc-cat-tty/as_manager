@@ -13,6 +13,16 @@ namespace as::fsm {
     return std::bind(assertWithTimeout, predicate, ms, successfulMsg, waitingMsg, timeoutMsg);
   }
 
+    inline auto continousMonitoringAssertNode(
+    std::function<bool()> predicate,
+    std::chrono::milliseconds ms,
+    temporal::Timer& timer,
+    std::string waitingMsg,
+    std::string timeoutMsg
+  ) {
+    return std::bind(assertWithTimeout, predicate, ms, timer, waitingMsg, timeoutMsg);
+  }
+
   template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
   inline auto waitUntilNode(
     std::function<bool()> predicate,

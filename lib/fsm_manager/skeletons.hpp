@@ -45,6 +45,31 @@ namespace as::fsm {
   };
 
   /**
+   * @brief Skeleton function for continous monitoring
+   */
+  void continousMonitoringAssert(
+    std::function<bool()> predicate,
+    std::chrono::milliseconds ms,
+    temporal::Timer& timer,
+    std::string waitingMsg,
+    std::string timeoutMsg
+  ){
+    timer.start(ms);
+
+    if (predicate()) {
+      timer.stop();
+    }
+    
+    if(timer.has_expired()) {
+        std::cout << timeoutMsg << std::endl;
+        timer.stop();
+        throw std::exception();
+    }
+
+    std::cout << waitingMsg << std::endl;
+  };
+
+  /**
    * @brief Skeleton function that waits until a predicate is met.
    * Can propagate exceptions if emergency state is triggered.
    */

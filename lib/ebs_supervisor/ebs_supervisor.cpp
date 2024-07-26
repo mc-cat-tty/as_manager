@@ -11,6 +11,8 @@ namespace as::ebs_supervisor {
     using namespace fsm;
     using namespace std::chrono_literals;
 
+    //pf = thresholdDecorate(std::bind(Signal::get_val, obj), 90)
+
     inline const auto WAIT_MISSION_ASMS_NODE=waitUntilNode([]{return false;}, "Mission selected and ASMS ON", "Waiting for mission and ASMS");
     inline const auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode([]{return false;}, 500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout");
     inline const auto OPEN_SDC_NODE = doActionNode([]{}, "Open SDC");
