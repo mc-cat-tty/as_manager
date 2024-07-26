@@ -6,21 +6,21 @@
 
 namespace as::ebs_supervisor{
     using namespace signals;
-    inline auto& updater = utils::Updater<20>::getInstance();
+    inline auto& updater = utils::Updater<5>::getInstance();
 
-    auto asms_signal= Signal<bool>(hal::read_asms_status,&updater);
+    auto asms_signal= Signal<bool>(hal::read_asms_status,&updater,0.8f);
     auto mission_signal= Signal<bool>(hal::read_mission_status,&updater);
     auto ebs1_signal = Signal<float>(hal::read_ebs1_pressure,&updater);
     auto ebs2_signal = Signal<float>(hal::read_ebs2_pressure,&updater);
-    auto sdc_signal = Signal<hal::SdcState>(hal::read_sdc,&updater);
-    auto breake_pressure_front_signal = Signal<float>(hal::read_brake_pressure_front,&updater);
-    auto breake_pressure_rear_signal = Signal<float>(hal::read_brake_pressure_rear,&updater);
+    auto sdc_signal = Signal<hal::SdcState>(hal::read_sdc,&updater,0.8f);
+    auto breake_pressure_front_signal = Signal<float>(hal::read_brake_pressure_front,&updater,0.8f);
+    auto breake_pressure_rear_signal = Signal<float>(hal::read_brake_pressure_rear,&updater,0.8f);
     auto motors_bit_vector_singal = Signal<uint8_t>(hal::read_motors_bit_vector,&updater);
     auto go_signal= Signal<bool>(hal::read_go_message,&updater);
     auto stop_signal= Signal<bool>(hal::read_stop_message,&updater);
     auto res_emergency_signal= Signal<hal::ResState>(hal::read_res_state,&updater);
     auto res_bit_vector_signal = Signal<uint8_t>(hal::read_res_bit_vector,&updater);
-    auto rpm_signal= Signal<float>(hal::read_rpm,&updater);
+    auto rpm_signal= Signal<float>(hal::read_rpm,&updater,0.8f);
     
 
 
