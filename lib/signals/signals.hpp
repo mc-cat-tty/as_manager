@@ -16,12 +16,12 @@ namespace signals {
                     updater->registerSubscriber(this);
                 }
             };
-            T get_value(){
+            T get_value() override {
                 this->update();
                 return low_pass_filter.get_value();
             }
 
-            void update(){
+            void update() override {
                 low_pass_filter.update(hal());
             }
 

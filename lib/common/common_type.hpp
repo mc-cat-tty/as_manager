@@ -1,7 +1,6 @@
 #pragma once
 
-namespace as {
-
+namespace hal {
 enum class SdcState {
     Open,
     Closed
@@ -35,15 +34,16 @@ enum class ResSignal{
     Emergency
 };
 
-//topic: /ebs/status
-typedef enum EbsSupervisorState {
-  OFF,
-  CHECKING,
-  READY,
-  DRIVING,
-  FINISHED,
-  EMERGENCY
-} EbsSupervisorState;
-
-
 };
+
+namespace as {
+  //topic: /ebs/status
+  enum class EbsSupervisorState {
+    OFF,
+    CHECKING,
+    READY,
+    DRIVING,
+    FINISHED,
+    EMERGENCY
+  };
+}

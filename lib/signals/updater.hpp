@@ -11,13 +11,13 @@ namespace signals::utils{
               return instance;
           }
 
-          void registerSubscriber(void* subscriber) {
+          void registerSubscriber(void* subscriber) override {
               if (numSubscribers < maxSubscribers) {
                   subscribers[numSubscribers++] = subscriber;
               }
           }
 
-          void update() {
+          void update() override {
               for (int i = 0; i < numSubscribers; ++i) {
                   subscribers[i]->get_value();
               }

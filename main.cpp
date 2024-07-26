@@ -4,11 +4,11 @@
 #include <hal/hal.hpp>
 #include <signals/signals.hpp>
 #include <signals/updater.hpp>
-#include <stream/ofstream.hpp>
+#include <stream/logstream.hpp>
 
 int main() {
     auto& ofs = as::Logstream::getInstance();
     ofs.setOutputStream(std::cout);
-    ofs<<"Hello world!";
+    ofs << "Hello world!";
     return 0;
 }
