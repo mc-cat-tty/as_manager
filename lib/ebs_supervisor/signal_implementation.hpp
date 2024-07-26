@@ -1,3 +1,5 @@
+#pragma once
+
 #include <signals/signals.hpp>
 #include <signals/updater.hpp>
 #include <hal/hal.hpp>

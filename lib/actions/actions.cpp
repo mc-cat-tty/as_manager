@@ -1,6 +1,6 @@
 #include <actions/actions.hpp>
 
-namespace hal::action {
+namespace hal::actions {
   void open_sdc(){
     hal::toggle_sdc_state(SdcState::Open);
   }

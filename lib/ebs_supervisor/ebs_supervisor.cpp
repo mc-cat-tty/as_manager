@@ -2,8 +2,9 @@
 #include <fsm_manager/nodes.hpp>
 #include <ebs_supervisor/ebs_supervisor.hpp>
 #include <temporal/common.hpp>
-#include <ebs_supervisor/signal_implementation.hpp>
 #include <ebs_supervisor/ebs_continuous_monitoring.hpp>
+#include <ebs_supervisor/signal_implementation.hpp>
+#include <actions/actions.hpp>
 #include <functional>
 
 std::string state;
@@ -11,13 +12,26 @@ std::string state;
 namespace as::ebs_supervisor {
     using namespace fsm;
     using namespace std::chrono_literals;
+    using namespace signals::utils;
+    using namespace hal::actions;
 
     //pf = thresholdDecorate(std::bind(Signal::get_val, obj), 90)
-    // inline auto ebs_cm= EbsContinousMonitoring::getInstance();
 
-    constexpr inline const auto WAIT_MISSION_ASMS_NODE=waitUntilNode([]{return false;}, "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {});
-    constexpr inline const auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode([]{return false;}, 500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout");
-    constexpr inline const auto OPEN_SDC_NODE = doActionNode([]{}, "Open SDC");
+    bool waitAsmsAnsMission(){
+        return asms_signal.get_value() && mission_signal.get_value();
+    }
+
+
+    constexpr inline const auto WAIT_MISSION_ASMS_NODE=waitUntilNode(waitAsmsAnsMission, "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {});
+
+    constexpr inline const auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode(
+      []{
+        return ebs1_signal.get_value()>=10.0f && ebs2_signal.get_value()>=10.0f;
+      },
+      500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout"
+    );
+    
+    constexpr inline const auto OPEN_SDC_NODE = doActionNode(open_sdc, "Open SDC");
     constexpr inline const auto CLOSE_SDC_NODE = doActionNode([]{}, "Close SDC");
     constexpr inline const auto ASSERT_SDC_OPEN_NODE = assertWithTimeoutNode([]{return false;}, 500ms, "SDC open", "Waiting SDC opening", "SDC opening timeout");
     constexpr inline const auto ASSERT_SDC_CLOSE_NODE = assertWithTimeoutNode([]{return false;}, 500ms, "SDC close", "Waiting SDC closing", "SDC closing timeout");
