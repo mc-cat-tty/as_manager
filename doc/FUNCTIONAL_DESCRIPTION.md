@@ -54,8 +54,8 @@ Goto READY
 
 ## READY
 Perform continuous monitoring while waiting RES GO signal
-Pull Clutch
-Insert Gear 1
+Pull Clutch   --> rimandato al controllo 
+Insert Gear 1 --> rimandato al controllo
 Goto DRIVING
 
 ## DRIVING
