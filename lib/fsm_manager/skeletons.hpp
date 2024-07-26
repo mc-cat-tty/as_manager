@@ -20,15 +20,15 @@ namespace as::fsm {
   NodeFlowCtrl assertWithTimeout(
     std::function<bool()> predicate,
     std::chrono::milliseconds ms,
-    std::string passedMsg,
-    std::string failedMsg,
+    std::string successfulMsg,
+    std::string waitingMsg,
     std::string timeoutMsg
   ){
     static auto timer = temporal::Timer();
     timer.start(ms);
 
     if (predicate()) {
-      std::cout << passedMsg << std::endl;
+      std::cout << successfulMsg << std::endl;
       timer.stop();
       return NodeFlowCtrl::NEXT;
     }
@@ -39,7 +39,7 @@ namespace as::fsm {
         throw std::exception();
     }
 
-    std::cout << failedMsg << std::endl;
+    std::cout << waitingMsg << std::endl;
 
     return NodeFlowCtrl::CURRENT;
   };
@@ -52,7 +52,7 @@ namespace as::fsm {
   NodeFlowCtrl waitUntil(
     std::function<bool()> predicate,
     std::string successfulMsg,
-    std::string failedMsg,
+    std::string waitingMsg,
     std::function<void()> continousMonitoring = []{}
   ) {
     if (predicate()) {
@@ -65,12 +65,12 @@ namespace as::fsm {
       std::cout << "Monitoring" << std::endl;
     }
     
-    std::cout << failedMsg << std::endl;
+    std::cout << waitingMsg << std::endl;
     return NodeFlowCtrl::CURRENT;
   }
 
   /**
-   * @brief Skeletion function that performs and action and hands over to the next node.
+   * @brief Skeleton function that performs and action and hands control over to the next node.
    */
   NodeFlowCtrl doAction(
     std::function<void()> action,
@@ -79,5 +79,18 @@ namespace as::fsm {
     std::cout << msg << std::endl;
     action();
     return NodeFlowCtrl::NEXT;
+  }
+
+  /**
+   * @brief Skeleton that calls function indefinitely and traps the execution flow of the FSM,
+   * by returning NodeFlowCtrl::NEXT at each iteration.
+   */
+  NodeFlowCtrl terminalTrap(
+    std::function<void()> fn,
+    std::string msg
+  ) {
+    fn();
+    std::cout << msg << std::endl;
+    return NodeFlowCtrl::CURRENT;
   }
 }
