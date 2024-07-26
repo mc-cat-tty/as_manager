@@ -8,7 +8,7 @@ namespace signals {
     using namespace signals::utils;
 
     template <typename T>
-    class Signal : public ISignal<T> {
+    class Signal : public IUpdatable {
         public:
             Signal(std::function<T()> source,  IUpdater* updater_, float alpha=1.0f) : low_pass_filter(alpha), hal(source), updater(updater_) {
                 assert(alpha >= 0.0f && alpha <= 1.0f);
@@ -16,7 +16,7 @@ namespace signals {
                     updater->registerSubscriber(this);
                 }
             };
-            T get_value() override {
+            T get_value() {
                 this->update();
                 return low_pass_filter.get_value();
             }

@@ -11,7 +11,7 @@ namespace signals::utils{
               return instance;
           }
 
-          void registerSubscriber(void* subscriber) override {
+          void registerSubscriber(IUpdatable* subscriber) override {
               if (numSubscribers < maxSubscribers) {
                   subscribers[numSubscribers++] = subscriber;
               }
@@ -19,7 +19,7 @@ namespace signals::utils{
 
           void update() override {
               for (int i = 0; i < numSubscribers; ++i) {
-                  subscribers[i]->get_value();
+                  subscribers[i]->update();
               }
           }
 
@@ -29,7 +29,7 @@ namespace signals::utils{
           Updater(const Updater&) = delete;
           Updater& operator=(const Updater&) = delete;
 
-          void *subscribers[maxSubscribers];
+          IUpdatable *subscribers[maxSubscribers];
           int numSubscribers = 0;  
   };
 }
