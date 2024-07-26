@@ -10,7 +10,7 @@ namespace as::fsm {
     std::string waitingMsg,
     std::string timeoutMsg
   ) {
-    return std::bind(assertWithTimeout, ms, successfulMsg, waitingMsg, timeoutMsg);
+    return std::bind(assertWithTimeout, predicate, ms, successfulMsg, waitingMsg, timeoutMsg);
   }
 
   template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
