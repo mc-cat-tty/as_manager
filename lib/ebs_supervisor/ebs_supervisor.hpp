@@ -12,6 +12,6 @@ namespace as::ebs_supervisor {
             }
 
         private:
-            fsm::Manager<28> ebsFsm;
+            fsm::Manager<29> ebsFsm;
     };
 }
