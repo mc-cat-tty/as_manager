@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include <fsm_manger/fsm_manager.hpp>
+#include <fsm_manager/fsm_manager.hpp>
 
 namespace as::fsm {
   enum class SafetyMonitoringSwitch {

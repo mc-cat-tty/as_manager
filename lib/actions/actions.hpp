@@ -3,8 +3,6 @@
 #include <hal/hal.hpp>
 
 namespace hal::actions {
-
-
     void open_sdc();
     void close_sdc();
 

@@ -33,5 +33,4 @@ namespace hal {
     void send_current_state(EbsSupervisorState state);
 
     double random_number();
-
-};
+}
