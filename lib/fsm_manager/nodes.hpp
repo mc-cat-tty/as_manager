@@ -1,49 +1,77 @@
 #pragma once
 
 #include <fsm_manager/skeletons.hpp>
+#include <concepts>
 
 namespace as::fsm {
-  inline auto assertWithTimeoutNode(
-    std::function<bool()> predicate,
+  constexpr inline auto assertWithTimeoutNode(
+    std::predicate auto predicate,
     std::chrono::milliseconds ms,
-    std::string successfulMsg,
-    std::string waitingMsg,
-    std::string timeoutMsg
+    std::string_view successfulMsg,
+    std::string_view waitingMsg,
+    std::string_view timeoutMsg
   ) {
-    return std::bind(assertWithTimeout, predicate, ms, successfulMsg, waitingMsg, timeoutMsg);
+    return [
+      predicate,
+      ms,
+      successfulMsg,
+      waitingMsg,
+      timeoutMsg
+    ] {
+      return assertWithTimeout(predicate, ms, successfulMsg, waitingMsg, timeoutMsg);
+    };
   }
 
-    inline auto continousMonitoringAssertNode(
-    std::function<bool()> predicate,
+  constexpr inline auto continousMonitoringAssertNode(
+    std::invocable auto predicate,
     std::chrono::milliseconds ms,
     temporal::Timer& timer,
-    std::string waitingMsg,
-    std::string timeoutMsg
+    std::string_view waitingMsg,
+    std::string_view timeoutMsg
   ) {
-    return std::bind(assertWithTimeout, predicate, ms, timer, waitingMsg, timeoutMsg);
+    return [
+      predicate,
+      ms,
+      timer,
+      waitingMsg,
+      timeoutMsg
+    ] {
+      return assertWithTimeout(predicate, ms, timer, waitingMsg, timeoutMsg);
+    };
   }
 
   template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
-  inline auto waitUntilNode(
-    std::function<bool()> predicate,
-    std::string successfulMsg,
-    std::string waitingMsg,
-    std::function<void()> continousMonitoring = []{}
+  constexpr inline auto waitUntilNode(
+    std::predicate auto predicate,
+    std::string_view successfulMsg,
+    std::string_view waitingMsg,
+    std::invocable auto continousMonitoring
   ) {
-    return std::bind(waitUntil<doSafetyMonitoring>, predicate, successfulMsg, waitingMsg, continousMonitoring);
+    return [
+      predicate,
+      successfulMsg,
+      waitingMsg,
+      continousMonitoring
+    ] {
+      return waitUntil<doSafetyMonitoring>(predicate, successfulMsg, waitingMsg, continousMonitoring);
+    };
   }
 
-  inline auto doActionNode(
-    std::function<void()> action,
-    std::string msg
+  constexpr inline auto doActionNode(
+    std::invocable auto action,
+    std::string_view msg
   ) {
-    return std::bind(doAction, action, msg);
+    return [action, msg] {
+      return doAction(action, msg);
+    };
   }
 
-  inline auto terminalTrapNode(
-    std::function<void()> fn,
+  constexpr inline auto terminalTrapNode(
+    std::invocable auto fn,
     std::string msg
   ) {
-    return std::bind(terminalTrap, fn, msg);
+    return [fn, msg] {
+      return terminalTrap(fn, msg);
+    };
   }
 }

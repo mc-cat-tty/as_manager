@@ -6,6 +6,8 @@
 
 #include <fsm_manager/fsm_manager.hpp>
 #include <temporal/timer.hpp>
+#include <string_view>
+#include <concepts>
 
 namespace as::fsm {
   enum class SafetyMonitoringSwitch {
@@ -18,11 +20,11 @@ namespace as::fsm {
    * to be true within a time window defined by ms.
    */
   NodeFlowCtrl assertWithTimeout(
-    std::function<bool()> predicate,
+    std::predicate auto predicate,
     std::chrono::milliseconds ms,
-    std::string successfulMsg,
-    std::string waitingMsg,
-    std::string timeoutMsg
+    std::string_view successfulMsg,
+    std::string_view waitingMsg,
+    std::string_view timeoutMsg
   ){
     static auto timer = temporal::Timer();
     timer.start(ms);
@@ -48,11 +50,11 @@ namespace as::fsm {
    * @brief Skeleton function for continous monitoring
    */
   void continousMonitoringAssert(
-    std::function<bool()> predicate,
+    std::predicate auto predicate,
     std::chrono::milliseconds ms,
     temporal::Timer& timer,
-    std::string waitingMsg,
-    std::string timeoutMsg
+    std::string_view waitingMsg,
+    std::string_view timeoutMsg
   ){
     timer.start(ms);
 
@@ -75,10 +77,10 @@ namespace as::fsm {
    */
   template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
   NodeFlowCtrl waitUntil(
-    std::function<bool()> predicate,
-    std::string successfulMsg,
-    std::string waitingMsg,
-    std::function<void()> continousMonitoring = []{}
+    std::predicate auto predicate,
+    std::string_view successfulMsg,
+    std::string_view waitingMsg,
+    std::invocable auto continousMonitoring = []{}
   ) {
     if (predicate()) {
       std::cout << successfulMsg << std::endl;
@@ -97,9 +99,9 @@ namespace as::fsm {
   /**
    * @brief Skeleton function that performs and action and hands control over to the next node.
    */
-  NodeFlowCtrl doAction(
-    std::function<void()> action,
-    std::string msg
+  constexpr NodeFlowCtrl doAction(
+    std::invocable auto action,
+    std::string_view msg
   ) {
     std::cout << msg << std::endl;
     action();
@@ -112,7 +114,7 @@ namespace as::fsm {
    */
   NodeFlowCtrl terminalTrap(
     std::function<void()> fn,
-    std::string msg
+    std::string_view msg
   ) {
     fn();
     std::cout << msg << std::endl;
