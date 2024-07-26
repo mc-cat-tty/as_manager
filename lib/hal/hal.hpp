@@ -6,14 +6,14 @@
 #include <common/common_type.hpp>
 
 namespace hal {
-  using namespace as;
+    using namespace as;
   
     SdcState read_sdc();
     bool read_asms_status() ;
 
     void toggle_actuator1_state(ActuatorState state) ;
     void toggle_actuator2_state(ActuatorState state) ;
-    void toggle_watchdog_state();
+    void write_watchdog_state(bool pinState);
     void set_assi_Y_state(AssiState state);
     void set_assi_B_state(AssiState state);
     void set_buzzer_state(BuzzerState state);
@@ -33,5 +33,4 @@ namespace hal {
     void send_current_state(EbsSupervisorState state);
 
     double random_number();
-
 }
