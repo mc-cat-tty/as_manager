@@ -24,9 +24,11 @@ namespace hal::action {
   void unbrake_act1(){
     hal::toggle_actuator1_state(ActuatorState::Unbrake);
   }
+  
   void unbrake_act2(){
     hal::toggle_actuator2_state(ActuatorState::Unbrake);
   }
+
   void unbrake_all_act(){
     hal::toggle_actuator1_state(ActuatorState::Unbrake);
     hal::toggle_actuator2_state(ActuatorState::Unbrake);
@@ -35,12 +37,9 @@ namespace hal::action {
   void active_buzzer(){
     hal::set_buzzer_state(BuzzerState::On);
   }
+
   void disabled_buzzer(){
     hal::set_buzzer_state(BuzzerState::Off);
-  }
-
-  void toggling_watchdog(){
-    hal::toggle_watchdog_state();
   }
 
   void switch_off_assi_Y(){

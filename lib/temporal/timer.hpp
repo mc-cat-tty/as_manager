@@ -1,7 +1,6 @@
 #pragma once
 
-#include <time/interfaces.hpp>
-#include <time/clock.hpp>
+#include <temporal/clock.hpp>
 
 namespace temporal {
 

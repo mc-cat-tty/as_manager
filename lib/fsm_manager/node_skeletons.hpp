@@ -5,6 +5,7 @@
 #pragma once
 
 #include <fsm_manager/fsm_manager.hpp>
+#include <temporal/timer.hpp>
 
 namespace as::fsm {
   enum class SafetyMonitoringSwitch {
@@ -23,7 +24,7 @@ namespace as::fsm {
     std::string failedMsg,
     std::string timeoutMsg
   ){
-    static auto timer = Timer(Clock());
+    static auto timer = temporal::Timer();
     timer.start(ms);
 
     if (predicate()) {
@@ -48,10 +49,11 @@ namespace as::fsm {
    * Can propagate exceptions if emergency state is triggered.
    */
   template <SafetyMonitoringSwitch doSafetyMonitoring = SafetyMonitoringSwitch::DISABLE>
-  NodeFlowCtrl constexpr waitUntil(
+  NodeFlowCtrl waitUntil(
     std::function<bool()> predicate,
     std::string successfulMsg,
-    std::string failedMsg
+    std::string failedMsg,
+    std::function<void()> continousMonitoring = []{}
   ) {
     if (predicate()) {
       std::cout << successfulMsg << std::endl;
@@ -59,8 +61,7 @@ namespace as::fsm {
     }
     
     if constexpr (doSafetyMonitoring == SafetyMonitoringSwitch::ENABLE) {
-      auto c = ContinousMonitoring();
-      c.run();
+      continousMonitoring();
       std::cout << "Monitoring" << std::endl;
     }
     
@@ -79,5 +80,4 @@ namespace as::fsm {
     action();
     return NodeFlowCtrl::NEXT;
   }
-
 }

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <time/interfaces.hpp>
+#include <chrono>
 
 namespace temporal {
+  using Tick = std::chrono::milliseconds;
 
   struct Clock {
     static inline Tick get_time() {

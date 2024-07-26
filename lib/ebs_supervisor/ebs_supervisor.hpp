@@ -3,20 +3,15 @@
 #include <common/common_type.hpp>
 
 namespace as::ebs_supervisor {
-
     class EbsSupervisor {
-
         public:
-
             EbsSupervisor();
 
-            void  run(){
-                fsm.run();
+            void run(){
+                ebsFsm.run();
             }
 
         private:
-            as::fsm::Manager<28> fsm;
-
+            fsm::Manager<28> ebsFsm;
     };
-    
 }

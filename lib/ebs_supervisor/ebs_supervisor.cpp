@@ -1,16 +1,16 @@
 #include <fsm_manager/fsm_manager.hpp>
 #include <fsm_manager/node_skeletons.hpp>
+#include <ebs_supervisor/ebs_supervisor.hpp>
+#include <functional>
 
 namespace as::ebs_supervisor {
+    using namespace fsm;
 
-    using namespace as::fsm;
-
-    EbsSupervisor::EbsSupervisor() : fsm(
+    EbsSupervisor::EbsSupervisor() : ebsFsm (
         {
-            waitUntil([]{ return false; },"Running","Error",) 
+          []() -> NodeFlowCtrl {},
+          []() -> NodeFlowCtrl {}
         },
-        
-    ) {
-
-    }
+        []() -> NodeFlowCtrl {}
+    ) {}
 }
