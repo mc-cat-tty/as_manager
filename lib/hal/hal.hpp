@@ -25,6 +25,8 @@ namespace hal {
     float read_ebs1_pressure() ;
     float read_ebs2_pressure() ;
     bool read_stop_message() ;
+    bool read_go_message();
+    bool read_mission_status();
     uint8_t read_motors_bit_vector();
 
     void send_brake_pressure_percentage(float percentage);

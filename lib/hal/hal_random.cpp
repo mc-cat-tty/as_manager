@@ -113,6 +113,20 @@ namespace hal{
                 return false;
         }
 
+        bool read_go_message(){
+            if (random_number() > 1.0)
+                return true;
+            else
+                return false;
+        }
+
+        bool read_mission_status(){
+            if (random_number() > 1.8)
+                return true;
+            else
+                return false;
+        }
+
         uint8_t read_motors_bit_vector(){
             if (random_number() < 0.6)
                 return 0x00;
