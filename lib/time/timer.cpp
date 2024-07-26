@@ -14,10 +14,6 @@ void Timer::start(Tick duration) {
     }
 }
 
-bool Timer::it_started() {
-    return is_started;
-}
-
 void Timer::stop() {
     is_started = false;
 }

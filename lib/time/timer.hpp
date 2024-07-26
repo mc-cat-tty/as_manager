@@ -16,8 +16,6 @@ public:
 
     void start(temporal::Tick duration);
 
-    bool it_started();
-
     void stop();
 
 private:

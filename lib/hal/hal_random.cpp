@@ -44,7 +44,7 @@ namespace hal{
 
         }
 
-        void toggle_watchdog_state(){
+        void toggle_watchdog_state(bool pinState){
         }
 
         SdcState read_sdc(){

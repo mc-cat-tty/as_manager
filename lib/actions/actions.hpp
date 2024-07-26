@@ -19,8 +19,6 @@ namespace hal::actions {
     void active_buzzer();
     void disabled_buzzer();
 
-    void toggling_watchdog();
-
     void switch_off_assi_Y();
     void switch_on_assi_Y();
     void strobe_assi_Y();

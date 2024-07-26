@@ -13,7 +13,7 @@ namespace hal {
 
     void toggle_actuator1_state(ActuatorState state) ;
     void toggle_actuator2_state(ActuatorState state) ;
-    void toggle_watchdog_state();
+    void write_watchdog_state(bool pinState);
     void set_assi_Y_state(AssiState state);
     void set_assi_B_state(AssiState state);
     void set_buzzer_state(BuzzerState state);
