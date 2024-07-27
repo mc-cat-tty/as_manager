@@ -68,7 +68,7 @@ namespace as::fsm {
 
   constexpr inline auto terminalTrapNode(
     std::invocable auto fn,
-    std::string msg
+    std::string_view msg
   ) {
     return [fn, msg] {
       return terminalTrap(fn, msg);

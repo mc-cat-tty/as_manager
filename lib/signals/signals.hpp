@@ -4,6 +4,7 @@
 #include <hal/hal.hpp>
 #include <cassert>
 #include <type_traits>
+#include <utility>
 
 namespace signals {
     using namespace signals::utils;
@@ -20,22 +21,7 @@ namespace signals {
             };
 
             T get_value() {
-                update();
                 if constexpr (std::is_same_v<T, float>) {
-                    return low_pass_filter.get_value();
-                }else  if constexpr (std::is_same_v<T, bool>){
-                    return hal() > 0.8f;
-                }else  if constexpr (std::is_same_v<T, hal::SdcState>){
-                    float value = low_pass_filter.get_value();
-                    if(value> 0.8f) {
-                        return hal::SdcState::Open;
-                    }else if (value < 0.2f) {
-                        return hal::SdcState::Closed;
-                    }else
-                        return hal::SdcState::Unknown;
-                    
-                }else
-                    return hal();if constexpr (std::is_same_v<T, float>) {
                     return low_pass_filter.get_value();
                 }else  if constexpr (std::is_same_v<T, bool>){
                     return hal() > 0.8f;
@@ -47,9 +33,9 @@ namespace signals {
                         return hal::SdcState::Closed;
                     }else if (value > 0.2f && value < 0.8f){
                         return hal::SdcState::Unknown;
-                    }else
-                        std::unreachable;
+                    }
                 }
+                return hal();
             }
 
             void update() override {
@@ -58,7 +44,7 @@ namespace signals {
                 }else  if constexpr (std::is_same_v<T, bool>){
                     low_pass_filter.update(hal()?1.0f:0.0f);
                 }else  if constexpr (std::is_same_v<T, hal::SdcState>){
-                    low_pass_filter.update(hal() == hal::SdcState::Open?1.0f:0.0f);
+                    low_pass_filter.update(hal()==hal::SdcState::Open?1.0f:0.0f);
                 }
             }
 
