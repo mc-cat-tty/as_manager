@@ -8,6 +8,20 @@ namespace as::ebs_supervisor{
     using namespace signals;
     inline auto& updater = signals::utils::Updater<5>::getInstance();
 
+        // Over the threshold
+    constexpr uint8_t EXPECTED_PRESSURE_EBS_TANK = 5;
+    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR = 10;
+    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS = 20;
+    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR = 6;
+
+
+    // Under the threshold
+    constexpr uint8_t EXPECTED_UNBRAKE_PRESSURE = 5;
+
+    const inline auto ASMS_THRESHOLD = 0.9f;
+    const inline auto SDC_TRESHOLD_OPEN = 0.9f;
+    const inline auto SDC_TRESHOLD_CLOSE = 0.1f;
+
     auto asms_signal= Signal<bool>(hal::read_asms_status,&updater,0.8f);
     auto mission_signal= Signal<bool>(hal::read_mission_status,&updater);
     auto ebs1_signal = Signal<float>(hal::read_ebs1_pressure,&updater);
