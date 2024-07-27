@@ -160,11 +160,11 @@ namespace as::ebs_supervisor {
             }, "FINISHED State"),
 
         },
-        {terminalTrapNode(
+        terminalTrapNode(
           []{
             state="Emergency";  
             open_sdc(); brake_act1(); brake_act2(); 
-            //assi_manager::AssiManager::getInstance().enableStrobeAssiB(); assi_manager::AssiManager::getInstance().enableBuzzer();
-          }, "Emergency State")}
+            assi_manager::AssiManager::getInstance().enableStrobeAssiB(); assi_manager::AssiManager::getInstance().enableBuzzer();
+          }, "Emergency State")
     ) {}
 }
