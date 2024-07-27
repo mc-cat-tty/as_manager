@@ -34,7 +34,7 @@ namespace as::ebs_supervisor {
 
     constexpr inline const auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        return ebs1_signal.get_value()>=10.0f && ebs2_signal.get_value()>=10.0f;
+        return ebs1_signal.get_value() >= 10.0f && ebs2_signal.get_value() >= 10.0f;
       },
       500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout"
     );
@@ -44,13 +44,13 @@ namespace as::ebs_supervisor {
 
     constexpr inline const auto ASSERT_SDC_OPEN_NODE = assertWithTimeoutNode(
       []{
-        return sdc_signal.get_value() == hal::SdcState::Open;
+        return sdc_signal.get_value() > 0.9;
       },
        500ms, "SDC open", "Waiting SDC opening", "SDC opening timeout");
 
     constexpr inline const auto ASSERT_SDC_CLOSE_NODE = assertWithTimeoutNode(
       []{
-        return sdc_signal.get_value() == hal::SdcState::Closed;
+        return sdc_signal.get_value() < 0.1;
       }, 500ms, "SDC close", "Waiting SDC closing", "SDC closing timeout");
         
     constexpr inline const auto TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().set_toggling();}, "Start toggling watchdog");//Errore di linking
@@ -91,7 +91,8 @@ namespace as::ebs_supervisor {
     constexpr inline const auto WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE =  waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
       []{
         return stop_signal.get_value();
-      }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
+      }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
+    );
 
     constexpr inline const auto FINISH_NODE = terminalTrapNode([]{state="FINISHED";}, "FINISHED State");
 
