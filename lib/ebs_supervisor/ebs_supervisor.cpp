@@ -21,16 +21,6 @@ namespace as::ebs_supervisor {
     using namespace hal;
     using namespace watchdog;
 
-    // Over the threshold
-    constexpr uint8_t EXPECTED_PRESSURE_EBS_TANK = 4;
-    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR = 10;
-    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS = 20;
-    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR = 6;
-
-
-    // Under the threshold
-    constexpr uint8_t EXPECTED_UNBRAKE_PRESSURE = 5;
-
     bool waitAsmsAnsMission(){
         return asms_signal.get_value() && mission_signal.get_value();
     }
@@ -61,26 +51,28 @@ namespace as::ebs_supervisor {
 
     constexpr inline const auto ASSERT_SDC_OPEN_NODE = assertWithTimeoutNode(
       []{
-        return sdc_signal.get_value() > 0.9;
+        return sdc_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(SDC_TRESHOLD_OPEN);
       },
        500ms, "SDC open", "Waiting SDC opening", "SDC opening timeout");
 
     constexpr inline const auto ASSERT_SDC_CLOSE_NODE = assertWithTimeoutNode(
       []{
-        return sdc_signal.get_value() < 0.1;
+        return sdc_signal.get_value_with_threhold(SDC_TRESHOLD_CLOSE);
       }, 500ms, "SDC close", "Waiting SDC closing", "SDC closing timeout");
         
-    constexpr inline const auto TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().set_toggling();}, "Start toggling watchdog");//Errore di linking
+    constexpr inline const auto TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().set_toggling();}, "Start toggling watchdog");
     constexpr inline const auto STOP_TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().stop_toggling();}, "Stop toggling watchdog");
 
     constexpr inline const auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
+        std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR
           and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR;
       }, 500ms, "Sufficient BRAKE pressure", "Waiting sufficient PBRAKE", "PBRAKE timeout");
 
     constexpr inline const auto ASSERT_NO_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
+        std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() <= EXPECTED_UNBRAKE_PRESSURE
           and breake_pressure_front_signal.get_value() <= EXPECTED_UNBRAKE_PRESSURE;
       }, 500ms, "No brake pressure", "Waiting no brake pressure", "Brake pressure timeout");
@@ -93,7 +85,7 @@ namespace as::ebs_supervisor {
     constexpr inline const auto WAIT_BRAKE_MOTOR_ENALBED = waitUntilNode(
       []{
         return hal::utils::motorMask(hal::utils::Motors::Brake, motors_bit_vector_singal.get_value());
-      }, "Brake motor enabled", "Waiting for brake motor enable", [] {});
+      }, "Brake motor enabled", "Waiting brake motor enabled", [] {});
 
     constexpr inline const auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with Maxon motor");
 
@@ -172,7 +164,7 @@ namespace as::ebs_supervisor {
           []{
             state="Emergency";  
             open_sdc(); brake_act1(); brake_act2(); 
-            assi_manager::AssiManager::getInstance().enableStrobeAssiB(); assi_manager::AssiManager::getInstance().enableBuzzer();
+            //assi_manager::AssiManager::getInstance().enableStrobeAssiB(); assi_manager::AssiManager::getInstance().enableBuzzer();
           }, "Emergency State")}
     ) {}
 }

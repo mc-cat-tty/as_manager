@@ -1,6 +1,7 @@
 #pragma once
 
 #include <signals/signals.hpp>
+#include <iostream>
 
 namespace signals::utils{
   template <int maxSubscribers>
@@ -18,6 +19,7 @@ namespace signals::utils{
           }
 
           void update() override {
+              //std::cout<<"[UPDATER] update"<<std::endl;
               for (int i = 0; i < numSubscribers; ++i) {
                   subscribers[i]->update();
               }

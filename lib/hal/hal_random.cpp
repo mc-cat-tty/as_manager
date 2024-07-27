@@ -1,4 +1,5 @@
 #include <hal/hal.hpp>
+#include <iostream>
 
 namespace hal{
         double random_number() {
@@ -28,7 +29,7 @@ namespace hal{
         }
 
         float  read_brake_pressure_front(){
-            if ( random_number() > 1.8)
+            if ( random_number() > 1.2)
                 return 3.0;
             else
                 return 26.0;
@@ -37,7 +38,7 @@ namespace hal{
 
 
         float read_brake_pressure_rear(){
-            if ( random_number() > 1.8)
+            if ( random_number() > 1.2)
                 return 1.0;
             else
                 return 23.0;
@@ -48,7 +49,7 @@ namespace hal{
         }
 
         SdcState read_sdc(){
-            if (random_number() > 0.2)
+            if (random_number() > 1.0)
                 return SdcState::Open;
             else
                 return SdcState::Closed;
@@ -96,11 +97,11 @@ namespace hal{
 
         uint8_t read_res_bit_vector(){
             if (random_number() < 0.6)
-                return 0x00;
+                return 0x07;
             else if (random_number() > 0.6 && random_number() < 1.2)
-                return 0x01;
+                return 0x07;
             else
-                return 0x03;
+                return 0x07;
         }
 
         bool read_asms_status(){
@@ -111,14 +112,14 @@ namespace hal{
         }
 
         bool read_stop_message(){
-            if (random_number() > 1.8)
+            if (random_number() > 1.9)
                 return true;
             else
                 return false;
         }
 
         bool read_go_message(){
-            if (random_number() > 1.0)
+            if (random_number() > 4.0)
                 return true;
             else
                 return false;
@@ -132,12 +133,13 @@ namespace hal{
         }
 
         uint8_t read_motors_bit_vector(){
-            if (random_number() < 0.6)
-                return 0x00;
-            else if (random_number() > 0.6 && random_number() < 1.2)
-                return 0x01;
-            else
-                return 0x03;
+            double value = random_number();
+            if (value < 0.6){
+                return 0x07;
+            }else if (value > 0.6 && value < 1.2){
+                return 0x07;
+            }else{
+                return 0x07;}
         }
         void send_brake_pressure_percentage(float percentage){
 
