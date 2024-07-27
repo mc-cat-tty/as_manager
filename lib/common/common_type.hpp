@@ -2,8 +2,8 @@
 
 namespace hal {
 enum class SdcState {
-    Open,
-    Closed
+    Open=1,
+    Closed=0
 };
 
 enum class ActuatorState {
