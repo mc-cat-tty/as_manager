@@ -8,6 +8,11 @@
 namespace signals {
   using namespace signals::utils;
 
+    enum class ValueRespectTreshold {
+    LOWER = 0,
+    BIGGER
+  };
+
   /**
    * @brief Proxy object to low pass filter and its updater.
    * @param alpha Set alpha to 1.0 in order to disable filtering.
@@ -20,6 +25,16 @@ namespace signals {
               if (alpha == 1.0f) return;
               updater->registerSubscriber(this);
           };
+
+          template <ValueRespectTreshold vrt=ValueRespectTreshold::LOWER>
+          bool get_value_with_threhold(float threshold) {
+                if constexpr (vrt == ValueRespectTreshold::LOWER)
+                    
+                    return low_pass_filter.get_value() < threshold;
+                else
+                    return low_pass_filter.get_value() > threshold;
+                
+          }
 
           float get_value() {
             if (low_pass_filter.get_alpha() == 1.0f)
