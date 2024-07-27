@@ -12,18 +12,18 @@ namespace hal{
         }
 
         float read_ebs1_pressure(){
-            if ( random_number() > 1.0)
+            if ( random_number() > 1.8)
                 return 1.0f;
             else
-                return 3.0f;
+                return 20.0f;
 
         }
 
         float read_ebs2_pressure(){
-            if ( random_number() > 1.0)
+            if ( random_number() > 1.8)
                 return 1.0f;
             else
-                return 3.0f;
+                return 20.0f;
 
         }
 
@@ -31,7 +31,7 @@ namespace hal{
             if ( random_number() > 1.8)
                 return 3.0;
             else
-                return 13.0;
+                return 26.0;
 
         }
 
@@ -40,7 +40,7 @@ namespace hal{
             if ( random_number() > 1.8)
                 return 1.0;
             else
-                return 12.0;
+                return 23.0;
 
         }
 

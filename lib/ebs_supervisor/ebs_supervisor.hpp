@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common/common_type.hpp>
+#include <fsm_manager/fsm_manager.hpp>
 
 namespace as::ebs_supervisor {
     class EbsSupervisor {
@@ -12,6 +13,6 @@ namespace as::ebs_supervisor {
             }
 
         private:
-            fsm::Manager<29> ebsFsm;
+            fsm::Manager<31> ebsFsm;
     };
 }

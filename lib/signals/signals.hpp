@@ -4,6 +4,7 @@
 #include <signal_source/signal_source.hpp>
 #include <cassert>
 #include <type_traits>
+#include <utility>
 
 namespace signals {
     using namespace signals::utils;

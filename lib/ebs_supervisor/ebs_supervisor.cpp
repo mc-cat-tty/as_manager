@@ -8,6 +8,7 @@
 #include <actions/actions.hpp>
 #include <signals/utils.hpp>
 #include <hal/utils.hpp>
+#include <assi_manager/assi_manager.hpp>
 #include <functional>
 
 std::string state;
@@ -20,12 +21,19 @@ namespace as::ebs_supervisor {
     using namespace hal;
     using namespace watchdog;
 
-    //pf = thresholdDecorate(std::bind(Signal::get_val, obj), 90)
+    // Over the threshold
+    constexpr uint8_t EXPECTED_PRESSURE_EBS_TANK = 4;
+    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR = 10;
+    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS = 20;
+    constexpr uint8_t EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR = 6;
+
+
+    // Under the threshold
+    constexpr uint8_t EXPECTED_UNBRAKE_PRESSURE = 5;
 
     bool waitAsmsAnsMission(){
         return asms_signal.get_value() && mission_signal.get_value();
     }
-
 
     constexpr inline const auto WAIT_MISSION_ASMS_NODE=waitUntilNode(
       waitAsmsAnsMission, 
@@ -34,11 +42,20 @@ namespace as::ebs_supervisor {
 
     constexpr inline const auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        return ebs1_signal.get_value() >= 10.0f && ebs2_signal.get_value() >= 10.0f;
+        std::cout<<"PBRAKE: "<<ebs1_signal.get_value()<<" "<<ebs2_signal.get_value()<<std::endl;
+        return ebs1_signal.get_value() >= EXPECTED_PRESSURE_EBS_TANK
+          and ebs2_signal.get_value() >= EXPECTED_PRESSURE_EBS_TANK;
       },
       500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout"
     );
-    
+
+    constexpr inline const auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE = assertWithTimeoutNode(
+      []{
+        std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
+        return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS
+          and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS;
+      }, 500ms, "Sufficient BRAKE pressure EBS", "Waiting sufficient PBRAKE EBS", "PBRAKE timeout EBS");
+
     constexpr inline const auto OPEN_SDC_NODE = doActionNode(open_sdc, "Open SDC");
     constexpr inline const auto CLOSE_SDC_NODE = doActionNode(close_sdc, "Close SDC");
 
@@ -58,12 +75,14 @@ namespace as::ebs_supervisor {
 
     constexpr inline const auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        return breake_pressure_rear_signal.get_value()>=10.0f && breake_pressure_front_signal.get_value()>=10.0f;
+        return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR
+          and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR;
       }, 500ms, "Sufficient BRAKE pressure", "Waiting sufficient PBRAKE", "PBRAKE timeout");
 
     constexpr inline const auto ASSERT_NO_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        return breake_pressure_rear_signal.get_value()<=2.0f && breake_pressure_front_signal.get_value()<=2.0f;
+        return breake_pressure_rear_signal.get_value() <= EXPECTED_UNBRAKE_PRESSURE
+          and breake_pressure_front_signal.get_value() <= EXPECTED_UNBRAKE_PRESSURE;
       }, 500ms, "No brake pressure", "Waiting no brake pressure", "Brake pressure timeout");
 
     constexpr inline const auto UNBRAKE_ACT1_NODE = doActionNode(unbrake_act1, "Unbrake Act1");
@@ -78,9 +97,10 @@ namespace as::ebs_supervisor {
 
     constexpr inline const auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with Maxon motor");
 
-    constexpr inline const auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR_NODE = assertWithTimeoutNode(
+    constexpr inline const auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR = assertWithTimeoutNode(
       []{
-        return breake_pressure_rear_signal.get_value()>=3.0f && breake_pressure_front_signal.get_value()>=3.0f;
+        return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR
+          and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR;
       }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
     constexpr inline const auto WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
@@ -94,14 +114,21 @@ namespace as::ebs_supervisor {
       }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
     );
 
-    constexpr inline const auto FINISH_NODE = terminalTrapNode([]{state="FINISHED";}, "FINISHED State");
+    constexpr inline const auto WAIT_TS_ACTIVE = waitUntilNode(
+      []{
+        return rpm_signal.get_value()>2000;
+      }, 
+      "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
+    );
 
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
           WAIT_MISSION_ASMS_NODE,
           doActionNode([]{state="CHECKING";}, "Published CHECKING"),
+          //EBS_CHECK
           ASSERT_EBS_PRESSURE_NODE,
-          ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
+          ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE,
+
           ASSERT_SDC_OPEN_NODE,
           TOGGLING_WATCHDOG_NODE,
           CLOSE_SDC_NODE,
@@ -112,23 +139,40 @@ namespace as::ebs_supervisor {
           ASSERT_SDC_CLOSE_NODE,
           OPEN_SDC_NODE,
           ASSERT_SDC_OPEN_NODE,
+
           UNBRAKE_ACT1_NODE,
           ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
           BRAKE_ACT1_NODE,
           UNBRAKE_ACT2_NODE,
           ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
+
           WAIT_BRAKE_MOTOR_ENALBED,
           UNBRAKE_ACT1_NODE,
           ASSERT_NO_BRAKE_PRESSURE_NODE,
           BRAKE_WITH_MAXON_MOTOR_NODE,
-          ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR_NODE,
-          doActionNode([]{state="READY";}, "Published READY"),
+          ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR,
+
+          CLOSE_SDC_NODE,
+          WAIT_TS_ACTIVE,
+          //READY
+          doActionNode([]{state="READY";assi_manager::AssiManager::getInstance().enableAssiY();}, "Published READY"),
           WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
-          doActionNode([]{state="DRIVING";}, "Published DRIVING"),
+          //DRIVING
+          doActionNode([]{state="DRIVING"; assi_manager::AssiManager::getInstance().enableStrobeAssiY();}, "Published DRIVING"),
           WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
-          FINISH_NODE,
+          terminalTrapNode(
+            []{
+              state="FINISHED"; 
+              open_sdc(); brake_act1(); brake_act2();
+              assi_manager::AssiManager::getInstance().enableAssiB(); 
+            }, "FINISHED State"),
 
         },
-        {terminalTrapNode([]{state="Emergency";}, "Emergency State")}
+        {terminalTrapNode(
+          []{
+            state="Emergency";  
+            open_sdc(); brake_act1(); brake_act2(); 
+            assi_manager::AssiManager::getInstance().enableStrobeAssiB(); assi_manager::AssiManager::getInstance().enableBuzzer();
+          }, "Emergency State")}
     ) {}
 }
