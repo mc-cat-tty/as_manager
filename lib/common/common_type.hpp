@@ -3,8 +3,7 @@
 namespace hal {
 enum class SdcState {
     Open,
-    Closed,
-    Unknown
+    Closed
 };
 
 enum class ActuatorState {
@@ -12,6 +11,7 @@ enum class ActuatorState {
     Unbrake
 };
 
+// out
 enum class AssiState{
     On,
     Strobe,

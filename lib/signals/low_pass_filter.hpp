@@ -18,7 +18,7 @@ namespace signals::utils {
           };
 
           inline void update(T val) {
-            this->filtered_value = (1-alpha) * filtered_value + alpha * val;
+            this->filtered_value = (1-alpha) * filtered_value + alpha * static_cast<float>(val);
           };
   };
 }
