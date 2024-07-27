@@ -8,6 +8,7 @@
 #include <temporal/timer.hpp>
 #include <string_view>
 #include <concepts>
+#include <as/exception.hpp>
 
 namespace as::fsm {
   enum class SafetyMonitoringSwitch {
@@ -38,7 +39,7 @@ namespace as::fsm {
     if(timer.has_expired()) {
         std::cout << timeoutMsg << std::endl;
         timer.stop();
-        throw std::exception();
+        throw EmergencyException();
     }
 
     std::cout << waitingMsg << std::endl;
@@ -65,7 +66,7 @@ namespace as::fsm {
     if(timer.has_expired()) {
         std::cout << timeoutMsg << std::endl;
         timer.stop();
-        throw std::exception();
+        throw EmergencyException();
     }
 
     std::cout << waitingMsg << std::endl;
