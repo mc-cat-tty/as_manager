@@ -16,11 +16,13 @@ namespace hal::utils {
         Emergency=0x04
     };
 
-    bool motorMask(Motors motor, uint8_t bitVector){
-        return (bitVector & static_cast<uint8_t>(motor));
+    bool motorMask(Motors motor, uint8_t data){
+        auto motorBitvector = static_cast<uint8_t>(motor);
+        return (data & motorBitvector) == motorBitvector;
     }
 
-    bool resmask(ResBitVector resState, uint8_t bitVector){
-        return (bitVector & static_cast<uint8_t>(resState));
+    bool resmask(ResBitVector resState, uint8_t data){
+        auto resBitVector= static_cast<uint8_t>(resState);
+        return (data & resBitVector) == resBitVector;
     }
 }
