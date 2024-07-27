@@ -1,14 +1,20 @@
-#include <actions/actions.hpp>
-#include <fsm_manager/fsm_manager.hpp>
-#include <signals/low_pass_filter.hpp>
-#include <hal/hal.hpp>
-#include <signals/signals.hpp>
+#include <watchdog/watchdog.hpp>
+#include <assi_manager/assi_manager.hpp>
+#include <ebs_supervisor/ebs_supervisor.hpp>
 #include <signals/updater.hpp>
-#include <stream/logstream.hpp>
+
 
 int main() {
-    auto& ofs = as::Logstream::getInstance();
-    ofs.setOutputStream(std::cout);
-    ofs << "Hello world!";
-    return 0;
+    auto& watchdog= watchdog::Watchdog::getInstance();
+    auto& assi_manager= as::assi_manager::AssiManager::getInstance();
+    auto EbsSupervisor= as::ebs_supervisor::EbsSupervisor();
+    auto& updater= signals::utils::Updater<5>::getInstance();
+
+    while(1){
+        updater.update();
+        EbsSupervisor.run();
+        watchdog.run();
+        assi_manager.run();
+    }
+
 }

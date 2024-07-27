@@ -50,7 +50,7 @@ namespace as::fsm {
 
       // If emergency occurs, FSM gets trapped in emergency state
       if (this->errorHandlerTriggered) {
-        this->emergencyNode();
+        //this->emergencyNode();
         return;
       }
 

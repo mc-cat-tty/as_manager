@@ -6,7 +6,7 @@
 
 namespace as::ebs_supervisor{
     using namespace signals;
-    inline auto& updater = utils::Updater<5>::getInstance();
+    inline auto& updater = signals::utils::Updater<5>::getInstance();
 
     auto asms_signal= Signal<bool>(hal::read_asms_status,&updater,0.8f);
     auto mission_signal= Signal<bool>(hal::read_mission_status,&updater);
