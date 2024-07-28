@@ -16,5 +16,4 @@ int main() {
         watchdog.run();
         assi_manager.run();
     }
-
 }
