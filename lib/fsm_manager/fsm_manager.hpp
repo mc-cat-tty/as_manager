@@ -50,7 +50,7 @@ namespace as::fsm {
 
       // If emergency occurs, FSM gets trapped in emergency state
       if (this->errorHandlerTriggered) {
-        //this->emergencyNode();
+        this->emergencyNode();
         return;
       }
 
@@ -67,17 +67,9 @@ namespace as::fsm {
         std::cout << "Major order problem occurred" << std::endl;
         this->emergencyNode();
       }
-      
-      switch (retState) {
-        case NodeFlowCtrl::CURRENT:
-        break;
-        
-        case NodeFlowCtrl::NEXT:
-        if (this->currentNodeIdx < NodesNumber-1) ++this->currentNodeIdx;
-        break;
 
-        default:
-        std::unreachable();
+      if (retState == NodeFlowCtrl::NEXT and this->currentNodeIdx < NodesNumber-1) {
+        ++this->currentNodeIdx;
       }
     }
     
