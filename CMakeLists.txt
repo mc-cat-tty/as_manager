@@ -1,18 +1,37 @@
 cmake_minimum_required(VERSION 3.8)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+project(as_manager)
+
+find_package(ament_cmake REQUIRED)
+
+include_directories(include)
+
+file(GLOB_RECURSE SOURCES include/*.cpp)
+add_executable(as_manager_node src/as_manager_node.cpp ${SOURCES})
+
+install(
+  TARGETS as_manager_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if (APPLE)
   set(CMAKE_CXX_COMPILER clang)
 endif()
 
-project(as_manager)
-
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
-
-find_package(ament_cmake REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

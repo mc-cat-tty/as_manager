@@ -1,6 +1,6 @@
 #pragma once
-#include <signals/interfaces.hpp>
-#include <signals/low_pass_filter.hpp>
+#include <as_manager/signals/interfaces.hpp>
+#include <as_manager/signals/low_pass_filter.hpp>
 #include <cassert>
 #include <type_traits>
 #include <utility>

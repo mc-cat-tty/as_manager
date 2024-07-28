@@ -1,7 +1,7 @@
-#include <watchdog/watchdog.hpp>
-#include <assi_manager/assi_manager.hpp>
-#include <ebs_supervisor/ebs_supervisor.hpp>
-#include <signals/updater.hpp>
+#include <as_manager/watchdog/watchdog.hpp>
+#include <as_manager/assi_manager/assi_manager.hpp>
+#include <as_manager/ebs_supervisor/ebs_supervisor.hpp>
+#include <as_manager/signals/updater.hpp>
 
 
 int main() {

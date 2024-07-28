@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fsm_manager/skeletons.hpp>
+#include <as_manager/fsm_manager/skeletons.hpp>
 #include <concepts>
 
 namespace as::fsm {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <signals/signals.hpp>
-#include <signals/updater.hpp>
-#include <hal/hal.hpp>
+#include <as_manager/signals/signals.hpp>
+#include <as_manager/signals/updater.hpp>
+#include <as_manager/hal/hal.hpp>
 
 namespace as::ebs_supervisor{
     using namespace signals;

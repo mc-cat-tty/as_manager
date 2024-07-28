@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hal/hal.hpp>
+#include <as_manager/hal/hal.hpp>
 
 namespace hal::actions {
     void open_sdc();

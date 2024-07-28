@@ -1,6 +1,6 @@
 #pragma once
-#include <temporal/timer.hpp>
-#include <actions/actions.hpp>
+#include <as_manager/temporal/timer.hpp>
+#include <as_manager/actions/actions.hpp>
 #include <iostream>
 
 namespace as::assi_manager {

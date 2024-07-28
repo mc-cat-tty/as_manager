@@ -4,11 +4,11 @@
  */
 #pragma once
 
-#include <fsm_manager/fsm_manager.hpp>
-#include <temporal/timer.hpp>
+#include <as_manager/fsm_manager/fsm_manager.hpp>
+#include <as_manager/temporal/timer.hpp>
 #include <string_view>
 #include <concepts>
-#include <as/exception.hpp>
+#include <as_manager/as/exception.hpp>
 
 namespace as::fsm {
   enum class SafetyMonitoringSwitch {

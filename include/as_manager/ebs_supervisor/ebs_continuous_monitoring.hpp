@@ -1,8 +1,8 @@
 #pragma once
-#include <temporal/timer.hpp>
-#include <fsm_manager/skeletons.hpp>
-#include <ebs_supervisor/signal_implementation.hpp>
-#include <hal/utils.hpp>
+#include <as_manager/temporal/timer.hpp>
+#include <as_manager/fsm_manager/skeletons.hpp>
+#include <as_manager/ebs_supervisor/signal_implementation.hpp>
+#include <as_manager/hal/utils.hpp>
 
 using namespace std::chrono_literals;
 using namespace as::fsm;

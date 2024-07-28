@@ -1,5 +1,5 @@
-#include <temporal/timer.hpp>
-#include <hal/hal.hpp>
+#include <as_manager/temporal/timer.hpp>
+#include <as_manager/hal/hal.hpp>
 #include <iostream>
 
 namespace watchdog {
