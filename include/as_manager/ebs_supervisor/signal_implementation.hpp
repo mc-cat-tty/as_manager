@@ -8,7 +8,7 @@ namespace as::ebs_supervisor{
     using namespace signals;
     inline auto& updater = signals::utils::Updater<5>::getInstance();
 
-        // Over the threshold
+    // Over the threshold
     constexpr uint8_t EXPECTED_PRESSURE_EBS_TANK = 5;
     constexpr uint8_t EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR = 10;
     constexpr uint8_t EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS = 20;

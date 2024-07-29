@@ -6,13 +6,20 @@
 namespace as::ebs_supervisor {
     class EbsSupervisor {
         public:
-            EbsSupervisor();
+            static EbsSupervisor& getInstance() {
+                static EbsSupervisor instance;
+                return instance;
+            }
 
             void run(){
                 ebsFsm.run();
             }
 
         private:
+            EbsSupervisor();
+            EbsSupervisor(const EbsSupervisor&) = delete;
+            EbsSupervisor(EbsSupervisor&&) = delete;
+            EbsSupervisor& operator=(const EbsSupervisor&) = delete;
             fsm::Manager<33> ebsFsm;
     };
 }

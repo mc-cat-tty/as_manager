@@ -16,6 +16,7 @@ namespace as::assi_manager {
             AssiManager() : enalbeAssiY(false), enalbeAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
 
             AssiManager(const AssiManager&) = delete;
+            AssiManager(AssiManager&&) = delete;
             AssiManager& operator=(const AssiManager&) = delete;
 
             void enableAssiY() {

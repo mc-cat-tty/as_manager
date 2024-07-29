@@ -13,6 +13,7 @@ namespace watchdog {
             Watchdog() : isToggling(false), pinState(false), timer() {}
 
             Watchdog(const Watchdog&) = delete;
+            Watchdog(Watchdog&&) = delete;
             Watchdog& operator=(const Watchdog&) = delete;
 
             inline void togglePinState(){

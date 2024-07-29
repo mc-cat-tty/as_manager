@@ -29,6 +29,7 @@ namespace signals::utils{
           Updater() = default;
           ~Updater() = default;
           Updater(const Updater&) = delete;
+          Updater(Updater&&) = delete;
           Updater& operator=(const Updater&) = delete;
 
           IUpdatable *subscribers[maxSubscribers];

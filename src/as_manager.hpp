@@ -10,12 +10,13 @@ constexpr unsigned updatableSignalsNumber = 5;
 
 class AsManagerNode : public rclcpp::Node {
     private:
-    as::ebs_supervisor::EbsSupervisor ebsSupervisor;
+    as::ebs_supervisor::EbsSupervisor &ebsSupervisor;
     watchdog::Watchdog &watchdog;
     as::assi_manager::AssiManager &assiManager;
     signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
+    rclcpp::TimerBase::SharedPtr superloopTimer;
 
-    void superLoop();
+    void superloop();
 
     public:
     AsManagerNode();
