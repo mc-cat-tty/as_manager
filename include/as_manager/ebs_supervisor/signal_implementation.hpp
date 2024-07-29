@@ -23,7 +23,7 @@ namespace as::ebs_supervisor{
     const inline auto SDC_TRESHOLD_CLOSE = 0.1f;
 
     auto asms_signal= Signal<bool>(hal::read_asms_status,&updater,0.8f);
-    auto mission_signal= Signal<bool>(hal::read_mission_status,&updater);
+    auto mission_signal= Signal<bool>(hal::is_autonomous_mission,&updater);
     auto ebs1_signal = Signal<float>(hal::read_ebs1_pressure,&updater);
     auto ebs2_signal = Signal<float>(hal::read_ebs2_pressure,&updater);
     auto sdc_signal = Signal<hal::SdcState>(hal::read_sdc,&updater,0.8f);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 namespace hal {
 enum class SdcState {
     Open=1,
@@ -46,5 +48,14 @@ namespace as {
     DRIVING,
     FINISHED,
     EMERGENCY
+  };
+
+    const inline std::unordered_map<EbsSupervisorState, std::string_view> EbsSupervisorStateLookup {
+    { as::EbsSupervisorState::OFF, "OFF" },
+    { as::EbsSupervisorState::CHECKING, "CHECKING"},
+    { as::EbsSupervisorState::READY, "READY" },
+    { as::EbsSupervisorState::DRIVING, "DRIVING" },
+    { as::EbsSupervisorState::FINISHED, "FINISHED" },
+    { as::EbsSupervisorState::EMERGENCY, "EMERGENCY" }
   };
 }

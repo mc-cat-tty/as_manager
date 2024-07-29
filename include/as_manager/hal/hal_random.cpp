@@ -1,9 +1,9 @@
+#ifdef TEST
+
 #include <as_manager/hal/hal.hpp>
-#include <iostream>
 
 namespace hal{
-
-        double random_number() {
+        static double random_number() {
             // Crea un generatore di numeri casuali
             std::random_device rd; // Seed random
             std::mt19937 gen(rd()); // Generatore Mersenne Twister
@@ -152,4 +152,8 @@ namespace hal{
     void set_gear(uint8_t gear) {};
     void pull_clutch() {};
 
+
+
 }
+
+#endif  // TEST

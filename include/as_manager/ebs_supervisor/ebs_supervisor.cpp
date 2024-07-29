@@ -6,6 +6,7 @@
 #include <as_manager/signals/utils.hpp>
 #include <as_manager/assi_manager/assi_manager.hpp>
 #include <as_manager/ebs_supervisor/ebs_nodes.hpp>
+#include <as_manager/as_manager.hpp>
 #include <functional>
 
 std::string state;
@@ -14,6 +15,7 @@ namespace as::ebs_supervisor {
 
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
+          // doActionNode(std::bind(hal::send_current_state, EbsSupervisorState::OFF), "Published OFF"),
           WAIT_MISSION_ASMS_NODE,
           doActionNode([]{state="CHECKING";}, "Published CHECKING"),
           
