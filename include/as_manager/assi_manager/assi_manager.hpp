@@ -13,16 +13,10 @@ namespace as::assi_manager {
             bool enalbeAssiY,enalbeAssiB, strobeAssiY, strobeAssiB, enabledBuzzer, buzzerState, assiYState, assiBState;
             Timer timer,buzzerTimer,assiYTimer,assiBTimer;
             int buzzerDurationCounter;
-            AssiManager() : enalbeAssiY(false),enalbeAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
+            AssiManager() : enalbeAssiY(false), enalbeAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
 
             AssiManager(const AssiManager&) = delete;
             AssiManager& operator=(const AssiManager&) = delete;
-
-        public:
-            static AssiManager& getInstance() {
-                static AssiManager instance;
-                return instance;
-            }
 
             void enableAssiY() {
                 enalbeAssiY=true;
@@ -68,6 +62,28 @@ namespace as::assi_manager {
                 //std::cout<<"[ASSI_MANAGER][BUZZER] enalbe"<<std::endl;
             }
 
+        public:
+            static AssiManager& getInstance() {
+                static AssiManager instance;
+                return instance;
+            }
+
+            inline void ready() {
+              this->enableAssiY();
+            };
+            
+            inline void driving() {
+              this->enableStrobeAssiY();
+            };
+            
+            inline void finished() {
+              this->enableAssiB();
+            };
+            
+            inline void emergency() {
+              this->enableStrobeAssiB();
+              this->enableBuzzer();
+            };
 
             void run() {
                 if (enalbeAssiY) {

@@ -59,10 +59,20 @@ namespace hal::actions {
   void switch_off_assi_B(){
     hal::set_assi_B_state(AssiState::Off);
   }
+
   void switch_on_assi_B(){
     hal::set_assi_B_state(AssiState::On);
   }
+  
   void strobe_assi_B(){
     hal::set_assi_B_state(AssiState::Strobe);
+  }
+
+  void pullClutch() {
+    hal::pull_clutch();
+  }
+
+  void setFirstGear() {
+    hal::set_gear(1);
   }
 }

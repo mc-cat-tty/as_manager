@@ -32,5 +32,8 @@ namespace hal {
     void send_brake_pressure_percentage(float percentage);
     void send_current_state(as::EbsSupervisorState state);
 
+    void set_gear(uint8_t gear);
+    void pull_clutch();
+
     double random_number();
 }

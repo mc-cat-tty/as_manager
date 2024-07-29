@@ -148,5 +148,9 @@ namespace hal{
 
         }
 
+    void set_gear(uint8_t gear) {};
+    void pull_clutch() {};
+
+
 
 }

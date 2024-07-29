@@ -13,6 +13,6 @@ namespace as::ebs_supervisor {
             }
 
         private:
-            fsm::Manager<31> ebsFsm;
+            fsm::Manager<33> ebsFsm;
     };
 }
