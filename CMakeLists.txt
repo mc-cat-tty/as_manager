@@ -1,17 +1,29 @@
 cmake_minimum_required(VERSION 3.8)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 project(as_manager)
+set(NODE_NAME ${PROJECT_NAME}_node)
 
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
 
 include_directories(include)
 
 file(GLOB_RECURSE SOURCES include/*.cpp)
-add_executable(as_manager_node src/as_manager_node.cpp ${SOURCES})
+add_executable(
+  ${NODE_NAME}
+  src/${NODE_NAME}.cpp
+  src/${PROJECT_NAME}.cpp
+  ${SOURCES}
+)
+
+ament_target_dependencies(${NODE_NAME}
+  rclcpp
+)
 
 install(
-  TARGETS as_manager_node
+  TARGETS ${NODE_NAME}
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -27,6 +39,7 @@ install(
 
 if (APPLE)
   set(CMAKE_CXX_COMPILER clang)
+  add_link_options(-lstdc++)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")

@@ -16,6 +16,7 @@ namespace as::ebs_supervisor {
         {
           WAIT_MISSION_ASMS_NODE,
           doActionNode([]{state="CHECKING";}, "Published CHECKING"),
+          
           //EBS_CHECK
           ASSERT_EBS_PRESSURE_NODE,
           ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE,
