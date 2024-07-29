@@ -5,7 +5,7 @@
 #include <chrono>
 #include <as_manager/common/common_type.hpp>
 
-namespace hal {  
+namespace hal {
     SdcState read_sdc();
     bool read_asms_status() ;
 

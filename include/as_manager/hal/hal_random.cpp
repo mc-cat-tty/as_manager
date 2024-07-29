@@ -2,6 +2,7 @@
 #include <iostream>
 
 namespace hal{
+
         double random_number() {
             // Crea un generatore di numeri casuali
             std::random_device rd; // Seed random
@@ -150,7 +151,5 @@ namespace hal{
 
     void set_gear(uint8_t gear) {};
     void pull_clutch() {};
-
-
 
 }
