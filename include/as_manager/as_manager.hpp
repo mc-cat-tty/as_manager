@@ -7,23 +7,19 @@
 #include <as_manager/ebs_supervisor/ebs_supervisor.hpp>
 #include <as_manager/signals/updater.hpp>
 
+#include <can_msgs/msg/frame.hpp>
+#include <mmr_edf/edf_node.hpp>
+#include <mmr_kria_base/msg/ecu_status.hpp>
+#include <mmr_kria_base/msg/res_status.hpp>
+#include <mmr_kria_base/msg/actuator_status.hpp>
+#include <mmr_kria_base/msg/cmd_motor.hpp>
+
+
 constexpr unsigned updatableSignalsNumber = 5;
 
-struct MaxonMotorState {
-  uint8_t steer;
-  uint8_t brake;
-  uint8_t clutch;
-};
-
-struct ResStatus{
-  uint8_t go;
-  uint8_t emergency;
-  uint8_t bag;
-};
 
 struct ROSInputState {
-  ResStatus resState;
-  MaxonMotorState maxonMotorsState;
+  uint8_t resState, maxonMotorsState;
   unsigned engineRpm;
   float brakePressureFront, brakePressureRear;
   float ebsPressure1, ebsPressure2;
@@ -33,7 +29,7 @@ struct ROSInputState {
 struct ROSPublishers {
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr asStatePublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr brakePercentagePublisher;
-  rclcpp::Publisher<can_msg::msg::Frame>::SharedPtr gearPublisher;
+  rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr gearPublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr clutchPublisher;
 };
 
@@ -46,7 +42,7 @@ struct ROSSubscribers {
   rclcpp::Subscription<mmr_kria_base::msg::ActuatorStatus>::SharedPtr maxonMotors_subscriber;
   rclcpp::Subscription<mmr_kria_base::msg::ResStatus>::SharedPtr resStatus_subscriber;
   //stop messagge da implementare
-  rclcpp::Subscription<can_msg::msg::Frame>::SharedPtr ASMission_subscriber;
+  rclcpp::Subscription<can_msgs::msg::Frame>::SharedPtr ASMission_subscriber;
 
 };
 
@@ -64,62 +60,23 @@ class AsManagerNode : public rclcpp::Node {
 
   void superloop();
 
-   void rpm_callback(const mmr_kria_base::msg::EcuStatus::SharedPtr msg){
-    inputState.rpm = msg->nmot;
-  }
-
-   void brakePressureRear_callback(const mmr_kria_base::msg::EcuStatus::SharedPtr msg){
-    inputState.brakePressureRear = msg->p_brake_rear;
-  }
-
-   void brakePressureFront_callback(const mmr_kria_base::msg::EcuStatus::SharedPtr msg){
-    inputState.brakePressureFront = msg->p_brake_front;
-  }
-
-   void ebs1Pressure_callback(const mmr_kria_base::msg::EcuStatus::SharedPtr msg){
-    inputState.ebsPressure1 msg->p_ebs_1;
-  }
-
-   void ebs2Pressure_callback(const mmr_kria_base::msg::EcuStatus::SharedPtr msg){
-    inputState.ebsPressure2 = msg->p_ebs_2;
-  }
-
-   void maxonMotor_callback(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg){
-    inputState.maxonMotorsState.steer = msg->steer_status;
-    inputState.maxonMotorsState.clutch msg->clutch_status;
-    inputState.maxonMotorsState.brake = msg->brake_status;
-  }
-
-   void resStatus_callback(const mmr_kria_base::msg::ResStatus::SharedPtr msg){
-    inputState.resState.go = msg->go;
-    inputState.resState.emergency = msg->emergency;
-    inputState.resState.bag = msg->bag;
-  }
-
-  static void asMission_callback(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg){
-    //TODO
-  }
-
-  /*  static void stopMessage_callback(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg){
-    //TODO
-  }
-  */
-
-
+  void ecuRpmCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.engineRpm = msg->nmot; }
+  void brakePressureRearCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.brakePressureRear = msg->p_brake_rear; }
+  void brakePressureFrontCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.brakePressureFront = msg->p_brake_front; }
+  void ebs1PressureCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.ebsPressure1 = msg->p_ebs_1; }
+  void ebs2PressureCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.ebsPressure2 = msg->p_ebs_2; }
+  void resStatusCb(const mmr_kria_base::msg::ResStatus::SharedPtr msg){ inputState.resState = (msg->emergency << 2) | (msg->bag << 1) | msg->go_signal; }
+  void maxonMotorCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg){ inputState.maxonMotorsState = (msg->brake_status << 2) | (msg->steer_status << 1) | msg->clutch_status; }
+  void asMissionCb(const can_msgs::msg::Frame::SharedPtr msg) { if (msg->id == 0x40) inputState.autonomousMission = msg->data[0]; }
+  // void stopMessageCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg) {}
 
   public:
   AsManagerNode();
   ~AsManagerNode();
 
   // Input state getters
-  static inline uint8_t getResState() {
-    return (inputState.resState.Emergency << 2) | (inputState.resState.bag << 1) | inputState.resState.go;
-  }
-
-  static inline uint8_t getMaxonMotorsState() { 
-    return (inputState.maxonMotorsState.brake << 2) | (inputState.maxonMotorsState.steer << 1) | inputState.maxonMotorsState.clutch;
-  }
-  
+  static inline uint8_t getResState() { return inputState.resState; }
+  static inline uint8_t getMaxonMotorsState() { return inputState.maxonMotorsState; }
   static inline unsigned getEngineRpm() { return inputState.engineRpm; }
   static inline float getBrakePressureFront() { return inputState.brakePressureFront; }
   static inline float getBrakePressureRear() { return inputState.brakePressureRear; }
@@ -136,20 +93,21 @@ class AsManagerNode : public rclcpp::Node {
   }
 
   static inline void sendBrakePercentage(float percentage){
-    auto mmr_kria_base::msg::CmdMotor msg = mmr_kria_base::msg::cmdmotor();
+    auto msg = mmr_kria_base::msg::CmdMotor();
     msg.brake_torque = percentage;
     outputPublishers.brakePercentagePublisher->publish(msg);
   }
 
   static inline void sendGear(uint8_t gear){ // TODO: 
-    auto can_msg::msg::Frame msg = mmr_kria_base::msg::cmdmotor();
-    msg.
+    auto msg = can_msgs::msg::Frame();
+    msg.id = 0x610;
+    msg.data[0] = gear;
     outputPublishers.gearPublisher->publish(msg);
   }
 
-  static inline void sendClutchPull(int percentage){
-    auto mmr_kria_base::msg::CmdMotor msg = mmr_kria_base::msg::cmdmotor();
-    msg.disengaged = 1;
+  static inline void sendClutchAction(bool doPull){
+    auto msg = mmr_kria_base::msg::CmdMotor();
+    msg.clutch_disengage = doPull;
     outputPublishers.clutchPublisher->publish(msg);
   }
 };

@@ -8,6 +8,9 @@ set(NODE_NAME ${PROJECT_NAME}_node)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(can_msgs REQUIRED)
+find_package(mmr_kria_base REQUIRED)
+find_package(mmr_edf REQUIRED)
 
 include_directories(include)
 
@@ -22,6 +25,9 @@ add_executable(
 ament_target_dependencies(${NODE_NAME}
   rclcpp
   std_msgs
+  can_msgs
+  mmr_kria_base
+  mmr_edf
 )
 
 install(

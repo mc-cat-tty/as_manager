@@ -19,7 +19,7 @@ namespace hal {
   ResState read_res_state() {return ResState::Operational;}
   float read_brake_pressure_front()  { return AsManagerNode::getBrakePressureFront(); }
   float read_brake_pressure_rear()  {return AsManagerNode::getBrakePressureRear(); }
-  unsigned read_rpm() {return AsManagerNode::getEngineRpm}
+  unsigned read_rpm() {return AsManagerNode::getEngineRpm(); }
   float read_ebs1_pressure()  {return AsManagerNode::getEbsPressure1(); }
   float read_ebs2_pressure() {return AsManagerNode::getEbsPressure2(); }
   bool read_stop_message()  {return false;}
@@ -29,7 +29,7 @@ namespace hal {
   uint8_t read_motors_bit_vector() {return 1;}
 
   void send_brake_pressure_percentage(float percentage) {
-    AsManagerNode::sendBrakePressurePercentage(percentage);
+    AsManagerNode::sendBrakePercentage(percentage);
   }
 
   void send_current_state(as::EbsSupervisorState state) {
@@ -40,7 +40,7 @@ namespace hal {
     AsManagerNode::sendGear(gear);
   }
   void pull_clutch() {
-    AsManagerNode::sendClutch();
+    AsManagerNode::sendClutchAction(true);
   }
 }
 
