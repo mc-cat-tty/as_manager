@@ -5,8 +5,8 @@
 #include <as_manager/hal/pin_implementation.hpp>
 
 namespace hal {
-  SdcState read_sdc() {return pin::sdcSensPin.getValue() ? SdcState::Closed; : SdcState::Open;}
-  bool read_asms_status() {return pin::asmsPin.getValue() ? return false : return true ;}
+  SdcState read_sdc() {return pin::sdcSensPin.getValue() ? SdcState::Open : SdcState::Closed;}
+  bool read_asms_status() {return pin::asmsPin.getValue() ? false : true ;}
 
   void toggle_actuator1_state(ActuatorState state) {
     pin::ebs1Pin.setValue(state == ActuatorState::Braking ? KriaPin::Value::ON : KriaPin::Value::OFF);
@@ -27,8 +27,8 @@ namespace hal {
   void set_buzzer_state(BuzzerState state) {
     pin::buzzerPin.setValue(state == BuzzerState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
-  void toggle_sdc_state(SdcState state) { //ANche qua funziona a logica inversa ?????
-    pin::sdcCtrlPin.setValue(state == SdcState::Open ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  void toggle_sdc_state(SdcState state) {
+    pin::sdcCtrlPin.setValue(state == SdcState::Open ? KriaPin::Value::OFF : KriaPin::Value::ON);
   }
 
   uint8_t read_res_bit_vector() {return AsManagerNode::getResState();}
