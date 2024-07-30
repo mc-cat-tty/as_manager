@@ -46,13 +46,15 @@ struct ROSSubscribers {
 
 };
 
-class AsManagerNode : public rclcpp::Node {
+class AsManagerNode : public EDFNode {
   private:
   as::ebs_supervisor::EbsSupervisor &ebsSupervisor;
   watchdog::Watchdog &watchdog;
   as::assi_manager::AssiManager &assiManager;
   signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
   rclcpp::TimerBase::SharedPtr superloopTimer;
+  std::string  brakeTopic, asStateTopic, canSendTopic, clutchTopic, ecuTopic, resTopic, maxonStateTopic, canReceiveTopic;
+  bool debug;
 
   static ROSInputState inputState;
   static ROSSubscribers inputSubscribers;
@@ -109,5 +111,36 @@ class AsManagerNode : public rclcpp::Node {
     auto msg = mmr_kria_base::msg::CmdMotor();
     msg.clutch_disengage = doPull;
     outputPublishers.clutchPublisher->publish(msg);
+  }
+
+  void load_parameters(){
+    declare_parameter("generic.WCET", 5000000);
+    declare_parameter("generic.period", 10000000);
+    declare_parameter("generic.deadline", 10000000);
+    declare_parameter("generic.debug", false);
+
+    declare_parameter("topic.asStateTopic", "");
+    declare_parameter("topic.brakeTopic", "");
+    declare_parameter("topic.canSendTopic", "");
+    declare_parameter("topic.clutchTopic", "");
+    declare_parameter("topic.ecuTopic", "");
+    declare_parameter("topic.resTopic", "");
+    declare_parameter("topic.maxonStateTopic", "");
+    declare_parameter("topic.canReceiveTopic", "");
+
+    get_parameter("generic.WCET", this->m_nWCET);
+    get_parameter("generic.period", this->m_nPeriod);
+    get_parameter("generic.deadline", this->m_nDeadline);
+    get_parameter("generic.debug", this->debug);
+
+    get_parameter("topic.asStateTopic", this->asStateTopic);
+    get_parameter("topic.brakeTopic", this->brakeTopic);
+    get_parameter("topic.canSendTopic", this->canSendTopic);
+    get_parameter("topic.clutchTopic", this->clutchTopic);
+    get_parameter("topic.ecuTopic", this->ecuTopic);
+    get_parameter("topic.resTopic", this->resTopic);
+    get_parameter("topic.maxonStateTopic", this->maxonStateTopic);
+    get_parameter("topic.canReceiveTopic", this->canReceiveTopic);
+    
   }
 };

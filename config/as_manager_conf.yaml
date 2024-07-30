@@ -1,0 +1,16 @@
+/as_manager_node:
+  ros__parameters:
+    generic:
+      WCET: 5000000 # ms
+      period: 10000000 # 10ms
+      deadline: 10000000
+      debug: true
+    topic:
+      asStateTopic: "/as/status"
+      brakeTopic: "/command/brake"
+      canSendTopic: "/canbus/rx/msg"
+      clutchTopic: "/command/clutch"
+      ecuTopic: "status/ecu"
+      resTopic: "status/res"
+      maxonStateTopic: "actuator/status"
+      canReceiveTopic: "canbus/tx/msg"
