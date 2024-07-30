@@ -15,9 +15,13 @@ namespace as::ebs_supervisor {
 
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
-          // doActionNode(std::bind(hal::send_current_state, EbsSupervisorState::OFF), "Published OFF"),
-          WAIT_MISSION_ASMS_NODE,
-          doActionNode([]{state="CHECKING";}, "Published CHECKING"),
+          doActionNode(std::bind(hal::send_current_state, EbsSupervisorState::OFF), "Published OFF"),
+          INIT_PINS_NODE,
+          START_CANBUS_BRIDGE_NODE, 
+          WAIT_ASMS_NODE,
+          START_CANOPEN_NODE,
+          WAIT_MISSION_NODE,
+          doActionNode(std::bind(hal::send_current_state, EbsSupervisorState::CHECKING), "Published CHECKING"),
           
           //EBS_CHECK
           ASSERT_EBS_PRESSURE_NODE,
@@ -49,26 +53,32 @@ namespace as::ebs_supervisor {
           WAIT_TS_ACTIVE,
 
           //READY
-          doActionNode([]{state="READY"; assi_manager::AssiManager::getInstance().ready();}, "Published READY"),
+          doActionNode([]{
+            hal::send_current_state(EbsSupervisorState::READY);
+            assi_manager::AssiManager::getInstance().ready();
+          }, "Published READY"),
           WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
           PULL_CLUTCH_NODE,
           GEAR_FIRST_NODE,
 
           //DRIVING
-          doActionNode([]{state="DRIVING"; assi_manager::AssiManager::getInstance().driving();}, "Published DRIVING"),
+          doActionNode([]{
+            hal::send_current_state(EbsSupervisorState::DRIVING);
+            assi_manager::AssiManager::getInstance().driving();
+          }, "Published DRIVING"),
           WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
 
           terminalTrapNode(
             []{
-              state="FINISHED"; 
+              hal::send_current_state(EbsSupervisorState::FINISHED);
               open_sdc(); brake_act1(); brake_act2();
               assi_manager::AssiManager::getInstance().finished();
-            }, "FINISHED State"),
+            }, "FINISHED State")
 
         },
         terminalTrapNode(
           []{
-            state="Emergency";  
+            hal::send_current_state(EbsSupervisorState::EMERGENCY);
             open_sdc(); brake_act1(); brake_act2();
             assi_manager::AssiManager::getInstance().emergency();
           }, "Emergency State")

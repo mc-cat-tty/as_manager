@@ -1,5 +1,4 @@
 #include <as_manager/as_manager.hpp>
-#include <as_manager/hal/pin_implementation.hpp>
 
 using namespace std::chrono_literals;
 
@@ -21,13 +20,6 @@ AsManagerNode::AsManagerNode() :
     AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/brake", 1);
     AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msgs::msg::Frame>("/canbus/rx/msg", 1);
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/clutch", 1);
-
-    using namespace hal::pin;
-    buzzerPin.setValue(KriaPin::Value::OFF);
-    watchdogPin.setValue(KriaPin::Value::OFF);
-    ebs1Pin.setValue(KriaPin::Value::ON);
-    ebs1Pin.setValue(KriaPin::Value::ON);
-    sdcCtrlPin.setValue(KriaPin::Value::OFF);
 
     using namespace std::placeholders;
     AsManagerNode::inputSubscribers.rpm_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(

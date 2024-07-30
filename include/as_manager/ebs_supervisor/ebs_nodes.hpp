@@ -2,18 +2,42 @@
 #include <as_manager/fsm_manager/nodes_factory.hpp>
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
 #include <as_manager/actions/actions.hpp>
+#include <as_manager/hal/pin_implementation.hpp>
 
 
 namespace as::ebs_supervisor {
     using namespace hal::actions;
     using namespace watchdog;
     
-    bool waitAsmsAnsMission(){
-        return asms_signal.get_value() && mission_signal.get_value();
-    }
+    constexpr auto INIT_PINS_NODE = doActionNode(
+      []{
+        using namespace hal::pin;
+        buzzerPin.setValue(KriaPin::Value::OFF);
+        watchdogPin.setValue(KriaPin::Value::OFF);
+        ebs1Pin.setValue(KriaPin::Value::ON);
+        ebs1Pin.setValue(KriaPin::Value::ON);
+        sdcCtrlPin.setValue(KriaPin::Value::OFF);
+      },
+      "Initialized pins"
+    );
 
-    constexpr auto WAIT_MISSION_ASMS_NODE=waitUntilNode(
-      waitAsmsAnsMission, 
+    constexpr auto START_CANBUS_BRIDGE_NODE = doActionNode(
+      std::bind(std::system, "ros2 launch canbus_bridge canbus_bridge_launch.py"),
+      "Started CAN Bus Bridge"
+    );
+
+    constexpr auto WAIT_ASMS_NODE=waitUntilNode(
+      []{return asms_signal.get_value();}, 
+      "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
+    );
+
+    constexpr auto START_CANOPEN_NODE = doActionNode(
+      std::bind(std::system, "ros2 launch canopen_bridge canopen_bridge_launch.py"),
+      "Started CAN Open Bridge"
+    );
+
+    constexpr auto WAIT_MISSION_NODE=waitUntilNode(
+      []{return mission_signal.get_value();}, 
       "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
     );
 
