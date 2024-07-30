@@ -2,18 +2,34 @@
 
 #include <as_manager/hal/hal.hpp>
 #include <as_manager/as_manager.hpp>
+#include <as_manager/hal/pin_implementation.hpp>
 
 namespace hal {
-  SdcState read_sdc() {return SdcState::Open;}
-  bool read_asms_status() {return false;}
+  SdcState read_sdc() {return pin::sdcSensPin.getValue() ? SdcState::Closed; : SdcState::Open;}
+  bool read_asms_status() {return pin::asmsPin.getValue() ? return false : return true ;}
 
-  void toggle_actuator1_state(ActuatorState state) {}
-  void toggle_actuator2_state(ActuatorState state) {}
-  void write_watchdog_state(bool pinState) {}
-  void set_assi_Y_state(AssiState state) {}
-  void set_assi_B_state(AssiState state) {}
-  void set_buzzer_state(BuzzerState state) {}
-  void toggle_sdc_state(SdcState state) {}
+  void toggle_actuator1_state(ActuatorState state) {
+    pin::ebs1Pin.setValue(state == ActuatorState::Braking ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
+  void toggle_actuator2_state(ActuatorState state) {
+    pin::ebs2Pin.setValue(state == ActuatorState::Braking ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
+
+  void write_watchdog_state(bool pinState) {
+    pin::watchdogPin.setValue(pinState ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
+  void set_assi_Y_state(AssiState state) {
+    pin::assiyPin.setValue(state == AssiState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
+  void set_assi_B_state(AssiState state) {
+    pin::assibPin.setValue(state == AssiState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
+  void set_buzzer_state(BuzzerState state) {
+    pin::buzzerPin.setValue(state == BuzzerState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
+  void toggle_sdc_state(SdcState state) { //ANche qua funziona a logica inversa ?????
+    pin::sdcCtrlPin.setValue(state == SdcState::Open ? KriaPin::Value::ON : KriaPin::Value::OFF);
+  }
 
   uint8_t read_res_bit_vector() {return AsManagerNode::getResState();}
   ResState read_res_state() {return ResState::Operational;}
