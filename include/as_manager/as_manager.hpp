@@ -18,9 +18,9 @@ struct ROSInputState {
 
 struct ROSOutputState {
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr asStatePublisher;
-  // rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr brakePercentagePublisher;
-  // rclcpp::Publisher<std_msgs::msg::Int>::SharedPtr gearPublisher;
-  // rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr clutchPublisher;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr brakePercentagePublisher;
+  rclcpp::Publisher<std_msgs::msg::Int>::SharedPtr gearPublisher;
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr clutchPublisher;
 };
 
 class AsManagerNode : public rclcpp::Node {
@@ -56,5 +56,23 @@ class AsManagerNode : public rclcpp::Node {
     auto msg = std_msgs::msg::String();
     msg.data = state;
     outputPublishers.asStatePublisher->publish(msg);
+  }
+
+  static inline void sendBrakePercentage(float percentage){
+    auto mmr_kria_base::msg::cmdmotor msg = mmr_kria_base::msg::cmdmotor();
+    msg.brake_torque = percentage;
+    outputPublishers.brakePercentagePublisher->publish(msg);
+  }
+
+  static inline void sendGear(uint8_t gear){ // TODO: 
+    auto can_msg::msg::Frame msg = mmr_kria_base::msg::cmdmotor();
+    msg.
+    outputPublishers.gearPublisher->publish(msg);
+  }
+
+  static inline void sendClutchPull(int percentage){
+    auto mmr_kria_base::msg::cmdmotor msg = mmr_kria_base::msg::cmdmotor();
+    msg.disengaged = 1;
+    outputPublishers.clutchPublisher->publish(msg);
   }
 };

@@ -28,14 +28,20 @@ namespace hal {
 
   uint8_t read_motors_bit_vector() {return 1;}
 
-  void send_brake_pressure_percentage(float percentage) {}
+  void send_brake_pressure_percentage(float percentage) {
+    AsManagerNode::sendBrakePressurePercentage(percentage);
+  }
 
   void send_current_state(as::EbsSupervisorState state) {
     AsManagerNode::sendASState(as::EbsSupervisorStateLookup.at(state));
   }
 
-  void set_gear(uint8_t gear) {}
-  void pull_clutch() {}
+  void set_gear(uint8_t gear) {
+    AsManagerNode::sendGear(gear);
+  }
+  void pull_clutch() {
+    AsManagerNode::sendClutch();
+  }
 }
 
 #endif  // TEST
