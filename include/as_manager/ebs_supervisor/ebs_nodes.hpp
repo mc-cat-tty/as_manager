@@ -20,8 +20,8 @@ namespace as::ebs_supervisor {
     constexpr auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode(
       []{
         std::cout<<"PBRAKE: "<<ebs1_signal.get_value()<<" "<<ebs2_signal.get_value()<<std::endl;
-        return ebs1_signal.get_value() >= EXPECTED_PRESSURE_EBS_TANK
-          and ebs2_signal.get_value() >= EXPECTED_PRESSURE_EBS_TANK;
+        return ebs1_signal.get_value() >= AsManagerNode::getEbsTankPressureThreshold()
+          and ebs2_signal.get_value() >=  AsManagerNode::getEbsTankPressureThreshold();
       },
       500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout"
     );
@@ -29,8 +29,8 @@ namespace as::ebs_supervisor {
     constexpr auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE = assertWithTimeoutNode(
       []{
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
-        return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS
-          and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_BOTH_ACTUATORS;
+        return breake_pressure_rear_signal.get_value() >= AsManagerNode::getBrakePressureBothActuatorsThreshold()
+          and breake_pressure_front_signal.get_value() >= AsManagerNode::getBrakePressureBothActuatorsThreshold();
       }, 500ms, "Sufficient BRAKE pressure EBS", "Waiting sufficient PBRAKE EBS", "PBRAKE timeout EBS");
 
     constexpr auto OPEN_SDC_NODE = doActionNode(open_sdc, "Open SDC");
@@ -53,15 +53,15 @@ namespace as::ebs_supervisor {
     constexpr auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
-        return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR
-          and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_ONE_ACTUATOR;
+        return breake_pressure_rear_signal.get_value() >= AsManagerNode::getBrakePressureOneActuatorThreshold()
+          and breake_pressure_front_signal.get_value() >= AsManagerNode::getBrakePressureOneActuatorThreshold();
       }, 500ms, "Sufficient BRAKE pressure", "Waiting sufficient PBRAKE", "PBRAKE timeout");
 
     constexpr auto ASSERT_NO_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
-        return breake_pressure_rear_signal.get_value() <= EXPECTED_UNBRAKE_PRESSURE
-          and breake_pressure_front_signal.get_value() <= EXPECTED_UNBRAKE_PRESSURE;
+        return breake_pressure_rear_signal.get_value() <= AsManagerNode::getUnbrakePressureThreshold()
+          and breake_pressure_front_signal.get_value() <= AsManagerNode::getUnbrakePressureThreshold();
       }, 500ms, "No brake pressure", "Waiting no brake pressure", "Brake pressure timeout");
 
     constexpr auto UNBRAKE_ACT1_NODE = doActionNode(unbrake_act1, "Unbrake Act1");
@@ -78,8 +78,8 @@ namespace as::ebs_supervisor {
 
     constexpr auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR = assertWithTimeoutNode(
       []{
-        return breake_pressure_rear_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR
-          and breake_pressure_front_signal.get_value() >= EXPECTED_BRAKE_PRESSURE_MAXON_MOTOR;
+        return breake_pressure_rear_signal.get_value() >= AsManagerNode::getBrakePressureMaxonMotorsThreshold()
+          and breake_pressure_front_signal.get_value() >= AsManagerNode::getBrakePressureMaxonMotorsThreshold();
       }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
     constexpr auto WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(

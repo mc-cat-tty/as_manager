@@ -6,6 +6,18 @@ ROSInputState AsManagerNode::inputState;
 ROSPublishers AsManagerNode::outputPublishers;
 ROSSubscribers AsManagerNode::inputSubscribers;
 
+static int AsManagerNode::ebsTankPressureThreshold;
+static int AsManagerNode::brakePressureOneActuatorThreshold;
+static int AsManagerNode::brakePressureBothActuatorsThreshold;
+static int AsManagerNode::brakePressureMaxonMotorsThreshold;
+static int AsManagerNode::unbrakePressureThreshold;
+
+static float AsManagerNode::asmsAplha;
+static float AsManagerNode::sdcAplha;
+static float AsManagerNode::brakePressureFrontAlpha;
+static float AsManagerNode::brakePressureRearAlpha;
+static float AsManagerNode::rpmAlpha;
+
 AsManagerNode::AsManagerNode() :
   EDFNode("as_manager_node"),
   ebsSupervisor(as::ebs_supervisor::EbsSupervisor::getInstance()),
@@ -16,6 +28,10 @@ AsManagerNode::AsManagerNode() :
     50ms,
     std::bind(&AsManagerNode::superloop, this)
   )) {
+
+    this->load_parameters();
+    this->configureEDFScheduler(this->m_nPeriod, this->m_nWCET, this->m_nDeadline);
+
     AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::String>(this->asStateTopic, 1);
     AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->brakeTopic, 1);
     AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msgs::msg::Frame>(this->canSendTopic, 1);

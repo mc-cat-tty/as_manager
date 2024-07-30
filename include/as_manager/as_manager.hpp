@@ -53,8 +53,12 @@ class AsManagerNode : public EDFNode {
   as::assi_manager::AssiManager &assiManager;
   signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
   rclcpp::TimerBase::SharedPtr superloopTimer;
+
+  //parameters
   std::string  brakeTopic, asStateTopic, canSendTopic, clutchTopic, ecuTopic, resTopic, maxonStateTopic, canReceiveTopic;
   bool debug;
+  static int ebsTankPressureThreshold,brakePressureOneActuatorThreshold,brakePressureBothActuatorsThreshold,brakePressureMaxonMotorsThreshold, unbrakePressureThreshold;
+  static float asmsAplha,sdcAplha,brakePressureFrontAlpha,brakePressureRearAlpha,rpmAlpha;
 
   static ROSInputState inputState;
   static ROSSubscribers inputSubscribers;
@@ -75,6 +79,18 @@ class AsManagerNode : public EDFNode {
   public:
   AsManagerNode();
   ~AsManagerNode();
+
+  // Getter of parameters
+  static inline int getEbsTankPressureThreshold() { return ebsTankPressureThreshold; }
+  static inline int getBrakePressureOneActuatorThreshold() { return brakePressureOneActuatorThreshold; }
+  static inline int getBrakePressureBothActuatorsThreshold() { return brakePressureBothActuatorsThreshold; }
+  static inline int getBrakePressureMaxonMotorsThreshold() { return brakePressureMaxonMotorsThreshold; }
+  static inline int getUnbrakePressureThreshold() { return unbrakePressureThreshold; }
+  static inline float getAsmsAlpha() { return asmsAplha; }
+  static inline float getSdcAlpha() { return sdcAplha; }
+  static inline float getBrakePressureFrontAlpha() { return brakePressureFrontAlpha; }
+  static inline float getBrakePressureRearAlpha() { return brakePressureRearAlpha; }
+  static inline float getRpmAlpha() { return rpmAlpha; }
 
   // Input state getters
   static inline uint8_t getResState() { return inputState.resState; }
@@ -128,6 +144,18 @@ class AsManagerNode : public EDFNode {
     declare_parameter("topic.maxonStateTopic", "");
     declare_parameter("topic.canReceiveTopic", "");
 
+    declare_parameter("thresholds.ebsTankPressureThreshold", 5);
+    declare_parameter("thresholds.brakePressureOneActuatorThreshold", 20);
+    declare_parameter("thresholds.brakePressureBothActuatorsThreshold", 10);
+    declare_parameter("thresholds.brakePressureMaxonMotorsThreshold", 6);
+    declare_parameter("thresholds.unbrakePressureThreshold", 5);
+
+    declare_parameter("alpha.asmsAplha", 0.8f);
+    declare_parameter("alpha.sdcAplha",  0.8f);
+    declare_parameter("alpha.brakePressureFrontAlpha",  0.8f);
+    declare_parameter("alpha.brakePressureRearAlpha",  0.8f);
+    declare_parameter("alpha.rpmAlpha",  0.8f);
+
     get_parameter("generic.WCET", this->m_nWCET);
     get_parameter("generic.period", this->m_nPeriod);
     get_parameter("generic.deadline", this->m_nDeadline);
@@ -141,6 +169,18 @@ class AsManagerNode : public EDFNode {
     get_parameter("topic.resTopic", this->resTopic);
     get_parameter("topic.maxonStateTopic", this->maxonStateTopic);
     get_parameter("topic.canReceiveTopic", this->canReceiveTopic);
+
+    get_parameter("thresholds.ebsTankPressureThreshold", this->ebsTankPressureThreshold);
+    get_parameter("thresholds.brakePressureOneActuatorThreshold", this->brakePressureOneActuatorThreshold);
+    get_parameter("thresholds.brakePressureBothActuatorsThreshold", this->brakePressureBothActuatorsThreshold);
+    get_parameter("thresholds.brakePressureMaxonMotorsThreshold", this->brakePressureMaxonMotorsThreshold);
+    get_parameter("thresholds.unbrakePressureThreshold", this->unbrakePressureThreshold);
+
+    get_parameter("alpha.asmsAplha", this->asmsAplha);
+    get_parameter("alpha.sdcAplha", this->sdcAplha);
+    get_parameter("alpha.brakePressureFrontAlpha", this->brakePressureFrontAlpha);
+    get_parameter("alpha.brakePressureRearAlpha", this->brakePressureRearAlpha);
+    get_parameter("alpha.rpmAlpha", this->rpmAlpha);
     
   }
 };
