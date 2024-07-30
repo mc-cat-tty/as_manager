@@ -16,9 +16,27 @@ AsManagerNode::AsManagerNode() :
     std::bind(&AsManagerNode::superloop, this)
   )) {
     AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::String>("/as/status", 1);
-    AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::cmdmotor>("/command/brake", 1);
-    AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msg::msg::Frame>("/canbus/tx/msg", 1);
-    AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::cmdmotor>("/command/clutch", 1);
+    AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/brake", 1);
+    AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msg::msg::Frame>("/canbus/rx/msg", 1);
+    AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/clutch", 1);
+
+    
+    AsManagerNode::inputSubscribers.rpm_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "status/ecu", 10, std::bind(&AsManagerNode::rpm_callback, this, _1));
+    AsManagerNode::inputSubscribers.brakePressureFront_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "status/ecu", 10, std::bind(&AsManagerNode::brakePressureFront_callback, this, _1));
+    AsManagerNode::inputSubscribers.brakePressureRear_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "status/ecu", 10, std::bind(&AsManagerNode::brakePressureRear_callback, this, _1));
+    AsManagerNode::inputSubscribers.EBS1Pressure_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "status/ecu", 10, std::bind(&AsManagerNode::ebs1Pressure_callback, this, _1));
+    AsManagerNode::inputSubscribers.EBS2Pressure_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "status/ecu", 10, std::bind(&AsManagerNode::ebs2Pressure_callback, this, _1));
+    AsManagerNode::inputSubscribers.resStatus_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "status/res", 10, std::bind(&AsManagerNode::resStatus_callback, this, _1));
+    AsManagerNode::inputSubscribers.maxonMotors_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "actuator/status", 10, std::bind(&AsManagerNode::maxonMotor_callback, this, _1));
+    AsManagerNode::inputSubscribers.ASMission_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      "canbus/tx/msg", 10, std::bind(&AsManagerNode::asMission_callback, this, _1));
   }
 
 AsManagerNode::~AsManagerNode() {
