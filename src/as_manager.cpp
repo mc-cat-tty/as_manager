@@ -17,9 +17,9 @@ AsManagerNode::AsManagerNode() :
     std::bind(&AsManagerNode::superloop, this)
   )) {
     AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::String>("/as/status", 1);
-    // AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/brake", 1);
-    // AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msg::msg::Frame>("/canbus/rx/msg", 1);
-    // AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/clutch", 1);
+    AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/brake", 1);
+    AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msgs::msg::Frame>("/canbus/rx/msg", 1);
+    AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/clutch", 1);
 
     using namespace std::placeholders;
     AsManagerNode::inputSubscribers.rpm_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
