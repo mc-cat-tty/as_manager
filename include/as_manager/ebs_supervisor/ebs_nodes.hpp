@@ -1,3 +1,4 @@
+#pragma once
 #include <as_manager/fsm_manager/nodes_factory.hpp>
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
 #include <as_manager/actions/actions.hpp>

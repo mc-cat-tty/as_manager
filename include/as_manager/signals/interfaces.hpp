@@ -1,3 +1,5 @@
+#pragma once
+
 namespace signals {
   struct IUpdatable {
     virtual void update() = 0;
