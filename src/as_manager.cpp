@@ -3,7 +3,8 @@
 using namespace std::chrono_literals;
 
 ROSInputState AsManagerNode::inputState;
-ROSOutputState AsManagerNode::outputPublishers;
+ROSPublishers AsManagerNode::outputPublishers;
+ROSSubscribers AsManagerNode::inputSubscribers;
 
 AsManagerNode::AsManagerNode() :
   Node("as_manager_node"),
@@ -20,7 +21,7 @@ AsManagerNode::AsManagerNode() :
     AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msg::msg::Frame>("/canbus/rx/msg", 1);
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>("/command/clutch", 1);
 
-    
+    using namespace std::placeholders;
     AsManagerNode::inputSubscribers.rpm_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
       "status/ecu", 10, std::bind(&AsManagerNode::rpm_callback, this, _1));
     AsManagerNode::inputSubscribers.brakePressureFront_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(

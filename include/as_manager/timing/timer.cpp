@@ -1,7 +1,7 @@
-#include <as_manager/temporal/timer.hpp>
+#include <as_manager/timing/timer.hpp>
 
 
-namespace temporal{
+namespace timing{
 
 Timer::Timer() :  is_started(false) {
 

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <as_manager/fsm_manager/fsm_manager.hpp>
-#include <as_manager/temporal/timer.hpp>
+#include <as_manager/timing/timer.hpp>
 #include <string_view>
 #include <concepts>
 #include <as_manager/as/exception.hpp>
@@ -27,7 +27,7 @@ namespace as::fsm {
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ){
-    static auto timer = temporal::Timer();
+    static auto timer = timing::Timer();
     timer.start(ms);
 
     if (predicate()) {
@@ -53,7 +53,7 @@ namespace as::fsm {
   void continousMonitoringAssert(
     std::predicate auto predicate,
     std::chrono::milliseconds ms,
-    temporal::Timer& timer,
+    timing::Timer& timer,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ){

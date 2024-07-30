@@ -1,11 +1,11 @@
 #pragma once
 
-#include <as_manager/temporal/timer.hpp>
+#include <as_manager/timing/timer.hpp>
 #include <as_manager/hal/hal.hpp>
 #include <iostream>
 
 namespace watchdog {
-    using namespace temporal;
+    using namespace timing;
     using namespace std::chrono_literals;
 
     class Watchdog {

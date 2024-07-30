@@ -33,7 +33,7 @@ namespace hal {
   }
 
   void send_current_state(as::EbsSupervisorState state) {
-    AsManagerNode::sendASState(as::EbsSupervisorStateLookup.at(state));
+    AsManagerNode::sendASState(state);
   }
 
   void set_gear(uint8_t gear) {

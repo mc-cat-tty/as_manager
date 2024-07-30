@@ -2,6 +2,6 @@
 
 #include <chrono>
 
-namespace temporal {
+namespace timing {
   using Tick = std::chrono::milliseconds;
 }

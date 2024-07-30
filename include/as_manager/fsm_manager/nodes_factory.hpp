@@ -25,7 +25,7 @@ namespace as::fsm {
   constexpr inline auto continousMonitoringAssertNode(
     std::invocable auto predicate,
     std::chrono::milliseconds ms,
-    temporal::Timer& timer,
+    timing::Timer& timer,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ) {

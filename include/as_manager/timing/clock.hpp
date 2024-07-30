@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace temporal {
+namespace timing {
   using namespace std::chrono;
 
   using Tick = milliseconds;

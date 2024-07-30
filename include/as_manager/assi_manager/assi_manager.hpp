@@ -1,11 +1,11 @@
 #pragma once
-#include <as_manager/temporal/timer.hpp>
+#include <as_manager/timing/timer.hpp>
 #include <as_manager/actions/actions.hpp>
 #include <iostream>
 
 namespace as::assi_manager {
 
-    using namespace temporal;
+    using namespace timing;
     using namespace std::chrono_literals;
 
     class AssiManager {

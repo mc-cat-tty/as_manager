@@ -13,13 +13,13 @@ struct MaxonMotorState {
   uint8_t steer;
   uint8_t brake;
   uint8_t clutch;
-}
+};
 
 struct ResStatus{
   uint8_t go;
   uint8_t emergency;
   uint8_t bag;
-}
+};
 
 struct ROSInputState {
   ResStatus resState;
@@ -30,14 +30,14 @@ struct ROSInputState {
   bool stopMessage, autonomousMission;
 };
 
-struct ROSPublisher {
+struct ROSPublishers {
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr asStatePublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr brakePercentagePublisher;
   rclcpp::Publisher<can_msg::msg::Frame>::SharedPtr gearPublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr clutchPublisher;
 };
 
-struct ROSSubscriber {
+struct ROSSubscribers {
   rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr rpm_subscriber;
   rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr brakePressureRear_subscriber;
   rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr brakePressureFront_subscriber;
@@ -59,8 +59,8 @@ class AsManagerNode : public rclcpp::Node {
   rclcpp::TimerBase::SharedPtr superloopTimer;
 
   static ROSInputState inputState;
-  static ROSSubscriber inputSubscribers;
-  static ROSPublisher outputPublishers;
+  static ROSSubscribers inputSubscribers;
+  static ROSPublishers outputPublishers;
 
   void superloop();
 
@@ -115,9 +115,11 @@ class AsManagerNode : public rclcpp::Node {
   static inline uint8_t getResState() {
     return (inputState.resState.Emergency << 2) | (inputState.resState.bag << 1) | inputState.resState.go;
   }
+
   static inline uint8_t getMaxonMotorsState() { 
     return (inputState.maxonMotorsState.brake << 2) | (inputState.maxonMotorsState.steer << 1) | inputState.maxonMotorsState.clutch;
   }
+  
   static inline unsigned getEngineRpm() { return inputState.engineRpm; }
   static inline float getBrakePressureFront() { return inputState.brakePressureFront; }
   static inline float getBrakePressureRear() { return inputState.brakePressureRear; }
@@ -127,9 +129,9 @@ class AsManagerNode : public rclcpp::Node {
   static inline bool getAutonomousMission() { return inputState.autonomousMission; }
 
   // Output state setters
-  static inline void sendASState(std::string_view state) {
+  static inline void sendASState(as::EbsSupervisorState state) {
     auto msg = std_msgs::msg::String();
-    msg.data = state;
+    msg.data = as::EbsSupervisorStateLookup.at(state);
     outputPublishers.asStatePublisher->publish(msg);
   }
 

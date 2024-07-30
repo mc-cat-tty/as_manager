@@ -1,5 +1,5 @@
 #pragma once
-#include <as_manager/temporal/timer.hpp>
+#include <as_manager/timing/timer.hpp>
 #include <as_manager/fsm_manager/skeletons.hpp>
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
 #include <as_manager/hal/utils.hpp>
@@ -49,9 +49,9 @@ namespace as::ebs_supervisor
     ~EbsContinousMonitoring() = default;
     EbsContinousMonitoring(const EbsContinousMonitoring &) = delete;
     EbsContinousMonitoring &operator=(const EbsContinousMonitoring &) = delete;
-    temporal::Timer ebsTimer;
-    temporal::Timer sdcTimer;
-    temporal::Timer resEmergencyTimer;
-    temporal::Timer motorsTimer;
+    timing::Timer ebsTimer;
+    timing::Timer sdcTimer;
+    timing::Timer resEmergencyTimer;
+    timing::Timer motorsTimer;
   };
 }
