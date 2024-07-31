@@ -4,6 +4,7 @@
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
 #include <as_manager/common/common_types.hpp>
 #include <as_manager/hal/utils.hpp>
+#include <as_manager/as_manager.hpp>
 
 using namespace std::chrono_literals;
 using namespace as::fsm;
@@ -22,8 +23,8 @@ namespace as::ebs_supervisor
     inline void continuousMonitoring(){
       continousMonitoringAssert(
         []{
-            return ebs1_signal.get_value() >= EXPECTED_PRESSURE_EBS_TANK and
-            ebs2_signal.get_value() >= EXPECTED_PRESSURE_EBS_TANK;
+            return ebs1_signal.get_value() >= AsManagerNode::getEbsTankPressureThreshold() and
+            ebs2_signal.get_value() >= AsManagerNode::getEbsTankPressureThreshold();
         }, 
         50ms, ebsTimer, "PEBS waiting continous monitoring", "PEBS timeout continous monitoring");
       continousMonitoringAssert(

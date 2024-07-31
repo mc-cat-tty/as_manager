@@ -52,7 +52,6 @@ class AsManagerNode : public EDFNode {
   watchdog::Watchdog &watchdog;
   as::assi_manager::AssiManager &assiManager;
   signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
-  rclcpp::TimerBase::SharedPtr superloopTimer;
 
   // Parameters
   std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;  
@@ -64,8 +63,6 @@ class AsManagerNode : public EDFNode {
   static ROSInputState inputState;
   static ROSSubscribers inputSubscriptions;
   static ROSPublishers outputPublishers;
-
-  void superloop();
 
   // Callbacks
   void ecuStatusCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) {
@@ -100,6 +97,7 @@ class AsManagerNode : public EDFNode {
   public:
   AsManagerNode();
   ~AsManagerNode();
+  void superloop();
 
   // Getter of parameters
   static inline int getEbsTankPressureThreshold() { return ebsTankPressureThreshold; }

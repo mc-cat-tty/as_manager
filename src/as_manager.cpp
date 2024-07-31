@@ -22,11 +22,7 @@ AsManagerNode::AsManagerNode() :
   ebsSupervisor(as::ebs_supervisor::EbsSupervisor::getInstance()),
   watchdog(watchdog::Watchdog::getInstance()),
   assiManager(as::assi_manager::AssiManager::getInstance()),
-  signalUpdater(signals::utils::Updater<5>::getInstance()),
-  superloopTimer(this->create_wall_timer(
-    50ms,
-    std::bind(&AsManagerNode::superloop, this)
-  )) {
+  signalUpdater(signals::utils::Updater<5>::getInstance()) {
 
     this->load_parameters();
     this->configureEDFScheduler(this->m_nPeriod, this->m_nWCET, this->m_nDeadline);
@@ -40,27 +36,27 @@ AsManagerNode::AsManagerNode() :
 
     // Best effort 1 keep last
     AsManagerNode::inputSubscriptions.ecuStatusSubscription= this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-      this->ecuStatusTopic, 10, std::bind(&AsManagerNode::ecuStatusCb, this, _1)
+      this->ecuStatusTopic, 1, std::bind(&AsManagerNode::ecuStatusCb, this, _1)
     );
     
     // Best effort 1 keep last
     AsManagerNode::inputSubscriptions.resStatusSubscription= this->create_subscription<mmr_kria_base::msg::ResStatus>(
-      this->resStatusTopic, 10, std::bind(&AsManagerNode::resStatusCb, this, _1)
+      this->resStatusTopic, 1, std::bind(&AsManagerNode::resStatusCb, this, _1)
     );
     
-    // Reliable 1 keep last
+    // Best effort 1 keep last - con spamming
     AsManagerNode::inputSubscriptions.maxonMotorsSubscription= this->create_subscription<mmr_kria_base::msg::ActuatorStatus>(
-      this->maxonMotorsTopic, 10, std::bind(&AsManagerNode::maxonMotorsCb, this, _1)
+      this->maxonMotorsTopic, 1, std::bind(&AsManagerNode::maxonMotorsCb, this, _1)
     );
     
     // Reliable 1 keep last
     AsManagerNode::inputSubscriptions.missionSelectedSubscription= this->create_subscription<std_msgs::msg::String>(
-      this->missionSelectedTopic, 10, std::bind(&AsManagerNode::missionSelectedCb, this, _1)
+      this->missionSelectedTopic, 1, std::bind(&AsManagerNode::missionSelectedCb, this, _1)
     );
 
     // Reliable 1 keep last
     AsManagerNode::inputSubscriptions.stopMessageSubscription= this->create_subscription<std_msgs::msg::Bool>(
-      this->stopMessageTopic, 10, std::bind(&AsManagerNode::stopMessageCb, this, _1)
+      this->stopMessageTopic, 1, std::bind(&AsManagerNode::stopMessageCb, this, _1)
     );
   }
 
