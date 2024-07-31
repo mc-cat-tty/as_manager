@@ -2,26 +2,21 @@
 
 
 namespace timing{
+  TimerAsync::TimerAsync() : is_started(false) {}
 
-Timer::Timer() :  is_started(false) {
-
-}
-
-void Timer::start(Tick duration) {
+  void TimerAsync::start(Tick duration) {
     if( !is_started ) {
-        endtime_ = Clock::get_time() + duration;
-        is_started = true;
+      endtime = Clock::get_time() + duration;
+      is_started = true;
     }
-}
+  }
 
-void Timer::stop() {
+  void TimerAsync::stop() {
     is_started = false;
-}
+  }
 
-bool Timer::has_expired() const {
-    return Clock::get_time() >= endtime_;
-}
-
-
+  bool TimerAsync::has_expired() const {
+    return Clock::get_time() >= endtime;
+  }
 };
 

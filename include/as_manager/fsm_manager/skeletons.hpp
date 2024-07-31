@@ -27,7 +27,7 @@ namespace as::fsm {
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ){
-    static auto timer = timing::Timer();
+    static auto timer = timing::TimerAsync();
     timer.start(ms);
 
     if (predicate()) {
@@ -53,7 +53,7 @@ namespace as::fsm {
   void continousMonitoringAssert(
     std::predicate auto predicate,
     std::chrono::milliseconds ms,
-    timing::Timer& timer,
+    timing::TimerAsync& timer,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ){

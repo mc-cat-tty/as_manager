@@ -11,7 +11,7 @@ namespace watchdog {
     class Watchdog {
         private:
             bool isToggling, pinState;
-            Timer timer;
+            TimerAsync timer;
             Watchdog() : isToggling(false), pinState(false), timer() {}
 
             Watchdog(const Watchdog&) = delete;

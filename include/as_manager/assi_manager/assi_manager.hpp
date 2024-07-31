@@ -11,7 +11,7 @@ namespace as::assi_manager {
     class AssiManager {
          private:
             bool enalbeAssiY,enalbeAssiB, strobeAssiY, strobeAssiB, enabledBuzzer, buzzerState, assiYState, assiBState;
-            Timer timer,buzzerTimer,assiYTimer,assiBTimer;
+            TimerAsync timer, buzzerTimer, assiYTimer, assiBTimer;
             int buzzerDurationCounter;
             AssiManager() : enalbeAssiY(false), enalbeAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
 

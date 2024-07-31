@@ -49,9 +49,9 @@ namespace as::ebs_supervisor
     ~EbsContinousMonitoring() = default;
     EbsContinousMonitoring(const EbsContinousMonitoring &) = delete;
     EbsContinousMonitoring &operator=(const EbsContinousMonitoring &) = delete;
-    timing::Timer ebsTimer;
-    timing::Timer sdcTimer;
-    timing::Timer resEmergencyTimer;
-    timing::Timer motorsTimer;
+    timing::TimerAsync ebsTimer;
+    timing::TimerAsync sdcTimer;
+    timing::TimerAsync resEmergencyTimer;
+    timing::TimerAsync motorsTimer;
   };
 }
