@@ -1,12 +1,13 @@
 #pragma once
 
-#include <as_manager/fsm_manager/skeletons.hpp>
 #include <concepts>
+#include <as_manager/timing/clock.hpp>
+#include <as_manager/fsm_manager/skeletons.hpp>
 
 namespace as::fsm {
   constexpr inline auto assertWithTimeoutNode(
     std::predicate auto predicate,
-    std::chrono::milliseconds ms,
+    timing::Tick ms,
     std::string_view successfulMsg,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
@@ -24,7 +25,7 @@ namespace as::fsm {
 
   constexpr inline auto continousMonitoringAssertNode(
     std::invocable auto predicate,
-    std::chrono::milliseconds ms,
+    timing::Tick ms,
     timing::TimerAsync& timer,
     std::string_view waitingMsg,
     std::string_view timeoutMsg

@@ -1,26 +1,21 @@
 #pragma once
 
 #include <cstdint>
-#include <thread>
 #include <functional>
+#include <cmath>
+#include <as_manager/timing/clock.hpp>
+#include <as_manager/common/common_types.hpp>
 
 namespace hal::utils {
-  enum class Motors{
-    Clutch=0x01,
-    Stear=0x02,
-    Brake=0x04,
-    All=0x07
-  };
+  constexpr inline static int getBitIdx(enumerable auto m) {
+    return static_cast<int>(log2(static_cast<unsigned>(m)));
+  }
 
-  enum class ResBitVector{
-    Go=0x01,
-    Bag=0x02,
-    Emergency=0x04
-  };
+  bool mask(unsigned data, maskable auto mask);
+  bool mask(unsigned data, unsigned mask);
 
-  bool motorMask(Motors motor, uint8_t data);
-
-  bool resMask(ResBitVector resState, uint8_t data);
+  uint8_t motorsComposeBv(bool clutch, bool steer, bool brake);
+  uint8_t resComposeBv(bool go, bool bag, bool emergency);
 
   /**
   @brief Synchronous blocking function that emulates a switch over
@@ -30,6 +25,6 @@ namespace hal::utils {
   */
   void ecuButtonTrigger(
     std::function<void(bool)> sendFunction,
-    std::chrono::milliseconds ms
+    timing::Tick ms
   );
 }

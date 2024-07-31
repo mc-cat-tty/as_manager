@@ -1,6 +1,6 @@
 #pragma once
 
-#include <as_manager/common/common_type.hpp>
+#include <as_manager/common/common_types.hpp>
 #include <as_manager/fsm_manager/fsm_manager.hpp>
 
 namespace as::ebs_supervisor {

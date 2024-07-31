@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <random>
 #include <chrono>
-#include <as_manager/common/common_type.hpp>
+#include <as_manager/common/common_types.hpp>
 
 namespace hal {
   SdcState read_sdc();

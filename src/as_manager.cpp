@@ -3,8 +3,8 @@
 using namespace std::chrono_literals;
 
 ROSInputState AsManagerNode::inputState;
+ROSSubscribers AsManagerNode::inputSubscriptions;
 ROSPublishers AsManagerNode::outputPublishers;
-ROSSubscribers AsManagerNode::inputSubscribers;
 
 int AsManagerNode::ebsTankPressureThreshold;
 int AsManagerNode::brakePressureOneActuatorThreshold;
@@ -39,27 +39,27 @@ AsManagerNode::AsManagerNode() :
     using namespace std::placeholders;
 
     // Best effort 1 keep last
-    this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+    AsManagerNode::inputSubscriptions.ecuStatusSubscription= this->create_subscription<mmr_kria_base::msg::EcuStatus>(
       this->ecuStatusTopic, 10, std::bind(&AsManagerNode::ecuStatusCb, this, _1)
     );
     
     // Best effort 1 keep last
-    this->create_subscription<mmr_kria_base::msg::ResStatus>(
+    AsManagerNode::inputSubscriptions.resStatusSubscription= this->create_subscription<mmr_kria_base::msg::ResStatus>(
       this->resStatusTopic, 10, std::bind(&AsManagerNode::resStatusCb, this, _1)
     );
     
     // Reliable 1 keep last
-    this->create_subscription<mmr_kria_base::msg::ActuatorStatus>(
+    AsManagerNode::inputSubscriptions.maxonMotorsSubscription= this->create_subscription<mmr_kria_base::msg::ActuatorStatus>(
       this->maxonMotorsTopic, 10, std::bind(&AsManagerNode::maxonMotorsCb, this, _1)
     );
     
     // Reliable 1 keep last
-    this->create_subscription<std_msgs::msg::String>(
+    AsManagerNode::inputSubscriptions.missionSelectedSubscription= this->create_subscription<std_msgs::msg::String>(
       this->missionSelectedTopic, 10, std::bind(&AsManagerNode::missionSelectedCb, this, _1)
     );
 
     // Reliable 1 keep last
-    this->create_subscription<std_msgs::msg::Bool>(
+    AsManagerNode::inputSubscriptions.stopMessageSubscription= this->create_subscription<std_msgs::msg::Bool>(
       this->stopMessageTopic, 10, std::bind(&AsManagerNode::stopMessageCb, this, _1)
     );
   }

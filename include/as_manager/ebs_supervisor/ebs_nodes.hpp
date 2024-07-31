@@ -95,7 +95,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_BRAKE_MOTOR_ENALBED = waitUntilNode(
       []{
-        return hal::utils::motorMask(hal::utils::Motors::Brake, motors_bit_vector_singal.get_value());
+        return hal::utils::mask(motors_bit_vector_singal.get_value(),(unsigned)hal::MaxonMotors::BRAKE);
       }, "Brake motor enabled", "Waiting brake motor enabled", [] {});
 
     constexpr auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with Maxon motor");
@@ -108,7 +108,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
       []{
-        return hal::utils::resMask(hal::utils::ResBitVector::Go, res_bit_vector_signal.get_value());
+        return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned)hal::Res::GO);
       }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
     constexpr auto WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE =  waitUntilNode<SafetyMonitoringSwitch::ENABLE>(

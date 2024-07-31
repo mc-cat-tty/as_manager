@@ -38,16 +38,11 @@ struct ROSPublishers {
 };
 
 struct ROSSubscribers {
-  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr rpm_subscriber;
-  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr brakePressureRear_subscriber;
-  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr brakePressureFront_subscriber;
-  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr EBS1Pressure_subscriber;
-  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr EBS2Pressure_subscriber;
-  rclcpp::Subscription<mmr_kria_base::msg::ActuatorStatus>::SharedPtr maxonMotors_subscriber;
-  rclcpp::Subscription<mmr_kria_base::msg::ResStatus>::SharedPtr resStatus_subscriber;
-  //stop messagge da implementare
-  rclcpp::Subscription<can_msgs::msg::Frame>::SharedPtr ASMission_subscriber;
-
+  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr ecuStatusSubscription;
+  rclcpp::Subscription<mmr_kria_base::msg::ResStatus>::SharedPtr resStatusSubscription;
+  rclcpp::Subscription<mmr_kria_base::msg::ActuatorStatus>::SharedPtr maxonMotorsSubscription;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr missionSelectedSubscription;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr stopMessageSubscription;
 };
 
 class AsManagerNode : public EDFNode {
@@ -66,7 +61,7 @@ class AsManagerNode : public EDFNode {
 
   // Static state
   static ROSInputState inputState;
-  static ROSSubscribers inputSubscribers;
+  static ROSSubscribers inputSubscriptions;
   static ROSPublishers outputPublishers;
 
   void superloop();
@@ -81,11 +76,11 @@ class AsManagerNode : public EDFNode {
   }
 
   void resStatusCb(const mmr_kria_base::msg::ResStatus::SharedPtr msg) {
-    inputState.resState = (msg->emergency << 2) | (msg->bag << 1) | msg->go_signal;
+    inputState.resState = hal::utils::resComposeBv(msg->go_signal, msg->bag, msg->emergency);
   }
   
   void maxonMotorsCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg) {
-    inputState.maxonMotorsState = (msg->brake_status << 2) | (msg->steer_status << 1) | msg->clutch_status;
+    inputState.maxonMotorsState = hal::utils::motorsComposeBv(msg->clutch_status, msg->steer_status, msg->brake_status);
   }
   
   void missionSelectedCb(const std_msgs::msg::String::SharedPtr mission) {
@@ -153,9 +148,9 @@ class AsManagerNode : public EDFNode {
     hal::utils::ecuButtonTrigger(sendFun, 1ms);
   }
 
-  static inline void sendClutchAction(bool doPull) {
+  static inline void sendClutchAction(bool doDisengage) {
     auto msg = mmr_kria_base::msg::CmdMotor();
-    msg.clutch_disengage = doPull;
+    msg.disengaged = doDisengage;
     outputPublishers.clutchPublisher->publish(msg);
   }
 

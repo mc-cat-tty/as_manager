@@ -4,10 +4,11 @@
  */
 #pragma once
 
-#include <as_manager/fsm_manager/fsm_manager.hpp>
-#include <as_manager/timing/timer.hpp>
 #include <string_view>
 #include <concepts>
+#include <as_manager/fsm_manager/fsm_manager.hpp>
+#include <as_manager/timing/timer.hpp>
+#include <as_manager/timing/clock.hpp>
 #include <as_manager/as/exception.hpp>
 
 namespace as::fsm {
@@ -22,7 +23,7 @@ namespace as::fsm {
    */
   NodeFlowCtrl assertWithTimeout(
     std::predicate auto predicate,
-    std::chrono::milliseconds ms,
+    timing::Tick ms,
     std::string_view successfulMsg,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
@@ -52,7 +53,7 @@ namespace as::fsm {
    */
   void continousMonitoringAssert(
     std::predicate auto predicate,
-    std::chrono::milliseconds ms,
+    timing::Tick ms,
     timing::TimerAsync& timer,
     std::string_view waitingMsg,
     std::string_view timeoutMsg

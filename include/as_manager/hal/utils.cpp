@@ -1,19 +1,30 @@
 #include "utils.hpp"
+#include <thread>
 
 namespace hal::utils {
-  bool motorMask(Motors motor, uint8_t data){
-    auto motorBitvector = static_cast<uint8_t>(motor);
-    return (data & motorBitvector) == motorBitvector;
+  bool mask(unsigned data, unsigned mask) {
+    return (data & mask) == mask;
   }
 
-  bool resMask(ResBitVector resState, uint8_t data){
-    auto resBitVector= static_cast<uint8_t>(resState);
-    return (data & resBitVector) == resBitVector;
+  bool mask(unsigned data, maskable auto mask) {
+    return mask(data, static_cast<unsigned>(mask));
+  }
+
+  uint8_t resComposeBv(bool go, bool bag, bool emergency) {
+    return (go << getBitIdx(Res::GO))
+      | (bag << getBitIdx(Res::BAG))
+      | (emergency << getBitIdx(Res::EMERGENCY));
+  }
+
+  uint8_t motorsComposeBv(bool clutch, bool steer, bool brake) {
+    return (clutch << getBitIdx(MaxonMotors::CLUTCH))
+      | (steer << getBitIdx(MaxonMotors::STEER))
+      | (brake << getBitIdx(MaxonMotors::BRAKE));
   }
 
   void ecuButtonTrigger(
     std::function<void(bool)> sendFunction,
-    std::chrono::milliseconds ms
+    timing::Tick ms
   ) {
     using namespace std::this_thread;
 

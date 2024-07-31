@@ -2,6 +2,7 @@
 #include <as_manager/timing/timer.hpp>
 #include <as_manager/fsm_manager/skeletons.hpp>
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
+#include <as_manager/common/common_types.hpp>
 #include <as_manager/hal/utils.hpp>
 
 using namespace std::chrono_literals;
@@ -37,7 +38,8 @@ namespace as::ebs_supervisor
          50ms, resEmergencyTimer, "Res emergency waiting continous monitoring", "Res emergency timeout continous monitoring");
       continousMonitoringAssert(
         []{
-          return hal::utils::motorMask(hal::utils::Motors::All, motors_bit_vector_singal.get_value());
+          using namespace hal::utils;
+          return mask(motors_bit_vector_singal.get_value(), hal::MaxonMotors::CLUTCH | hal::MaxonMotors::STEER | hal::MaxonMotors::BRAKE);
         }, 
         50ms, motorsTimer, "Motors waiting continous monitoring" , "Motors timeout continous monitoring");
     }
