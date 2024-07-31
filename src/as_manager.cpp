@@ -6,17 +6,16 @@ ROSInputState AsManagerNode::inputState;
 ROSPublishers AsManagerNode::outputPublishers;
 ROSSubscribers AsManagerNode::inputSubscribers;
 
-static int AsManagerNode::ebsTankPressureThreshold;
-static int AsManagerNode::brakePressureOneActuatorThreshold;
-static int AsManagerNode::brakePressureBothActuatorsThreshold;
-static int AsManagerNode::brakePressureMaxonMotorsThreshold;
-static int AsManagerNode::unbrakePressureThreshold;
-
-static float AsManagerNode::asmsAplha;
-static float AsManagerNode::sdcAplha;
-static float AsManagerNode::brakePressureFrontAlpha;
-static float AsManagerNode::brakePressureRearAlpha;
-static float AsManagerNode::rpmAlpha;
+int AsManagerNode::ebsTankPressureThreshold;
+int AsManagerNode::brakePressureOneActuatorThreshold;
+int AsManagerNode::brakePressureBothActuatorsThreshold;
+int AsManagerNode::brakePressureMaxonMotorsThreshold;
+int AsManagerNode::unbrakePressureThreshold;
+float AsManagerNode::asmsAplha;
+float AsManagerNode::sdcAplha;
+float AsManagerNode::brakePressureFrontAlpha;
+float AsManagerNode::brakePressureRearAlpha;
+float AsManagerNode::rpmAlpha;
 
 AsManagerNode::AsManagerNode() :
   EDFNode("as_manager_node"),
