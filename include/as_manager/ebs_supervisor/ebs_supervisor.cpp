@@ -81,6 +81,6 @@ namespace as::ebs_supervisor {
             hal::send_current_state(EbsSupervisorState::EMERGENCY);
             open_sdc(); brake_act1(); brake_act2();
             assi_manager::AssiManager::getInstance().emergency();
-          }, "Emergency State")
+          }, "EMERGENCY State")
     ) {}
 }
