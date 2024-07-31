@@ -13,7 +13,7 @@
 #include <as_manager/signals/updater.hpp>
 
 #include <can_msgs/msg/frame.hpp>
-#include <mmr_edf/edf_node.hpp>
+#include <mmr_edf/mmr_edf.hpp>
 #include <mmr_kria_base/msg/ecu_status.hpp>
 #include <mmr_kria_base/msg/res_status.hpp>
 #include <mmr_kria_base/msg/actuator_status.hpp>
