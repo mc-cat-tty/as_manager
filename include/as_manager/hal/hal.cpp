@@ -53,7 +53,7 @@ namespace hal {
   }
 
   void set_gear(uint8_t gear) {
-    AsManagerNode::sendGear(gear);
+    if (gear == 1) AsManagerNode::sendGearUp();
   }
   void pull_clutch() {
     AsManagerNode::sendClutchAction(true);

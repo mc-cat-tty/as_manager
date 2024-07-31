@@ -1,10 +1,13 @@
 #pragma once
+#include <chrono>
+
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
 #include <as_manager/watchdog/watchdog.hpp>
 #include <as_manager/assi_manager/assi_manager.hpp>
 #include <as_manager/ebs_supervisor/ebs_supervisor.hpp>
+#include <as_manager/hal/utils.hpp>
 #include <as_manager/signals/updater.hpp>
 
 #include <can_msgs/msg/frame.hpp>
@@ -14,9 +17,8 @@
 #include <mmr_kria_base/msg/actuator_status.hpp>
 #include <mmr_kria_base/msg/cmd_motor.hpp>
 
-
 constexpr unsigned updatableSignalsNumber = 5;
-
+using namespace std::chrono_literals;
 
 struct ROSInputState {
   uint8_t resState, maxonMotorsState;
@@ -116,14 +118,19 @@ class AsManagerNode : public EDFNode {
     outputPublishers.brakePercentagePublisher->publish(msg);
   }
 
-  static inline void sendGear(uint8_t gear){ // TODO: 
+  static inline void sendGearUp(){
     auto msg = can_msgs::msg::Frame();
     msg.id = 0x610;
-    msg.data[0] = gear;
-    outputPublishers.gearPublisher->publish(msg);
+
+    auto sendFun = [&msg](bool val) {
+      msg.data[0] = val << 1;
+      outputPublishers.gearPublisher->publish(msg);
+    };
+
+    hal::utils::ecuButtonTrigger(sendFun, 1ms);
   }
 
-  static inline void sendClutchAction(bool doPull){
+  static inline void sendClutchAction(bool doPull) {
     auto msg = mmr_kria_base::msg::CmdMotor();
     msg.clutch_disengage = doPull;
     outputPublishers.clutchPublisher->publish(msg);
