@@ -48,7 +48,7 @@ namespace hal {
     AsManagerNode::sendBrakePercentage(percentage);
   }
 
-  void send_current_state(as::EbsSupervisorState state) {
+  void send_current_state(as::AsState state) {
     AsManagerNode::sendASState(state);
   }
 

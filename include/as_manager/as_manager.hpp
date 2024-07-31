@@ -4,6 +4,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/u_int8.hpp>
 
 #include <as_manager/watchdog/watchdog.hpp>
 #include <as_manager/assi_manager/assi_manager.hpp>
@@ -31,7 +32,7 @@ struct ROSInputState {
 };
 
 struct ROSPublishers {
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr asStatePublisher;
+  rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr asStatePublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr brakePercentagePublisher;
   rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr gearPublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr clutchPublisher;
@@ -124,9 +125,9 @@ class AsManagerNode : public EDFNode {
   static inline bool getAutonomousMission() { return inputState.autonomousMission != "manual"; }
 
   // Output state setters
-  static inline void sendASState(as::EbsSupervisorState state) {
-    auto msg = std_msgs::msg::String();
-    msg.data = as::EbsSupervisorStateLookup.at(state);
+  static inline void sendASState(as::AsState state) {
+    auto msg = std_msgs::msg::UInt8();
+    msg.data = static_cast<uint8_t>(state);
     outputPublishers.asStatePublisher->publish(msg);
   }
 

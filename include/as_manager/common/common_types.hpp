@@ -4,6 +4,10 @@
 #include <string_view>
 #include <concepts>
 
+#if !STANDALONE
+#include <mmr_kria_base/configuration.hpp>
+#endif
+
 namespace hal {
   template<typename T> concept enumerable = std::is_enum_v<T>;
   template <typename T>
@@ -63,8 +67,8 @@ namespace hal {
 };
 
 namespace as {
-  //topic: /ebs/status
-  enum class EbsSupervisorState {
+  #if STANDALONE
+  enum class AsState {
     OFF,
     CHECKING,
     READY,
@@ -73,12 +77,15 @@ namespace as {
     EMERGENCY
   };
 
-  const inline std::unordered_map<EbsSupervisorState, std::string_view> EbsSupervisorStateLookup {
-    { as::EbsSupervisorState::OFF, "OFF" },
-    { as::EbsSupervisorState::CHECKING, "CHECKING"},
-    { as::EbsSupervisorState::READY, "READY" },
-    { as::EbsSupervisorState::DRIVING, "DRIVING" },
-    { as::EbsSupervisorState::FINISHED, "FINISHED" },
-    { as::EbsSupervisorState::EMERGENCY, "EMERGENCY" }
+  const inline std::unordered_map<EbsSupervisorState, std::string_view> AsStateStringLookup {
+    { as::AsState::OFF, "OFF" },
+    { as::AsState::CHECKING, "CHECKING"},
+    { as::AsState::READY, "READY" },
+    { as::AsState::DRIVING, "DRIVING" },
+    { as::AsState::FINISHED, "FINISHED" },
+    { as::AsState::EMERGENCY, "EMERGENCY" }
   };
+  #else
+  using AsState = AS::STATE;
+  #endif
 }

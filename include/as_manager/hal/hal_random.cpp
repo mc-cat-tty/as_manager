@@ -145,7 +145,7 @@ namespace hal{
         void send_brake_pressure_percentage(float percentage){
 
         }
-        void send_current_state(as::EbsSupervisorState state){
+        void send_current_state(as::AsState state){
 
         }
 

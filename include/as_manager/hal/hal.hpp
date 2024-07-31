@@ -30,7 +30,7 @@ namespace hal {
   uint8_t read_motors_bit_vector();
 
   void send_brake_pressure_percentage(float percentage);
-  void send_current_state(as::EbsSupervisorState state);
+  void send_current_state(as::AsState state);
 
   void set_gear(uint8_t gear);
   void pull_clutch();
