@@ -12,10 +12,11 @@
       brakeTopic: "/command/brake"
       canSendTopic: "/canbus/rx/msg"
       clutchTopic: "/command/clutch"
-      ecuTopic: "status/ecu"
-      resTopic: "status/res"
-      maxonStateTopic: "actuator/status"
-      canReceiveTopic: "canbus/tx/msg"
+      ecuStatusTopic: "/status/ecu"
+      resStatusTopic: "/status/res"
+      maxonMotorsTopic: "/actuator/status"
+      missionSelectedTopic: "/mission/selected"
+      stopMessageTopic: "/mission/stop"
 
     thresholds:
       ebsTankPressureThreshold: 5

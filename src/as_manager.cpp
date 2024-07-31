@@ -37,22 +37,31 @@ AsManagerNode::AsManagerNode() :
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->clutchTopic, 1);
 
     using namespace std::placeholders;
-    AsManagerNode::inputSubscribers.rpm_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-      this->ecuTopic, 10, std::bind(&AsManagerNode::ecuRpmCb, this, _1));
-    AsManagerNode::inputSubscribers.brakePressureFront_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-       this->ecuTopic, 10, std::bind(&AsManagerNode::brakePressureFrontCb, this, _1));
-    AsManagerNode::inputSubscribers.brakePressureRear_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-       this->ecuTopic, 10, std::bind(&AsManagerNode::brakePressureRearCb, this, _1));
-    AsManagerNode::inputSubscribers.EBS1Pressure_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-       this->ecuTopic, 10, std::bind(&AsManagerNode::ebs1PressureCb, this, _1));
-    AsManagerNode::inputSubscribers.EBS2Pressure_subscriber = this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-       this->ecuTopic, 10, std::bind(&AsManagerNode::ebs2PressureCb, this, _1));
-    AsManagerNode::inputSubscribers.resStatus_subscriber = this->create_subscription<mmr_kria_base::msg::ResStatus>(
-      this->resTopic, 10, std::bind(&AsManagerNode::resStatusCb, this, _1));
-    AsManagerNode::inputSubscribers.maxonMotors_subscriber = this->create_subscription<mmr_kria_base::msg::ActuatorStatus>(
-      this->maxonStateTopic, 10, std::bind(&AsManagerNode::maxonMotorCb, this, _1));
-    AsManagerNode::inputSubscribers.ASMission_subscriber = this->create_subscription<can_msgs::msg::Frame>(
-      this->canReceiveTopic, 10, std::bind(&AsManagerNode::asMissionCb, this, _1));
+
+    // Best effort 1 keep last
+    this->create_subscription<mmr_kria_base::msg::EcuStatus>(
+      this->ecuStatusTopic, 10, std::bind(&AsManagerNode::ecuStatusCb, this, _1)
+    );
+    
+    // Best effort 1 keep last
+    this->create_subscription<mmr_kria_base::msg::ResStatus>(
+      this->resStatusTopic, 10, std::bind(&AsManagerNode::resStatusCb, this, _1)
+    );
+    
+    // Reliable 1 keep last
+    this->create_subscription<mmr_kria_base::msg::ActuatorStatus>(
+      this->maxonMotorsTopic, 10, std::bind(&AsManagerNode::maxonMotorsCb, this, _1)
+    );
+    
+    // Reliable 1 keep last
+    this->create_subscription<std_msgs::msg::String>(
+      this->missionSelectedTopic, 10, std::bind(&AsManagerNode::missionSelectedCb, this, _1)
+    );
+
+    // Reliable 1 keep last
+    this->create_subscription<std_msgs::msg::Bool>(
+      this->stopMessageTopic, 10, std::bind(&AsManagerNode::stopMessageCb, this, _1)
+    );
   }
 
 AsManagerNode::~AsManagerNode() {

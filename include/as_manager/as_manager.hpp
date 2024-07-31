@@ -3,6 +3,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+#include <std_msgs/msg/bool.hpp>
 
 #include <as_manager/watchdog/watchdog.hpp>
 #include <as_manager/assi_manager/assi_manager.hpp>
@@ -25,7 +26,8 @@ struct ROSInputState {
   unsigned engineRpm;
   float brakePressureFront, brakePressureRear;
   float ebsPressure1, ebsPressure2;
-  bool stopMessage, autonomousMission;
+  bool stopMessage;
+  std::string autonomousMission;
 };
 
 struct ROSPublishers {
@@ -56,27 +58,48 @@ class AsManagerNode : public EDFNode {
   signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
   rclcpp::TimerBase::SharedPtr superloopTimer;
 
-  //parameters
-  std::string  brakeTopic, asStateTopic, canSendTopic, clutchTopic, ecuTopic, resTopic, maxonStateTopic, canReceiveTopic;
+  // Parameters
+  std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;  
   bool debug;
-  static int ebsTankPressureThreshold,brakePressureOneActuatorThreshold,brakePressureBothActuatorsThreshold,brakePressureMaxonMotorsThreshold, unbrakePressureThreshold;
+  static int ebsTankPressureThreshold, brakePressureOneActuatorThreshold, brakePressureBothActuatorsThreshold, brakePressureMaxonMotorsThreshold, unbrakePressureThreshold;
   static float asmsAplha,sdcAplha,brakePressureFrontAlpha,brakePressureRearAlpha,rpmAlpha;
 
+  // Static state
   static ROSInputState inputState;
   static ROSSubscribers inputSubscribers;
   static ROSPublishers outputPublishers;
 
   void superloop();
 
-  void ecuRpmCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.engineRpm = msg->nmot; }
-  void brakePressureRearCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.brakePressureRear = msg->p_brake_rear; }
-  void brakePressureFrontCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.brakePressureFront = msg->p_brake_front; }
-  void ebs1PressureCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.ebsPressure1 = msg->p_ebs_1; }
-  void ebs2PressureCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) { inputState.ebsPressure2 = msg->p_ebs_2; }
-  void resStatusCb(const mmr_kria_base::msg::ResStatus::SharedPtr msg){ inputState.resState = (msg->emergency << 2) | (msg->bag << 1) | msg->go_signal; }
-  void maxonMotorCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg){ inputState.maxonMotorsState = (msg->brake_status << 2) | (msg->steer_status << 1) | msg->clutch_status; }
-  void asMissionCb(const can_msgs::msg::Frame::SharedPtr msg) { if (msg->id == 0x40) inputState.autonomousMission = msg->data[0]; }
-  // void stopMessageCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg) {}
+  // Callbacks
+  void ecuStatusCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) {
+    inputState.engineRpm = msg->nmot;
+    inputState.brakePressureRear = msg->p_brake_rear;
+    inputState.brakePressureFront = msg->p_brake_front;
+    inputState.ebsPressure1 = msg->p_ebs_1;
+    inputState.ebsPressure2 = msg->p_ebs_2;
+  }
+
+  void resStatusCb(const mmr_kria_base::msg::ResStatus::SharedPtr msg) {
+    inputState.resState = (msg->emergency << 2) | (msg->bag << 1) | msg->go_signal;
+  }
+  
+  void maxonMotorsCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg) {
+    inputState.maxonMotorsState = (msg->brake_status << 2) | (msg->steer_status << 1) | msg->clutch_status;
+  }
+  
+  void missionSelectedCb(const std_msgs::msg::String::SharedPtr mission) {
+      std::transform(
+        std::begin(mission->data),
+        std::end(mission->data),
+        std::begin(inputState.autonomousMission),
+        [](char c){ return std::tolower(c); }
+    ) ;
+  }
+  
+  void stopMessageCb(const std_msgs::msg::Bool::SharedPtr msg) {
+    inputState.stopMessage = msg->data;
+  }
 
   public:
   AsManagerNode();
@@ -103,7 +126,7 @@ class AsManagerNode : public EDFNode {
   static inline float getEbsPressure1() { return inputState.ebsPressure1; }
   static inline float getEbsPressure2() { return inputState.ebsPressure2; }
   static inline bool getStopMessage() { return inputState.stopMessage; }
-  static inline bool getAutonomousMission() { return inputState.autonomousMission; }
+  static inline bool getAutonomousMission() { return inputState.autonomousMission != "manual"; }
 
   // Output state setters
   static inline void sendASState(as::EbsSupervisorState state) {
@@ -146,10 +169,11 @@ class AsManagerNode : public EDFNode {
     declare_parameter("topic.brakeTopic", "");
     declare_parameter("topic.canSendTopic", "");
     declare_parameter("topic.clutchTopic", "");
-    declare_parameter("topic.ecuTopic", "");
-    declare_parameter("topic.resTopic", "");
-    declare_parameter("topic.maxonStateTopic", "");
-    declare_parameter("topic.canReceiveTopic", "");
+    declare_parameter("topic.ecuStatusTopic", "");
+    declare_parameter("topic.resStatusTopic", "");
+    declare_parameter("topic.maxonMotorsTopic", "");
+    declare_parameter("topic.missionSelectedTopic", "");
+    declare_parameter("topic.stopMessageTopic", "");
 
     declare_parameter("thresholds.ebsTankPressureThreshold", 5);
     declare_parameter("thresholds.brakePressureOneActuatorThreshold", 20);
@@ -172,10 +196,11 @@ class AsManagerNode : public EDFNode {
     get_parameter("topic.brakeTopic", this->brakeTopic);
     get_parameter("topic.canSendTopic", this->canSendTopic);
     get_parameter("topic.clutchTopic", this->clutchTopic);
-    get_parameter("topic.ecuTopic", this->ecuTopic);
-    get_parameter("topic.resTopic", this->resTopic);
-    get_parameter("topic.maxonStateTopic", this->maxonStateTopic);
-    get_parameter("topic.canReceiveTopic", this->canReceiveTopic);
+    get_parameter("topic.ecuStatusTopic", this->ecuStatusTopic);
+    get_parameter("topic.resStatusTopic", this->resStatusTopic);
+    get_parameter("topic.maxonMotorsTopic", this->maxonMotorsTopic);
+    get_parameter("topic.missionSelectedTopic", this->missionSelectedTopic);
+    get_parameter("topic.stopMessageTopic", this->stopMessageTopic);
 
     get_parameter("thresholds.ebsTankPressureThreshold", this->ebsTankPressureThreshold);
     get_parameter("thresholds.brakePressureOneActuatorThreshold", this->brakePressureOneActuatorThreshold);
