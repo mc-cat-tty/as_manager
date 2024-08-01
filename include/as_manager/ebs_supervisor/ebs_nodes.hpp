@@ -21,11 +21,6 @@ namespace as::ebs_supervisor {
       "Initialized pins"
     );
 
-    constexpr auto START_CANBUS_BRIDGE_NODE = doActionNode(
-      std::bind(std::system, "ros2 launch canbus_bridge canbus_bridge_launch.py"),
-      "Started CAN Bus Bridge"
-    );
-
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
       []{return asms_signal.get_value();}, 
       "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
@@ -95,7 +90,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_BRAKE_MOTOR_ENALBED = waitUntilNode(
       []{
-        return hal::utils::mask(motors_bit_vector_singal.get_value(),(unsigned)hal::MaxonMotors::BRAKE);
+        return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::BRAKE);
       }, "Brake motor enabled", "Waiting brake motor enabled", [] {});
 
     constexpr auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with Maxon motor");

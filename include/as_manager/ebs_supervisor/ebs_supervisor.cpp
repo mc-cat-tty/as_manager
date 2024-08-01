@@ -16,14 +16,15 @@ namespace as::ebs_supervisor {
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
+          
+          // OFF
           INIT_PINS_NODE,
-          START_CANBUS_BRIDGE_NODE, 
           WAIT_ASMS_NODE,
           START_CANOPEN_NODE,
           WAIT_MISSION_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
-          //EBS_CHECK
+          // EBS CHECK
           ASSERT_EBS_PRESSURE_NODE,
           ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE,
 
@@ -54,21 +55,22 @@ namespace as::ebs_supervisor {
           CLOSE_SDC_NODE,
           WAIT_TS_ACTIVE,
 
-
-          //READY
+          // READY
           doActionNode([]{
             hal::send_current_state(AsState::READY);
             assi_manager::AssiManager::getInstance().ready();
-          }, "Published READY"),
+          }, "Published READY and ASSI to READY"),
           WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
+          doActionNode([]{
+            assi_manager::AssiManager::getInstance().driving();
+          },
+            "ASSI to DRIVING"
+          ),
           PULL_CLUTCH_NODE,
           GEAR_FIRST_NODE,
 
-          //DRIVING
-          doActionNode([]{
-            hal::send_current_state(AsState::DRIVING);
-            assi_manager::AssiManager::getInstance().driving();
-          }, "Published DRIVING"),
+          // DRIVING
+          doActionNode(std::bind(&hal::send_current_state, AsState::DRIVING), "Published DRIVING"),
           WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
 
           terminalTrapNode(
