@@ -137,22 +137,23 @@ class AsManagerNode : public EDFNode {
   }
 
   static inline void setUpMotors(bool brake, bool clutch, bool steer){
-    if(!brake){
+    if(brake){
       auto msgBrake=mmr_kria_base::msg::CmdMotor();
       msgBrake.enable=brake;
       outputPublishers.brakePublisher->publish(msgBrake);
     }
 
-    if(!clutch){
+    if(clutch){
       auto msgClutch=mmr_kria_base::msg::CmdMotor();
       msgClutch.enable=clutch;
       outputPublishers.brakePublisher->publish(msgClutch);
     } 
 
-    if(!steer){
+    if(steer){
       auto msgSteerHoming=mmr_kria_base::msg::CmdMotor();
       msgSteerHoming.homing=steer;
       outputPublishers.brakePublisher->publish(msgSteerHoming);
+      
       auto msgSteerEnable=mmr_kria_base::msg::CmdMotor();
       msgSteerEnable.enable=steer;
       outputPublishers.brakePublisher->publish(msgSteerEnable);

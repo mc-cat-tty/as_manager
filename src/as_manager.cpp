@@ -1,4 +1,5 @@
 #include <as_manager/as_manager.hpp>
+#include <rclcpp/qos.hpp>
 
 using namespace std::chrono_literals;
 
@@ -27,7 +28,12 @@ AsManagerNode::AsManagerNode() :
     this->load_parameters();
     this->configureEDFScheduler(this->m_nPeriod, this->m_nWCET, this->m_nDeadline);
 
-    AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::UInt8>(this->asStateTopic, 1);
+    auto &transientLocalQOS = rclcpp::QoS(1)
+      .reliable()
+      .keep_last(1)
+      .transient_local();
+
+    AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::UInt8>(this->asStateTopic, transientLocalQOS);
     AsManagerNode::outputPublishers.brakePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->brakeTopic, 1);
     AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msgs::msg::Frame>(this->canSendTopic, 1);
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->clutchTopic, 1);
@@ -35,19 +41,21 @@ AsManagerNode::AsManagerNode() :
 
     using namespace std::placeholders;
 
+    const auto &bestEffortQOS = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
+
     // Best effort 1 keep last
     AsManagerNode::inputSubscriptions.ecuStatusSubscription= this->create_subscription<mmr_kria_base::msg::EcuStatus>(
-      this->ecuStatusTopic, 1, std::bind(&AsManagerNode::ecuStatusCb, this, _1)
+      this->ecuStatusTopic, bestEffortQOS, std::bind(&AsManagerNode::ecuStatusCb, this, _1)
     );
     
     // Best effort 1 keep last
     AsManagerNode::inputSubscriptions.resStatusSubscription= this->create_subscription<mmr_kria_base::msg::ResStatus>(
-      this->resStatusTopic, 1, std::bind(&AsManagerNode::resStatusCb, this, _1)
+      this->resStatusTopic, bestEffortQOS, std::bind(&AsManagerNode::resStatusCb, this, _1)
     );
     
-    // Best effort 1 keep last - con spamming
+    // Best effort 1 keep last
     AsManagerNode::inputSubscriptions.maxonMotorsSubscription= this->create_subscription<mmr_kria_base::msg::ActuatorStatus>(
-      this->maxonMotorsTopic, 1, std::bind(&AsManagerNode::maxonMotorsCb, this, _1)
+      this->maxonMotorsTopic, bestEffortQOS, std::bind(&AsManagerNode::maxonMotorsCb, this, _1)
     );
     
     // Reliable 1 keep last

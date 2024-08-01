@@ -9,7 +9,7 @@ namespace timing {
 
   struct Clock {
     static inline Tick get_time() {
-      return duration_cast<Tick>(high_resolution_clock::now().time_since_epoch());
+      return duration_cast<Tick>(steady_clock::now().time_since_epoch());
     }
   };
 }
