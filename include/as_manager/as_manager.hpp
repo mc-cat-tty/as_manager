@@ -160,6 +160,7 @@ class AsManagerNode : public EDFNode {
   static inline void sendGearUp(){
     auto msg = can_msgs::msg::Frame();
     msg.id = 0x610;
+    msg.dlc = 8;
 
     auto sendFun = [&msg](bool val) {
       msg.data[0] = val << 1;
