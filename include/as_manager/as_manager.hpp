@@ -136,7 +136,7 @@ class AsManagerNode : public EDFNode {
     outputPublishers.brakePublisher->publish(msg);
   }
 
-  static inline void setUpMotors(bool brake, bool clutch, bool stear){
+  static inline void setUpMotors(bool brake, bool clutch, bool steer){
     if(!brake){
       auto msgBrake=mmr_kria_base::msg::CmdMotor();
       msgBrake.enable=brake;
@@ -149,7 +149,7 @@ class AsManagerNode : public EDFNode {
       outputPublishers.brakePublisher->publish(msgClutch);
     } 
 
-    if(!stear){
+    if(!steer){
       auto msgSteerHoming=mmr_kria_base::msg::CmdMotor();
       msgSteerHoming.homing=steer;
       outputPublishers.brakePublisher->publish(msgSteerHoming);
@@ -172,12 +172,9 @@ class AsManagerNode : public EDFNode {
   }
 
   static inline void sendClutchAction(bool doDisengage) {
-    auto msg_enable = mmr_kria_base::msg::CmdMotor();
-    msg_enable.disengaged = doDisengage;
-    outputPublishers.clutchPublisher->publish(msg_enable);
-    auto msg_disengaged = mmr_kria_base::msg::CmdMotor();
+    auto msg = mmr_kria_base::msg::CmdMotor();
     msg.disengaged = doDisengage;
-    outputPublishers.clutchPublisher->publish(msg_disengaged);
+    outputPublishers.clutchPublisher->publish(msg);
   }
 
   void load_parameters(){

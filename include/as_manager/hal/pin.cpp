@@ -42,27 +42,23 @@ KriaPin::Direction KriaPin::getDirection() const {
     return dirStr == "out" ? Direction::OUT : Direction::IN;
 }
 
-bool KriaPin::writeToFile(const std::string& path, const KriaPin::Value value) const {
+bool KriaPin::writeToFile(const std::string& path, const std::string& value) const {
     std::ofstream file(path);
     if (!file.is_open()) {
         std::cerr << "Failed to open file: " << path << std::endl;
-        throw 1;
+        return false;
     }
-
-    file << std::to_string((int)value);
-    if (!file.good()) {
-        std::cerr << "Failed to open file: " << path << std::endl;
-        throw 1;
-    }
+    file << value;
+    return file.good();
 }
 
-bool KriaPin::readFromFile(const std::string& path) const {
+std::string KriaPin::readFromFile(const std::string& path) const {
     std::ifstream file(path);
     if (!file.is_open()) {
         std::cerr << "Failed to open file: " << path << std::endl;
-        throw  1;
+        return "";
     }
-    int value;
+    std::string value;
     file >> value;
     return value;
 }
