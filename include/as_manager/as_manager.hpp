@@ -5,6 +5,7 @@
 #include <std_msgs/msg/string.hpp>
 #include <std_msgs/msg/bool.hpp>
 #include <std_msgs/msg/u_int8.hpp>
+#include <std_msgs/msg/int8.hpp>
 
 #include <as_manager/watchdog/watchdog.hpp>
 #include <as_manager/assi_manager/assi_manager.hpp>
@@ -18,6 +19,7 @@
 #include <mmr_kria_base/msg/res_status.hpp>
 #include <mmr_kria_base/msg/actuator_status.hpp>
 #include <mmr_kria_base/msg/cmd_motor.hpp>
+#include <mmr_kria_base/configuration.hpp>
 
 constexpr unsigned updatableSignalsNumber = 5;
 using namespace std::chrono_literals;
@@ -28,7 +30,7 @@ struct ROSInputState {
   float brakePressureFront, brakePressureRear;
   float ebsPressure1, ebsPressure2;
   bool stopMessage;
-  std::string autonomousMission;
+  int8_t autonomousMission;
 };
 
 struct ROSPublishers {
@@ -43,7 +45,7 @@ struct ROSSubscribers {
   rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr ecuStatusSubscription;
   rclcpp::Subscription<mmr_kria_base::msg::ResStatus>::SharedPtr resStatusSubscription;
   rclcpp::Subscription<mmr_kria_base::msg::ActuatorStatus>::SharedPtr maxonMotorsSubscription;
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr missionSelectedSubscription;
+  rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr missionSelectedSubscription;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr stopMessageSubscription;
 };
 
@@ -82,13 +84,8 @@ class AsManagerNode : public EDFNode {
     inputState.maxonMotorsState = hal::utils::motorsComposeBv(msg->clutch_status, msg->steer_status, msg->brake_status);
   }
   
-  void missionSelectedCb(const std_msgs::msg::String::SharedPtr mission) {
-      std::transform(
-        std::begin(mission->data),
-        std::end(mission->data),
-        std::begin(inputState.autonomousMission),
-        [](char c){ return std::tolower(c); }
-    ) ;
+  void missionSelectedCb(const std_msgs::msg::Int8::SharedPtr mission) {
+    inputState.autonomousMission = mission->data;
   }
   
   void stopMessageCb(const std_msgs::msg::Bool::SharedPtr msg) {
@@ -121,7 +118,7 @@ class AsManagerNode : public EDFNode {
   static inline float getEbsPressure1() { return inputState.ebsPressure1; }
   static inline float getEbsPressure2() { return inputState.ebsPressure2; }
   static inline bool getStopMessage() { return inputState.stopMessage; }
-  static inline bool getAutonomousMission() { return inputState.autonomousMission != "manual"; }
+  static inline bool getAutonomousMission() { return inputState.autonomousMission != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL; }
 
   // Output state setters
   static inline void sendASState(as::AsState state) {

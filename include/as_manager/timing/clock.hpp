@@ -1,4 +1,5 @@
 #pragma once
+#if STANDALONE
 
 #include <chrono>
 
@@ -13,3 +14,7 @@ namespace timing {
     }
   };
 }
+
+#else
+#include <mmr_kria_base/configuration.hpp>
+#endif

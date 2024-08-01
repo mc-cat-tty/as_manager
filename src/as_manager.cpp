@@ -59,7 +59,7 @@ AsManagerNode::AsManagerNode() :
     );
     
     // Reliable 1 keep last
-    AsManagerNode::inputSubscriptions.missionSelectedSubscription= this->create_subscription<std_msgs::msg::String>(
+    AsManagerNode::inputSubscriptions.missionSelectedSubscription= this->create_subscription<std_msgs::msg::Int8>(
       this->missionSelectedTopic, 1, std::bind(&AsManagerNode::missionSelectedCb, this, _1)
     );
 
