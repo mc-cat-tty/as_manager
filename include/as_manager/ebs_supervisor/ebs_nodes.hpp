@@ -126,4 +126,6 @@ namespace as::ebs_supervisor {
 
     constexpr auto PULL_CLUTCH_NODE = doActionNode(pullClutch, "Pulling clutch");
     constexpr auto GEAR_FIRST_NODE = doActionNode(setFirstGear, "Setting gear to first");
+
+    constexpr auto SETUP_MOTORS_NODE = doActionNode(setUpMotors, "Enable all motors and for steer do homing before enable");
 }

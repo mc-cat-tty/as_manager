@@ -28,4 +28,5 @@ namespace hal::actions {
 
     void pullClutch();
     void setFirstGear();
+    void setUpMotors();
 }

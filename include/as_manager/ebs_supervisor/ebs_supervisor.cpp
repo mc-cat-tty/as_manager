@@ -43,6 +43,8 @@ namespace as::ebs_supervisor {
           UNBRAKE_ACT2_NODE,
           ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
 
+          SETUP_MOTORS_NODE,
+
           WAIT_BRAKE_MOTOR_ENALBED,
           UNBRAKE_ACT1_NODE,
           ASSERT_NO_BRAKE_PRESSURE_NODE,
@@ -51,6 +53,7 @@ namespace as::ebs_supervisor {
 
           CLOSE_SDC_NODE,
           WAIT_TS_ACTIVE,
+
 
           //READY
           doActionNode([]{

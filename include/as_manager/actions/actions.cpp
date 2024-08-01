@@ -75,4 +75,8 @@ namespace hal::actions {
   void setFirstGear() {
     hal::set_gear(1);
   }
+
+  void setUpMotors() {
+    hal::set_up_all_motors();
+  }
 }
