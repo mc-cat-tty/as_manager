@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>as_manager</name>
+  <version>0.0.0</version>
+  <description>Autonomous System Manager is a node orchestrator for self-driving Formula Student cars. It carries out safety-critical tasks such as the EBS Supervisor and the ASSI Manager.</description>
+  <maintainer email="44820563+mc-cat-tty@users.noreply.github.com">Francesco Mecatti</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>can_msgs</depend>
+  <depend>mmr_kria_base</depend>
+  <depend>mmr_edf</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

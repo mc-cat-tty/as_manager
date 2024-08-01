@@ -1,0 +1,34 @@
+/as_manager_node:
+  ros__parameters:
+
+    generic:
+      WCET: 5000000 # ms
+      period: 10000000 # 10ms
+      deadline: 10000000
+      debug: true
+
+    topic:
+      asStateTopic: "/as/status"
+      brakeTopic: "/command/brake"
+      canSendTopic: "/canbus/rx/msg"
+      clutchTopic: "/command/clutch"
+      steerTopic: "/command/steer"
+      ecuStatusTopic: "/status/ecu"
+      resStatusTopic: "/status/res"
+      maxonMotorsTopic: "/actuator/status"
+      missionSelectedTopic: "/mission/selected"
+      stopMessageTopic: "/mission/stop"
+
+    thresholds:
+      ebsTankPressureThreshold: 5
+      brakePressureOneActuatorThreshold: 10
+      brakePressureBothActuatorsThreshold: 20
+      brakePressureMaxonMotorsThreshold: 6
+      unbrakePressureThreshold: 5
+
+    alpha:
+      asmsAplha: 0.8
+      sdcAplha: 0.8
+      brakePressureFrontAlpha: 0.8
+      brakePressureRearAlpha: 0.8
+      rpmAlpha: 0.8
