@@ -12,6 +12,7 @@
       brakeTopic: "/command/brake"
       canSendTopic: "/canbus/rx/msg"
       clutchTopic: "/command/clutch"
+      steerTopic: "/command/steer"
       ecuStatusTopic: "/status/ecu"
       resStatusTopic: "/status/res"
       maxonMotorsTopic: "/actuator/status"

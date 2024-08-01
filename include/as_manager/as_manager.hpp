@@ -33,9 +33,10 @@ struct ROSInputState {
 
 struct ROSPublishers {
   rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr asStatePublisher;
-  rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr brakePercentagePublisher;
+  rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr brakePublisher;
   rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr gearPublisher;
   rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr clutchPublisher;
+  rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr steerPublisher;
 };
 
 struct ROSSubscribers {
@@ -54,7 +55,7 @@ class AsManagerNode : public EDFNode {
   signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
 
   // Parameters
-  std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;  
+  std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;  
   bool debug;
   static int ebsTankPressureThreshold, brakePressureOneActuatorThreshold, brakePressureBothActuatorsThreshold, brakePressureMaxonMotorsThreshold, unbrakePressureThreshold;
   static float asmsAplha,sdcAplha,brakePressureFrontAlpha,brakePressureRearAlpha,rpmAlpha;
@@ -132,7 +133,30 @@ class AsManagerNode : public EDFNode {
   static inline void sendBrakePercentage(float percentage){
     auto msg = mmr_kria_base::msg::CmdMotor();
     msg.brake_torque = percentage;
-    outputPublishers.brakePercentagePublisher->publish(msg);
+    outputPublishers.brakePublisher->publish(msg);
+  }
+
+  static inline void setUpMotors(bool brake, bool clutch, bool stear){
+    if(!brake){
+      auto msgBrake=mmr_kria_base::msg::CmdMotor();
+      msgBrake.enable=brake;
+      outputPublishers.brakePublisher->publish(msgBrake);
+    }
+
+    if(!clutch){
+      auto msgClutch=mmr_kria_base::msg::CmdMotor();
+      msgClutch.enable=clutch;
+      outputPublishers.brakePublisher->publish(msgClutch);
+    } 
+
+    if(!stear){
+      auto msgSteerHoming=mmr_kria_base::msg::CmdMotor();
+      msgSteerHoming.homing=steer;
+      outputPublishers.brakePublisher->publish(msgSteerHoming);
+      auto msgSteerEnable=mmr_kria_base::msg::CmdMotor();
+      msgSteerEnable.enable=steer;
+      outputPublishers.brakePublisher->publish(msgSteerEnable);
+    }
   }
 
   static inline void sendGearUp(){
@@ -148,9 +172,12 @@ class AsManagerNode : public EDFNode {
   }
 
   static inline void sendClutchAction(bool doDisengage) {
-    auto msg = mmr_kria_base::msg::CmdMotor();
+    auto msg_enable = mmr_kria_base::msg::CmdMotor();
+    msg_enable.disengaged = doDisengage;
+    outputPublishers.clutchPublisher->publish(msg_enable);
+    auto msg_disengaged = mmr_kria_base::msg::CmdMotor();
     msg.disengaged = doDisengage;
-    outputPublishers.clutchPublisher->publish(msg);
+    outputPublishers.clutchPublisher->publish(msg_disengaged);
   }
 
   void load_parameters(){
@@ -163,6 +190,7 @@ class AsManagerNode : public EDFNode {
     declare_parameter("topic.brakeTopic", "");
     declare_parameter("topic.canSendTopic", "");
     declare_parameter("topic.clutchTopic", "");
+    declare_parameter("topic.steerTopic", "");
     declare_parameter("topic.ecuStatusTopic", "");
     declare_parameter("topic.resStatusTopic", "");
     declare_parameter("topic.maxonMotorsTopic", "");
@@ -190,6 +218,7 @@ class AsManagerNode : public EDFNode {
     get_parameter("topic.brakeTopic", this->brakeTopic);
     get_parameter("topic.canSendTopic", this->canSendTopic);
     get_parameter("topic.clutchTopic", this->clutchTopic);
+    get_parameter("topic.steerTopic", this->steerTopic);
     get_parameter("topic.ecuStatusTopic", this->ecuStatusTopic);
     get_parameter("topic.resStatusTopic", this->resStatusTopic);
     get_parameter("topic.maxonMotorsTopic", this->maxonMotorsTopic);

@@ -28,9 +28,10 @@ AsManagerNode::AsManagerNode() :
     this->configureEDFScheduler(this->m_nPeriod, this->m_nWCET, this->m_nDeadline);
 
     AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::UInt8>(this->asStateTopic, 1);
-    AsManagerNode::outputPublishers.brakePercentagePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->brakeTopic, 1);
+    AsManagerNode::outputPublishers.brakePublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->brakeTopic, 1);
     AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msgs::msg::Frame>(this->canSendTopic, 1);
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->clutchTopic, 1);
+    AsManagerNode::outputPublishers.steerPublisher = this->create_publisher<mmr_kria_base::msg::CmdMotor>(this->steerTopic, 1);
 
     using namespace std::placeholders;
 
