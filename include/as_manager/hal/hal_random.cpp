@@ -56,7 +56,7 @@ namespace hal{
                 return SdcState::Closed;
         }
 
-        int read_rpm(){
+        unsigned read_rpm(){
             if (random_number() > 0.8)
                 return 4000;
             else
@@ -106,7 +106,7 @@ namespace hal{
         }
 
         bool read_asms_status(){
-            if (random_number() > 0.4)
+            if (random_number() > 0)
                 return true;
             else
                 return false;
@@ -147,6 +147,13 @@ namespace hal{
         }
         void send_current_state(as::AsState state){
 
+        }
+
+        bool is_autonomous_mission(){
+            if (random_number() > 1.8)
+                return true;
+            else
+                return false;
         }
 
     void set_gear(uint8_t gear) {};
