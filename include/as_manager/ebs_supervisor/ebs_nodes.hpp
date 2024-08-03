@@ -23,7 +23,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
       []{return asms_signal.get_value();}, 
-      "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
+      "ASMS is ON", "Waiting ASMS", [] {}
     );
 
     constexpr auto START_CANOPEN_NODE = doActionNode(
@@ -33,7 +33,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_MISSION_NODE=waitUntilNode(
       []{return mission_signal.get_value();}, 
-      "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
+      "Mission selected", "Waiting mission", [] {}
     );
 
     constexpr auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode(
@@ -42,7 +42,7 @@ namespace as::ebs_supervisor {
         return ebs1_signal.get_value() >= AsManagerNode::getEbsTankPressureThreshold()
           and ebs2_signal.get_value() >=  AsManagerNode::getEbsTankPressureThreshold();
       },
-      500ms, "Sufficient EBS tank pressure", "Waiting sufficient PEBS", "PEBS timeout"
+      500ms, "Sufficient EBS tank pressure", "Waiting for sufficient EBS pressure", "EBS pressure timeout"
     );
 
     constexpr auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE = assertWithTimeoutNode(
@@ -50,7 +50,7 @@ namespace as::ebs_supervisor {
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() >= AsManagerNode::getBrakePressureBothActuatorsThreshold()
           and breake_pressure_front_signal.get_value() >= AsManagerNode::getBrakePressureBothActuatorsThreshold();
-      }, 500ms, "Sufficient BRAKE pressure EBS", "Waiting sufficient PBRAKE EBS", "PBRAKE timeout EBS");
+      }, 500ms, "Sufficient BRAKE pressure on both actuators", "Waiting sufficient BRAKE pressure on both actuators", "BRAKE pressure on both actuators timeout");
 
     constexpr auto OPEN_SDC_NODE = doActionNode(open_sdc, "Open SDC");
     constexpr auto CLOSE_SDC_NODE = doActionNode(close_sdc, "Close SDC");
@@ -74,7 +74,7 @@ namespace as::ebs_supervisor {
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() >= AsManagerNode::getBrakePressureOneActuatorThreshold()
           and breake_pressure_front_signal.get_value() >= AsManagerNode::getBrakePressureOneActuatorThreshold();
-      }, 500ms, "Sufficient BRAKE pressure", "Waiting sufficient PBRAKE", "PBRAKE timeout");
+      }, 500ms, "Sufficient BRAKE pressure", "Waiting sufficient BRAKE pressure", "BRAKE pressure timeout");
 
     constexpr auto ASSERT_NO_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
@@ -84,8 +84,8 @@ namespace as::ebs_supervisor {
       }, 500ms, "No brake pressure", "Waiting no brake pressure", "Brake pressure timeout");
 
     constexpr auto UNBRAKE_ACT1_NODE = doActionNode(unbrake_act1, "Unbrake Act1");
-    constexpr auto BRAKE_ACT1_NODE = doActionNode(brake_act1, "brake Act1");
-    constexpr auto BRAKE_ACT2_NODE = doActionNode(brake_act2, "brake Act2");
+    constexpr auto BRAKE_ACT1_NODE = doActionNode(brake_act1, "Brake Act1");
+    constexpr auto BRAKE_ACT2_NODE = doActionNode(brake_act2, "Brake Act2");
     constexpr auto UNBRAKE_ACT2_NODE = doActionNode(unbrake_act2, "Unbrake Act2");
 
     constexpr auto WAIT_BRAKE_MOTOR_ENALBED = waitUntilNode(
@@ -93,7 +93,7 @@ namespace as::ebs_supervisor {
         return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::BRAKE);
       }, "Brake motor enabled", "Waiting brake motor enabled", [] {});
 
-    constexpr auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with Maxon motor");
+    constexpr auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with MAXON motor");
 
     constexpr auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR = assertWithTimeoutNode(
       []{
@@ -116,7 +116,7 @@ namespace as::ebs_supervisor {
       []{
         return rpm_signal.get_value()>2000;
       }, 
-      "Mission selected and ASMS ON", "Waiting for mission and ASMS", [] {}
+      "TS Activated", "Waiting for crank", [] {}
     );
 
     constexpr auto PULL_CLUTCH_NODE = doActionNode(pullClutch, "Pulling clutch");

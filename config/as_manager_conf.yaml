@@ -27,8 +27,8 @@
       unbrakePressureThreshold: 5
 
     alpha:
-      asmsAplha: 0.8
-      sdcAplha: 0.8
+      asmsAlpha: 0.8
+      sdcAlpha: 0.8
       brakePressureFrontAlpha: 0.8
       brakePressureRearAlpha: 0.8
       rpmAlpha: 0.8
