@@ -24,7 +24,7 @@ namespace as::ebs_supervisor {
     );
 
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
-      []{return asms_signal.get_value();}, 
+      []{return asms_signal.get_value() == SdcState::CLOSED;}, 
       "ASMS is ON", "Waiting ASMS", [] {}
     );
 
@@ -103,15 +103,16 @@ namespace as::ebs_supervisor {
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureMaxonMotorsThreshold;
       }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
-    constexpr auto WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_GO_SIGNAL = waitUntilNode(
       []{
         return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned)hal::Res::GO);
-      }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
+      }, "GO signal received", "Waiting for GO signal", []{}
+    );
 
-    constexpr auto WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE =  waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode(
       []{
         return stop_signal.get_value();
-      }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
+      }, "STOP signal received", "Waiting for STOP signal", []{}
     );
 
     constexpr auto WAIT_TS_ACTIVE = waitUntilNode(
