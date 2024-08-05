@@ -4,16 +4,18 @@
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
 #include <as_manager/common/common_types.hpp>
 #include <as_manager/hal/utils.hpp>
+#include <as_manager/params/parameters.hpp>
 #include <as_manager/as_manager.hpp>
 
-using namespace std::chrono_literals;
-using namespace as::fsm;
 
 
-namespace as::ebs_supervisor
-{
-  class EbsContinousMonitoring
-  {
+
+namespace as::ebs_supervisor {
+  using namespace std::chrono_literals;
+  using namespace as::fsm;
+  using namespace params;
+
+  class EbsContinousMonitoring {
   public:
     static EbsContinousMonitoring& getInstance() {
       static EbsContinousMonitoring instance;
@@ -23,8 +25,8 @@ namespace as::ebs_supervisor
     inline void continuousMonitoring(){
       continousMonitoringAssert(
         []{
-            return ebs1_signal.get_value() >= AsManagerNode::getEbsTankPressureThreshold() and
-            ebs2_signal.get_value() >= AsManagerNode::getEbsTankPressureThreshold();
+            return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold and
+            ebs2_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold;
         }, 
         50ms, ebsTimer, "PEBS waiting continous monitoring", "PEBS timeout continous monitoring");
       continousMonitoringAssert(

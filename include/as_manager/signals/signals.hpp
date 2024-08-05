@@ -44,6 +44,7 @@ namespace signals {
           }
 
           void update() {
+            std::cout << "ALPHA: " << low_pass_filter.get_alpha() << std::endl;
             if (low_pass_filter.get_alpha() < 1.0f)
               low_pass_filter.update(signal_source());
           }

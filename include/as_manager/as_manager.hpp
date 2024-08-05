@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <string>
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -12,6 +13,7 @@
 #include <as_manager/ebs_supervisor/ebs_supervisor.hpp>
 #include <as_manager/hal/utils.hpp>
 #include <as_manager/signals/updater.hpp>
+#include <as_manager/params/parameters.hpp>
 
 #include <can_msgs/msg/frame.hpp>
 #include <mmr_edf/mmr_edf.hpp>
@@ -51,21 +53,18 @@ struct ROSSubscribers {
 
 class AsManagerNode : public EDFNode {
   private:
-  as::ebs_supervisor::EbsSupervisor &ebsSupervisor;
-  watchdog::Watchdog &watchdog;
-  as::assi_manager::AssiManager &assiManager;
-  signals::utils::Updater<updatableSignalsNumber> &signalUpdater;
-
-  // Parameters
-  std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;  
-  bool debug;
-  static int ebsTankPressureThreshold, brakePressureOneActuatorThreshold, brakePressureBothActuatorsThreshold, brakePressureMaxonMotorsThreshold, unbrakePressureThreshold;
-  static float asmsAlpha,sdcAlpha,brakePressureFrontAlpha,brakePressureRearAlpha,rpmAlpha;
+  as::ebs_supervisor::EbsSupervisor *ebsSupervisor;
+  watchdog::Watchdog *watchdog;
+  as::assi_manager::AssiManager *assiManager;
+  signals::utils::Updater<updatableSignalsNumber> *signalUpdater;
 
   // Static state
   static ROSInputState inputState;
   static ROSSubscribers inputSubscriptions;
   static ROSPublishers outputPublishers;
+
+  // Topics
+  std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
 
   // Callbacks
   void ecuStatusCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) {
@@ -96,18 +95,6 @@ class AsManagerNode : public EDFNode {
   AsManagerNode();
   ~AsManagerNode();
   void superloop();
-
-  // Getter of parameters
-  static inline int getEbsTankPressureThreshold() { return ebsTankPressureThreshold; }
-  static inline int getBrakePressureOneActuatorThreshold() { return brakePressureOneActuatorThreshold; }
-  static inline int getBrakePressureBothActuatorsThreshold() { return brakePressureBothActuatorsThreshold; }
-  static inline int getBrakePressureMaxonMotorsThreshold() { return brakePressureMaxonMotorsThreshold; }
-  static inline int getUnbrakePressureThreshold() { return unbrakePressureThreshold; }
-  static inline float getAsmsAlpha() { return asmsAlpha; }
-  static inline float getSdcAlpha() { return sdcAlpha; }
-  static inline float getBrakePressureFrontAlpha() { return brakePressureFrontAlpha; }
-  static inline float getBrakePressureRearAlpha() { return brakePressureRearAlpha; }
-  static inline float getRpmAlpha() { return rpmAlpha; }
 
   // Input state getters
   static inline uint8_t getResState() { return inputState.resState; }
@@ -208,7 +195,6 @@ class AsManagerNode : public EDFNode {
     get_parameter("generic.WCET", this->m_nWCET);
     get_parameter("generic.period", this->m_nPeriod);
     get_parameter("generic.deadline", this->m_nDeadline);
-    get_parameter("generic.debug", this->debug);
 
     get_parameter("topic.asStateTopic", this->asStateTopic);
     get_parameter("topic.brakeTopic", this->brakeTopic);
@@ -221,17 +207,20 @@ class AsManagerNode : public EDFNode {
     get_parameter("topic.missionSelectedTopic", this->missionSelectedTopic);
     get_parameter("topic.stopMessageTopic", this->stopMessageTopic);
 
-    get_parameter("thresholds.ebsTankPressureThreshold", this->ebsTankPressureThreshold);
-    get_parameter("thresholds.brakePressureOneActuatorThreshold", this->brakePressureOneActuatorThreshold);
-    get_parameter("thresholds.brakePressureBothActuatorsThreshold", this->brakePressureBothActuatorsThreshold);
-    get_parameter("thresholds.brakePressureMaxonMotorsThreshold", this->brakePressureMaxonMotorsThreshold);
-    get_parameter("thresholds.unbrakePressureThreshold", this->unbrakePressureThreshold);
+    using namespace params;
+    get_parameter("generic.debug", Parameters::getInstance().debug);
 
-    get_parameter("alpha.asmsAlpha", this->asmsAlpha);
-    get_parameter("alpha.sdcAlpha", this->sdcAlpha);
-    get_parameter("alpha.brakePressureFrontAlpha", this->brakePressureFrontAlpha);
-    get_parameter("alpha.brakePressureRearAlpha", this->brakePressureRearAlpha);
-    get_parameter("alpha.rpmAlpha", this->rpmAlpha);
+    get_parameter("thresholds.ebsTankPressureThreshold", Parameters::getInstance().ebsTankPressureThreshold);
+    get_parameter("thresholds.brakePressureOneActuatorThreshold", Parameters::getInstance().brakePressureOneActuatorThreshold);
+    get_parameter("thresholds.brakePressureBothActuatorsThreshold", Parameters::getInstance().brakePressureBothActuatorsThreshold);
+    get_parameter("thresholds.brakePressureMaxonMotorsThreshold", Parameters::getInstance().brakePressureMaxonMotorsThreshold);
+    get_parameter("thresholds.unbrakePressureThreshold", Parameters::getInstance().unbrakePressureThreshold);
+
+    get_parameter("alpha.asmsAlpha", Parameters::getInstance().asmsAlpha);
+    get_parameter("alpha.sdcAlpha", Parameters::getInstance().sdcAlpha);
+    get_parameter("alpha.brakePressureFrontAlpha", Parameters::getInstance().brakePressureFrontAlpha);
+    get_parameter("alpha.brakePressureRearAlpha", Parameters::getInstance().brakePressureRearAlpha);
+    get_parameter("alpha.rpmAlpha", Parameters::getInstance().rpmAlpha);
     
   }
 };

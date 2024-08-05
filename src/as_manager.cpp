@@ -7,26 +7,18 @@ ROSInputState AsManagerNode::inputState;
 ROSSubscribers AsManagerNode::inputSubscriptions;
 ROSPublishers AsManagerNode::outputPublishers;
 
-int AsManagerNode::ebsTankPressureThreshold;
-int AsManagerNode::brakePressureOneActuatorThreshold;
-int AsManagerNode::brakePressureBothActuatorsThreshold;
-int AsManagerNode::brakePressureMaxonMotorsThreshold;
-int AsManagerNode::unbrakePressureThreshold;
-float AsManagerNode::asmsAlpha;
-float AsManagerNode::sdcAlpha;
-float AsManagerNode::brakePressureFrontAlpha;
-float AsManagerNode::brakePressureRearAlpha;
-float AsManagerNode::rpmAlpha;
 
 AsManagerNode::AsManagerNode() :
-  EDFNode("as_manager_node"),
-  ebsSupervisor(as::ebs_supervisor::EbsSupervisor::getInstance()),
-  watchdog(watchdog::Watchdog::getInstance()),
-  assiManager(as::assi_manager::AssiManager::getInstance()),
-  signalUpdater(signals::utils::Updater<5>::getInstance()) {
+  EDFNode("as_manager_node")
+   {
 
     this->load_parameters();
     this->configureEDFScheduler(this->m_nPeriod, this->m_nWCET, this->m_nDeadline);
+
+    watchdog = &watchdog::Watchdog::getInstance();
+    assiManager = &as::assi_manager::AssiManager::getInstance();
+    ebsSupervisor = &as::ebs_supervisor::EbsSupervisor::getInstance();
+    signalUpdater = &signals::utils::Updater<5>::getInstance();
 
     auto &transientLocalQOS = rclcpp::QoS(1)
       .reliable()
@@ -75,8 +67,8 @@ AsManagerNode::~AsManagerNode() {
 }
 
 void AsManagerNode::superloop() {
-  this->signalUpdater.update();
-  this->ebsSupervisor.run();
-  this->watchdog.run();
-  this->assiManager.run();
+  this->signalUpdater->update();
+  this->ebsSupervisor->run();
+  this->watchdog->run();
+  this->assiManager->run();
 }
