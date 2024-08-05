@@ -20,7 +20,7 @@ namespace signals {
   template <typename T>
   class Signal : public IUpdatable {
       public:
-          constexpr Signal(std::invocable auto signal_source, IUpdater *updater, float alpha = 1.0f) :
+          constexpr Signal(std::invocable auto signal_source, IUpdater *updater, float &alpha) :
             low_pass_filter(alpha), signal_source(signal_source), updater(updater) {
               if (alpha == 1.0f) return;
               updater->registerSubscriber(this);
