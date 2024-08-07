@@ -16,5 +16,5 @@ namespace timing {
 }
 
 #else
-#include <mmr_kria_base/configuration.hpp>
+#include <mmr_base/configuration.hpp>
 #endif

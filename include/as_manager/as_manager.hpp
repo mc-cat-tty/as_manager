@@ -17,11 +17,11 @@
 
 #include <can_msgs/msg/frame.hpp>
 #include <mmr_edf/mmr_edf.hpp>
-#include <mmr_kria_base/msg/ecu_status.hpp>
-#include <mmr_kria_base/msg/res_status.hpp>
-#include <mmr_kria_base/msg/actuator_status.hpp>
-#include <mmr_kria_base/msg/cmd_motor.hpp>
-#include <mmr_kria_base/configuration.hpp>
+#include <mmr_base/msg/ecu_status.hpp>
+#include <mmr_base/msg/res_status.hpp>
+#include <mmr_base/msg/actuator_status.hpp>
+#include <mmr_base/msg/cmd_motor.hpp>
+#include <mmr_base/configuration.hpp>
 
 constexpr unsigned updatableSignalsNumber = 5;
 using namespace std::chrono_literals;
@@ -37,16 +37,16 @@ struct ROSInputState {
 
 struct ROSPublishers {
   rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr asStatePublisher;
-  rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr brakePublisher;
+  rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr brakePublisher;
   rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr gearPublisher;
-  rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr clutchPublisher;
-  rclcpp::Publisher<mmr_kria_base::msg::CmdMotor>::SharedPtr steerPublisher;
+  rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr clutchPublisher;
+  rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr steerPublisher;
 };
 
 struct ROSSubscribers {
-  rclcpp::Subscription<mmr_kria_base::msg::EcuStatus>::SharedPtr ecuStatusSubscription;
-  rclcpp::Subscription<mmr_kria_base::msg::ResStatus>::SharedPtr resStatusSubscription;
-  rclcpp::Subscription<mmr_kria_base::msg::ActuatorStatus>::SharedPtr maxonMotorsSubscription;
+  rclcpp::Subscription<mmr_base::msg::EcuStatus>::SharedPtr ecuStatusSubscription;
+  rclcpp::Subscription<mmr_base::msg::ResStatus>::SharedPtr resStatusSubscription;
+  rclcpp::Subscription<mmr_base::msg::ActuatorStatus>::SharedPtr maxonMotorsSubscription;
   rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr missionSelectedSubscription;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr stopMessageSubscription;
 };
@@ -67,7 +67,7 @@ class AsManagerNode : public EDFNode {
   std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
 
   // Callbacks
-  void ecuStatusCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) {
+  void ecuStatusCb(const mmr_base::msg::EcuStatus::SharedPtr msg) {
     inputState.engineRpm = msg->nmot;
     inputState.brakePressureRear = msg->p_brake_rear;
     inputState.brakePressureFront = msg->p_brake_front;
@@ -75,11 +75,11 @@ class AsManagerNode : public EDFNode {
     inputState.ebsPressure2 = msg->p_ebs_2;
   }
 
-  void resStatusCb(const mmr_kria_base::msg::ResStatus::SharedPtr msg) {
+  void resStatusCb(const mmr_base::msg::ResStatus::SharedPtr msg) {
     inputState.resState = hal::utils::resComposeBv(msg->go_signal, msg->bag, msg->emergency);
   }
   
-  void maxonMotorsCb(const mmr_kria_base::msg::ActuatorStatus::SharedPtr msg) {
+  void maxonMotorsCb(const mmr_base::msg::ActuatorStatus::SharedPtr msg) {
     inputState.maxonMotorsState = hal::utils::motorsComposeBv(msg->clutch_status, msg->steer_status, msg->brake_status);
   }
   
@@ -115,30 +115,30 @@ class AsManagerNode : public EDFNode {
   }
 
   static inline void sendBrakePercentage(float percentage){
-    auto msg = mmr_kria_base::msg::CmdMotor();
+    auto msg = mmr_base::msg::CmdMotor();
     msg.brake_torque = percentage;
     outputPublishers.brakePublisher->publish(msg);
   }
 
   static inline void setUpMotors(bool brake, bool clutch, bool steer){
     if(brake){
-      auto msgBrake=mmr_kria_base::msg::CmdMotor();
+      auto msgBrake=mmr_base::msg::CmdMotor();
       msgBrake.enable=brake;
       outputPublishers.brakePublisher->publish(msgBrake);
     }
 
     if(clutch){
-      auto msgClutch=mmr_kria_base::msg::CmdMotor();
+      auto msgClutch=mmr_base::msg::CmdMotor();
       msgClutch.enable=clutch;
       outputPublishers.brakePublisher->publish(msgClutch);
     } 
 
     if(steer){
-      auto msgSteerHoming=mmr_kria_base::msg::CmdMotor();
+      auto msgSteerHoming=mmr_base::msg::CmdMotor();
       msgSteerHoming.homing=steer;
       outputPublishers.brakePublisher->publish(msgSteerHoming);
       
-      auto msgSteerEnable=mmr_kria_base::msg::CmdMotor();
+      auto msgSteerEnable=mmr_base::msg::CmdMotor();
       msgSteerEnable.enable=steer;
       outputPublishers.brakePublisher->publish(msgSteerEnable);
     }
@@ -158,7 +158,7 @@ class AsManagerNode : public EDFNode {
   }
 
   static inline void sendClutchAction(bool doDisengage) {
-    auto msg = mmr_kria_base::msg::CmdMotor();
+    auto msg = mmr_base::msg::CmdMotor();
     msg.disengaged = doDisengage;
     outputPublishers.clutchPublisher->publish(msg);
   }

@@ -9,7 +9,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(can_msgs REQUIRED)
-find_package(mmr_kria_base REQUIRED)
+find_package(mmr_base REQUIRED)
 find_package(mmr_edf REQUIRED)
 
 include_directories(include)
@@ -26,7 +26,7 @@ ament_target_dependencies(${NODE_NAME}
   rclcpp
   std_msgs
   can_msgs
-  mmr_kria_base
+  mmr_base
   mmr_edf
 )
 
@@ -50,7 +50,6 @@ if (APPLE)
   add_link_options(-lstdc++)
 endif()
 
-# add_compile_definitions(TEST)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)

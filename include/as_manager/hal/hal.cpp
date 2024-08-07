@@ -5,34 +5,34 @@
 #include <as_manager/hal/pin_implementation.hpp>
 
 namespace hal {
-  SdcState read_sdc() {return pin::sdcSensPin.getValue() ? SdcState::Open : SdcState::Closed;}
+  SdcState read_sdc() {return pin::sdcSensPin.getValue() ? SdcState::OPEN : SdcState::CLOSE;}
   bool read_asms_status() {return pin::asmsPin.getValue() ? false : true ;}
 
   void toggle_actuator1_state(ActuatorState state) {
-    pin::ebs1Pin.setValue(state == ActuatorState::Braking ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::ebs1Pin.setValue(state == ActuatorState::BRAKING ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
   void toggle_actuator2_state(ActuatorState state) {
-    pin::ebs2Pin.setValue(state == ActuatorState::Braking ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::ebs2Pin.setValue(state == ActuatorState::BRAKING ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
 
   void write_watchdog_state(bool pinState) {
     pin::watchdogPin.setValue(pinState ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
   void set_assi_Y_state(AssiState state) {
-    pin::assiyPin.setValue(state == AssiState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::assiyPin.setValue(state == AssiState::ON ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
   void set_assi_B_state(AssiState state) {
-    pin::assibPin.setValue(state == AssiState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::assibPin.setValue(state == AssiState::ON ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
   void set_buzzer_state(BuzzerState state) {
-    pin::buzzerPin.setValue(state == BuzzerState::On ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::buzzerPin.setValue(state == BuzzerState::ON ? KriaPin::Value::ON : KriaPin::Value::OFF);
   }
   void toggle_sdc_state(SdcState state) {
-    pin::sdcCtrlPin.setValue(state == SdcState::Open ? KriaPin::Value::OFF : KriaPin::Value::ON);
+    pin::sdcCtrlPin.setValue(state == SdcState::OPEN ? KriaPin::Value::OFF : KriaPin::Value::ON);
   }
 
   uint8_t read_res_bit_vector() {return AsManagerNode::getResState();}
-  ResState read_res_state() {return ResState::Operational;}
+  ResState read_res_state() {return ResState::OPERATIONAL;}
   float read_brake_pressure_front()  { return AsManagerNode::getBrakePressureFront(); }
   float read_brake_pressure_rear()  {return AsManagerNode::getBrakePressureRear(); }
   unsigned read_rpm() {return AsManagerNode::getEngineRpm(); }
