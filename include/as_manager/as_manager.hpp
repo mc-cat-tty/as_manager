@@ -64,7 +64,7 @@ class AsManagerNode : public EDFNode {
   static ROSPublishers outputPublishers;
 
   // Topics
-  std::string brakeTopic, asStateTopic, canSendTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
+  std::string brakeTopic, asStateTopic, canRxTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
 
   // Callbacks
   void ecuStatusCb(const mmr_kria_base::msg::EcuStatus::SharedPtr msg) {
@@ -169,16 +169,16 @@ class AsManagerNode : public EDFNode {
     declare_parameter("generic.deadline", 10000000);
     declare_parameter("generic.debug", false);
 
-    declare_parameter("topic.asStateTopic", "");
-    declare_parameter("topic.brakeTopic", "");
-    declare_parameter("topic.canSendTopic", "");
-    declare_parameter("topic.clutchTopic", "");
-    declare_parameter("topic.steerTopic", "");
-    declare_parameter("topic.ecuStatusTopic", "");
-    declare_parameter("topic.resStatusTopic", "");
-    declare_parameter("topic.maxonMotorsTopic", "");
-    declare_parameter("topic.missionSelectedTopic", "");
-    declare_parameter("topic.stopMessageTopic", "");
+    declare_parameter("topics.asStateTopic", "");
+    declare_parameter("topics.brakeTopic", "");
+    declare_parameter("topics.canRxTopic", "");
+    declare_parameter("topics.clutchTopic", "");
+    declare_parameter("topics.steerTopic", "");
+    declare_parameter("topics.ecuStatusTopic", "");
+    declare_parameter("topics.resStatusTopic", "");
+    declare_parameter("topics.maxonMotorsTopic", "");
+    declare_parameter("topics.missionSelectedTopic", "");
+    declare_parameter("topics.stopMessageTopic", "");
 
     declare_parameter("thresholds.ebsTankPressureThreshold", 5);
     declare_parameter("thresholds.brakePressureOneActuatorThreshold", 20);
@@ -196,16 +196,16 @@ class AsManagerNode : public EDFNode {
     get_parameter("generic.period", this->m_nPeriod);
     get_parameter("generic.deadline", this->m_nDeadline);
 
-    get_parameter("topic.asStateTopic", this->asStateTopic);
-    get_parameter("topic.brakeTopic", this->brakeTopic);
-    get_parameter("topic.canSendTopic", this->canSendTopic);
-    get_parameter("topic.clutchTopic", this->clutchTopic);
-    get_parameter("topic.steerTopic", this->steerTopic);
-    get_parameter("topic.ecuStatusTopic", this->ecuStatusTopic);
-    get_parameter("topic.resStatusTopic", this->resStatusTopic);
-    get_parameter("topic.maxonMotorsTopic", this->maxonMotorsTopic);
-    get_parameter("topic.missionSelectedTopic", this->missionSelectedTopic);
-    get_parameter("topic.stopMessageTopic", this->stopMessageTopic);
+    get_parameter("topics.asStateTopic", this->asStateTopic);
+    get_parameter("topics.brakeTopic", this->brakeTopic);
+    get_parameter("topics.canRxTopic", this->canRxTopic);
+    get_parameter("topics.clutchTopic", this->clutchTopic);
+    get_parameter("topics.steerTopic", this->steerTopic);
+    get_parameter("topics.ecuStatusTopic", this->ecuStatusTopic);
+    get_parameter("topics.resStatusTopic", this->resStatusTopic);
+    get_parameter("topics.maxonMotorsTopic", this->maxonMotorsTopic);
+    get_parameter("topics.missionSelectedTopic", this->missionSelectedTopic);
+    get_parameter("topics.stopMessageTopic", this->stopMessageTopic);
 
     using namespace params;
     get_parameter("generic.debug", Parameters::getInstance().debug);
