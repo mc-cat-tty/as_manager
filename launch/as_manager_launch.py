@@ -4,10 +4,11 @@ from launch_ros.actions import Node
 import os
 
 
+CONFIG_FILENAME = "config.yaml"
+
 def generate_launch_description():
   launch_description = LaunchDescription()
-  
-  config_node = os.path.join(get_package_share_directory('as_manager'), 'config', 'as_manager_conf.yaml')
+  configuration = os.path.join(get_package_share_directory('as_manager'), 'config', CONFIG_FILENAME)
   
   node = Node(
     package="as_manager",
