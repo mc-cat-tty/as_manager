@@ -5,7 +5,7 @@
 #include <concepts>
 
 #if !STANDALONE
-#include <mmr_kria_base/configuration.hpp>
+#include <mmr_base/configuration.hpp>
 #endif
 
 namespace hal {
@@ -38,31 +38,31 @@ namespace hal {
   };
 
   enum class SdcState {
-    Open=1,
-    Closed=0
+    OPEN=1,
+    CLOSE=0
   };
 
   enum class ActuatorState {
-    Braking,
-    Unbrake
+    BRAKING,
+    UNBRAKING
   };
 
   // out
   enum class AssiState{
-    On,
-    Strobe,
-    Off
+    ON,
+    STROBE,
+    OFF
   };
 
   enum class BuzzerState{
-    On,
-    Off
+    ON,
+    OFF
   };
 
   enum class ResState {
-    Idle,
-    Operational,
-    Error
+    IDLE,
+    OPERATIONAL,
+    ERROR
   };
 };
 

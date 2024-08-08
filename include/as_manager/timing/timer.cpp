@@ -4,9 +4,9 @@
 namespace timing{
   TimerAsync::TimerAsync() : is_started(false) {}
 
-  void TimerAsync::start(Tick duration) {
+  void TimerAsync::start(milliseconds duration) {
     if( !is_started ) {
-      endtime = Clock::get_time() + duration;
+      endtime = Clock::get_time<milliseconds>() + duration;
       is_started = true;
     }
   }
@@ -16,7 +16,7 @@ namespace timing{
   }
 
   bool TimerAsync::has_expired() const {
-    return Clock::get_time() >= endtime;
+    return Clock::get_time<milliseconds>() >= endtime;
   }
 };
 

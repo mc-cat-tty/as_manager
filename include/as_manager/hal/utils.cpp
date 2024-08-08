@@ -24,7 +24,7 @@ namespace hal::utils {
 
   void ecuButtonTrigger(
     std::function<void(bool)> sendFunction,
-    timing::Tick ms
+    std::chrono::milliseconds ms
   ) {
     using namespace std::this_thread;
 

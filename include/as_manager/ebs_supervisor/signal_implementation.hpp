@@ -28,7 +28,7 @@ namespace as::ebs_supervisor{
     using namespace params;
     float DEFAULT_ALPHA = 1.0f;
 
-    auto asms_signal= Signal<bool>(hal::read_asms_status,&updater, std::ref(Parameters::getInstance().asmsAlpha));
+    auto asms_signal= Signal<bool>(hal::read_asms_status, &updater, std::ref(Parameters::getInstance().asmsAlpha));
     auto mission_signal= Signal<bool>(hal::is_autonomous_mission,&updater, DEFAULT_ALPHA);
     auto ebs1_signal = Signal<float>(hal::read_ebs1_pressure,&updater, DEFAULT_ALPHA);
     auto ebs2_signal = Signal<float>(hal::read_ebs2_pressure,&updater, DEFAULT_ALPHA);

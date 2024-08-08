@@ -4,6 +4,7 @@
 #include <as_manager/actions/actions.hpp>
 #include <as_manager/hal/pin_implementation.hpp>
 #include <as_manager/params/parameters.hpp>
+#include <as_manager/common/common_types.hpp>
 
 
 namespace as::ebs_supervisor {
@@ -24,7 +25,7 @@ namespace as::ebs_supervisor {
     );
 
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
-      []{return asms_signal.get_value();}, 
+      []{return asms_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(ASMS_THRESHOLD);}, 
       "ASMS is ON", "Waiting ASMS", [] {}
     );
 

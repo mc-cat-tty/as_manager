@@ -2,54 +2,54 @@
 
 namespace hal::actions {
   void open_sdc(){
-    hal::toggle_sdc_state(SdcState::Open);
+    hal::toggle_sdc_state(SdcState::OPEN);
   }
   void close_sdc(){
-    hal::toggle_sdc_state(SdcState::Closed);
+    hal::toggle_sdc_state(SdcState::CLOSE);
   }
 
   void brake_act1(){
-    hal::toggle_actuator1_state(ActuatorState::Braking);
+    hal::toggle_actuator1_state(ActuatorState::BRAKING);
   }
 
   void brake_act2(){
-    hal::toggle_actuator2_state(ActuatorState::Braking);
+    hal::toggle_actuator2_state(ActuatorState::BRAKING);
   }
 
   void brake_all_act(){
-    hal::toggle_actuator1_state(ActuatorState::Braking);
-    hal::toggle_actuator2_state(ActuatorState::Braking);
+    hal::toggle_actuator1_state(ActuatorState::BRAKING);
+    hal::toggle_actuator2_state(ActuatorState::BRAKING);
   }
 
   void unbrake_act1(){
-    hal::toggle_actuator1_state(ActuatorState::Unbrake);
+    hal::toggle_actuator1_state(ActuatorState::UNBRAKING);
   }
   
   void unbrake_act2(){
-    hal::toggle_actuator2_state(ActuatorState::Unbrake);
+    hal::toggle_actuator2_state(ActuatorState::UNBRAKING);
   }
 
   void unbrake_all_act(){
-    hal::toggle_actuator1_state(ActuatorState::Unbrake);
-    hal::toggle_actuator2_state(ActuatorState::Unbrake);
+    hal::toggle_actuator1_state(ActuatorState::UNBRAKING);
+    hal::toggle_actuator2_state(ActuatorState::UNBRAKING);
   }
 
   void active_buzzer(){
-    hal::set_buzzer_state(BuzzerState::On);
+    hal::set_buzzer_state(BuzzerState::ON);
   }
 
   void disabled_buzzer(){
-    hal::set_buzzer_state(BuzzerState::Off);
+    hal::set_buzzer_state(BuzzerState::OFF);
   }
 
   void switch_off_assi_Y(){
-    hal::set_assi_Y_state(AssiState::Off);
+    hal::set_assi_Y_state(AssiState::OFF);
   }
   void switch_on_assi_Y(){
-    hal::set_assi_Y_state(AssiState::On);
+    hal::set_assi_Y_state(AssiState::ON);
   }
   void strobe_assi_Y(){
-    hal::set_assi_Y_state(AssiState::Strobe);
+    hal::set_assi_Y_state(AssiState::STROBE);
   }
 
   void brake_with_maxon(){
@@ -57,15 +57,15 @@ namespace hal::actions {
   }
 
   void switch_off_assi_B(){
-    hal::set_assi_B_state(AssiState::Off);
+    hal::set_assi_B_state(AssiState::OFF);
   }
 
   void switch_on_assi_B(){
-    hal::set_assi_B_state(AssiState::On);
+    hal::set_assi_B_state(AssiState::ON);
   }
   
   void strobe_assi_B(){
-    hal::set_assi_B_state(AssiState::Strobe);
+    hal::set_assi_B_state(AssiState::STROBE);
   }
 
   void pullClutch() {

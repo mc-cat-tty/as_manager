@@ -51,9 +51,9 @@ namespace hal{
 
         SdcState read_sdc(){
             if (random_number() > 1.0)
-                return SdcState::Open;
+                return SdcState::OPEN;
             else
-                return SdcState::Closed;
+                return SdcState::CLOSE;
         }
 
         unsigned read_rpm(){
@@ -66,9 +66,9 @@ namespace hal{
 
         ResState read_res_state(){
             if (random_number() > 1.8)
-                return ResState::Operational;
+                return ResState::OPERATIONAL;
             else
-                return ResState::Error;
+                return ResState::ERROR;
         }
 
         void  toggle_actuator1_state(ActuatorState state){
