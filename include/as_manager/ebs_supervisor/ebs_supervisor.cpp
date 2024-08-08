@@ -1,7 +1,6 @@
 #include <as_manager/watchdog/watchdog.hpp>
 #include <as_manager/fsm_manager/fsm_manager.hpp>
 #include <as_manager/ebs_supervisor/ebs_supervisor.hpp>
-#include <as_manager/timing/common.hpp>
 #include <as_manager/ebs_supervisor/ebs_continuous_monitoring.hpp>
 #include <as_manager/signals/utils.hpp>
 #include <as_manager/assi_manager/assi_manager.hpp>

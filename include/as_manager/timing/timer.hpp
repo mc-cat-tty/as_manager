@@ -1,18 +1,19 @@
 #pragma once
 
 #include <as_manager/timing/clock.hpp>
+#include <chrono>
 
 namespace timing {
   class TimerAsync {
   public:
     TimerAsync();
     bool has_expired() const;
-    void start(timing::Tick duration);
+    void start(std::chrono::milliseconds duration);
     void stop();
 
   private:
     bool is_started;
-    timing::Tick endtime;
-    timing::Tick duration;
+    std::chrono::milliseconds endtime;
+    std::chrono::milliseconds duration;
   };
 };
