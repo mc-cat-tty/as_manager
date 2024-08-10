@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <random>
 #include <chrono>
+#include <unistd.h>
 #include <as_manager/common/common_types.hpp>
 
 namespace hal {

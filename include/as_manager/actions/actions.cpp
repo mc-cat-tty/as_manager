@@ -79,4 +79,15 @@ namespace hal::actions {
   void setUpMotors() {
     hal::set_up_all_motors();
   }
+
+  void startNode(std::string nodeName) {
+    pid_t newNodePid = fork();
+
+    /* TODO: better management of the error */
+    if (newNodePid < 0) { exit(255); }
+    if (!newNodePid) {
+      execlp("ros2", "ros2", "launch", nodeName, nodeName + "_launch.py", (char*)NULL);
+      exit(4);
+    } else return;
+  }
 }
