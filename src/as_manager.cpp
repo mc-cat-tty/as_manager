@@ -27,7 +27,7 @@ AsManagerNode::AsManagerNode() :
 
     AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::UInt8>(this->asStateTopic, transientLocalQOS);
     AsManagerNode::outputPublishers.brakePublisher = this->create_publisher<mmr_base::msg::CmdMotor>(this->brakeTopic, 1);
-    AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<can_msgs::msg::Frame>(this->canRxTopic, 1);
+    AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<mmr_base::msg::CmdEcu>(this->gearUpTopic, 1);
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_base::msg::CmdMotor>(this->clutchTopic, 1);
     AsManagerNode::outputPublishers.steerPublisher = this->create_publisher<mmr_base::msg::CmdMotor>(this->steerTopic, 1);
 

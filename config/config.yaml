@@ -8,7 +8,7 @@ as_manager_node:
 
     topics:
       asStateTopic: "/as/status"
-      canRxTopic: "/canbus/rx/msg"
+      gearUpTopic: "/command/ecu"
       brakeTopic: "/command/brake"
       clutchTopic: "/command/clutch"
       steerTopic: "/command/steer"
