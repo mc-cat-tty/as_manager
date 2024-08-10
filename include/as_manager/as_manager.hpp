@@ -21,6 +21,7 @@
 #include <mmr_base/msg/res_status.hpp>
 #include <mmr_base/msg/actuator_status.hpp>
 #include <mmr_base/msg/cmd_motor.hpp>
+#include <mmr_base/msg/cmd_ecu.hpp>
 #include <mmr_base/configuration.hpp>
 
 constexpr unsigned updatableSignalsNumber = 5;
@@ -38,7 +39,7 @@ struct ROSInputState {
 struct ROSPublishers {
   rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr asStatePublisher;
   rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr brakePublisher;
-  rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr gearPublisher;
+  rclcpp::Publisher<mmr_base::msg::CmdEcu>::SharedPtr gearPublisher;
   rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr clutchPublisher;
   rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr steerPublisher;
 };
@@ -64,7 +65,7 @@ class AsManagerNode : public EDFNode {
   static ROSPublishers outputPublishers;
 
   // Topics
-  std::string brakeTopic, asStateTopic, canRxTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
+  std::string brakeTopic, asStateTopic, gearUpTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
 
   // Callbacks
   void ecuStatusCb(const mmr_base::msg::EcuStatus::SharedPtr msg) {
@@ -145,16 +146,9 @@ class AsManagerNode : public EDFNode {
   }
 
   static inline void sendGearUp(){
-    auto msg = can_msgs::msg::Frame();
-    msg.id = 0x610;
-    msg.dlc = 8;
-
-    auto sendFun = [&msg](bool val) {
-      msg.data[0] = val << 1;
-      outputPublishers.gearPublisher->publish(msg);
-    };
-
-    hal::utils::ecuButtonTrigger(sendFun, 1ms);
+    auto msg = mmr_base::msg::CmdEcu();
+    msg.gear_target = 1;
+    outputPublishers.gearPublisher->publish(msg);
   }
 
   static inline void sendClutchAction(bool doDisengage) {
@@ -171,7 +165,7 @@ class AsManagerNode : public EDFNode {
 
     declare_parameter("topics.asStateTopic", "");
     declare_parameter("topics.brakeTopic", "");
-    declare_parameter("topics.canRxTopic", "");
+    declare_parameter("topics.gearUpTopic", "");
     declare_parameter("topics.clutchTopic", "");
     declare_parameter("topics.steerTopic", "");
     declare_parameter("topics.ecuStatusTopic", "");
@@ -198,7 +192,7 @@ class AsManagerNode : public EDFNode {
 
     get_parameter("topics.asStateTopic", this->asStateTopic);
     get_parameter("topics.brakeTopic", this->brakeTopic);
-    get_parameter("topics.canRxTopic", this->canRxTopic);
+    get_parameter("topics.gearUpTopic", this->gearUpTopic);
     get_parameter("topics.clutchTopic", this->clutchTopic);
     get_parameter("topics.steerTopic", this->steerTopic);
     get_parameter("topics.ecuStatusTopic", this->ecuStatusTopic);
