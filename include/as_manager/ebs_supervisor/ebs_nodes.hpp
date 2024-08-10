@@ -11,7 +11,7 @@ namespace as::ebs_supervisor {
     using namespace hal::actions;
     using namespace watchdog;
     using namespace params;
-    
+
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
         using namespace hal::pin;
@@ -29,8 +29,13 @@ namespace as::ebs_supervisor {
       "ASMS is ON", "Waiting ASMS", [] {}
     );
 
+    constexpr auto START_CANBUS_NODE = doActionNode(
+      std::bind(hal::actions::startNode, "canbus_bridge"),
+      "Started CAN Open Bridge"
+    );
+
     constexpr auto START_CANOPEN_NODE = doActionNode(
-      std::bind(std::system, "ros2 launch canopen_bridge canopen_bridge_launch.py"),
+      std::bind(hal::actions::startNode, "canopen_bridge"),
       "Started CAN Open Bridge"
     );
 
