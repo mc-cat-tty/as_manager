@@ -28,7 +28,7 @@ namespace hal::actions {
 
     void pullClutch();
     void setFirstGear();
-    void setUpMotors();
+    void enableMotors();
 
     void startNode(std::string nodeName);
 }

@@ -97,40 +97,23 @@ namespace hal{
         }
 
         uint8_t read_res_bit_vector(){
-            if (random_number() < 0.6)
-                return 0x07;
-            else if (random_number() > 0.6 && random_number() < 1.2)
-                return 0x07;
-            else
-                return 0x07;
+            return 0x00;
         }
 
         bool read_asms_status(){
-            if (random_number() > 0)
-                return true;
-            else
-                return false;
+          return false;
         }
 
         bool read_stop_message(){
-            if (random_number() > 1.9)
-                return true;
-            else
-                return false;
+          return false;
         }
 
         bool read_go_message(){
-            if (random_number() > 4.0)
-                return true;
-            else
-                return false;
+          return false;
         }
 
         bool read_mission_status(){
-            if (random_number() > 1.8)
-                return true;
-            else
-                return false;
+            return false;
         }
 
         uint8_t read_motors_bit_vector(){
@@ -150,18 +133,12 @@ namespace hal{
         }
 
         bool is_autonomous_mission(){
-            if (random_number() > 1.8)
-                return true;
-            else
-                return false;
+            return false;
         }
 
     void set_gear(uint8_t gear) {};
     void pull_clutch() {};
-      void set_up_all_motors(){};
-
-
-
+    void enable_motors(){};
 }
 
 #endif  // TEST

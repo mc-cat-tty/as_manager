@@ -35,5 +35,5 @@ namespace hal {
 
   void set_gear(uint8_t gear);
   void pull_clutch();
-  void set_up_all_motors();
+  void enable_motors();
 }

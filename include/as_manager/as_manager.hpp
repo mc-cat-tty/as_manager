@@ -123,7 +123,7 @@ class AsManagerNode : public EDFNode {
     outputPublishers.brakePublisher->publish(msg);
   }
 
-  static inline void setUpMotors(bool brake, bool clutch, bool steer){
+  static inline void enableMotors(bool brake, bool clutch, bool steer){
     if(brake){
       auto msgBrake=mmr_base::msg::CmdMotor();
       msgBrake.enable=brake;

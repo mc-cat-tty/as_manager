@@ -59,8 +59,8 @@ namespace hal {
     AsManagerNode::sendClutchAction(true);
   }
 
-  void set_up_all_motors(){
-    AsManagerNode::setUpMotors(true,true,true);
+  void enable_motors(){
+    AsManagerNode::enableMotors(true,true,true);
   }
 }
 
