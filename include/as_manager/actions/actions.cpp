@@ -1,4 +1,5 @@
 #include <as_manager/actions/actions.hpp>
+#include <iostream>
 
 namespace hal::actions {
   void open_sdc(){
@@ -76,18 +77,24 @@ namespace hal::actions {
     hal::set_gear(1);
   }
 
-  void setUpMotors() {
-    hal::set_up_all_motors();
+  void enableMotors() {
+    hal::enable_motors();
   }
 
   void startNode(std::string nodeName) {
     pid_t newNodePid = fork();
 
-    /* TODO: better management of the error */
-    if (newNodePid < 0) { exit(255); }
+    if (newNodePid < 0) {
+      std::cerr << "Fork failed with error number: " << newNodePid << std::endl;
+      exit(255);
+    }
     if (!newNodePid) {
-      execlp("ros2", "ros2", "launch", nodeName, nodeName + "_launch.py", (char*)NULL);
-      exit(4);
-    } else return;
+      int ret = execlp("ros2", "ros2", "launch", nodeName, nodeName + "_launch.py", (char*)NULL);
+      if (ret == -1) {
+        std::cerr << "Exec failed with error number: " << ret << std::endl;
+        exit(4);
+      }
+    }
+    else return;
   }
 }
