@@ -1,5 +1,5 @@
 as_manager_node:
-  ros_parameters:
+  ros__parameters:
     generic:
       WCET: 5000000 # ns
       period: 10000000 # ns

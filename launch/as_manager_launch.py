@@ -15,7 +15,7 @@ def generate_launch_description():
     name="as_manager_node",
     executable="as_manager_node",
     output="screen",
-    parameters=[config_node]
+    parameters=[configuration]
   )
 
   launch_description.add_action(node)

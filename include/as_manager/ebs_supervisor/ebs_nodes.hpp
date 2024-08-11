@@ -31,7 +31,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto START_CANBUS_NODE = doActionNode(
       std::bind(hal::actions::startNode, "canbus_bridge"),
-      "Started CAN Open Bridge"
+      "Started CAN Bus Bridge"
     );
 
     constexpr auto START_CANOPEN_NODE = doActionNode(
@@ -96,7 +96,7 @@ namespace as::ebs_supervisor {
     constexpr auto BRAKE_ACT2_NODE = doActionNode(brake_act2, "Brake Act2");
     constexpr auto UNBRAKE_ACT2_NODE = doActionNode(unbrake_act2, "Unbrake Act2");
 
-    constexpr auto WAIT_BRAKE_MOTOR_ENALBED = waitUntilNode(
+    constexpr auto WAIT_BRAKE_MOTOR_ENABLED = waitUntilNode(
       []{
         return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::BRAKE);
       }, "Brake motor enabled", "Waiting brake motor enabled", [] {});
@@ -109,12 +109,12 @@ namespace as::ebs_supervisor {
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureMaxonMotorsThreshold;
       }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
-    constexpr auto WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_GO_SIGNAL = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned)hal::Res::GO);
       }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
-    constexpr auto WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE =  waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return stop_signal.get_value();
       }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
@@ -130,5 +130,5 @@ namespace as::ebs_supervisor {
     constexpr auto PULL_CLUTCH_NODE = doActionNode(pullClutch, "Pulling clutch");
     constexpr auto GEAR_FIRST_NODE = doActionNode(setFirstGear, "Setting gear to first");
 
-    constexpr auto SETUP_MOTORS_NODE = doActionNode(setUpMotors, "Enable all motors and for steer do homing before enable");
+    constexpr auto ENABLE_MOTORS_NODE = doActionNode(setUpMotors, "Enable all motors and for steer do homing before enable");
 }
