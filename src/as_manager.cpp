@@ -25,7 +25,7 @@ AsManagerNode::AsManagerNode() :
       .keep_last(1)
       .transient_local();
 
-    AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::UInt8>(this->asStateTopic, transientLocalQOS);
+    AsManagerNode::outputPublishers.asStatePublisher = this->create_publisher<std_msgs::msg::Int8>(this->asStateTopic, transientLocalQOS);
     AsManagerNode::outputPublishers.brakePublisher = this->create_publisher<mmr_base::msg::CmdMotor>(this->brakeTopic, 1);
     AsManagerNode::outputPublishers.gearPublisher = this->create_publisher<mmr_base::msg::CmdEcu>(this->gearUpTopic, 1);
     AsManagerNode::outputPublishers.clutchPublisher = this->create_publisher<mmr_base::msg::CmdMotor>(this->clutchTopic, 1);

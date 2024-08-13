@@ -37,7 +37,7 @@ struct ROSInputState {
 };
 
 struct ROSPublishers {
-  rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr asStatePublisher;
+  rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr asStatePublisher;
   rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr brakePublisher;
   rclcpp::Publisher<mmr_base::msg::CmdEcu>::SharedPtr gearPublisher;
   rclcpp::Publisher<mmr_base::msg::CmdMotor>::SharedPtr clutchPublisher;
@@ -112,8 +112,8 @@ class AsManagerNode : public EDFNode {
 
   // Output state setters
   static inline void sendASState(as::AsState state) {
-    auto msg = std_msgs::msg::UInt8();
-    msg.data = static_cast<uint8_t>(state);
+    auto msg = std_msgs::msg::Int8();
+    msg.data = static_cast<int8_t>(state);
     outputPublishers.asStatePublisher->publish(msg);
   }
 
