@@ -15,14 +15,14 @@ namespace as::ebs_supervisor {
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
           // CANBUS BRIDGE as the first thing
-          START_CANBUS_NODE,
+          // START_CANBUS_NODE,
 
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
           
           // OFF
           INIT_PINS_NODE,
           // WAIT_ASMS_NODE,
-          START_CANOPEN_NODE,
+          // START_CANOPEN_NODE,
           // WAIT_MISSION_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
