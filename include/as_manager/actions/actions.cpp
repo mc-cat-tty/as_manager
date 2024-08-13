@@ -54,7 +54,7 @@ namespace hal::actions {
   }
 
   void brake_with_maxon(){
-    hal::send_brake_pressure_percentage(20);
+    hal::send_brake_pressure_percentage(-0.008f);
   }
 
   void switch_off_assi_B(){
