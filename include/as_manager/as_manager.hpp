@@ -133,17 +133,17 @@ class AsManagerNode : public EDFNode {
     if(clutch){
       auto msgClutch=mmr_base::msg::CmdMotor();
       msgClutch.enable=clutch;
-      outputPublishers.brakePublisher->publish(msgClutch);
+      outputPublishers.clutchPublisher->publish(msgClutch);
     } 
 
     if(steer){
       auto msgSteerHoming=mmr_base::msg::CmdMotor();
       msgSteerHoming.homing=steer;
-      outputPublishers.brakePublisher->publish(msgSteerHoming);
+      outputPublishers.steerPublisher->publish(msgSteerHoming);
       
       auto msgSteerEnable=mmr_base::msg::CmdMotor();
       msgSteerEnable.enable=steer;
-      outputPublishers.brakePublisher->publish(msgSteerEnable);
+      outputPublishers.steerPublisher->publish(msgSteerEnable);
     }
   }
 
