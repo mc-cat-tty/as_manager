@@ -69,7 +69,7 @@ namespace as::ebs_supervisor {
             "ASSI to DRIVING"
           ),
           PULL_CLUTCH_NODE,
-          // GEAR_FIRST_NODE,
+          GEAR_FIRST_NODE,
 
           // DRIVING
           doActionNode(std::bind(&hal::send_current_state, AsState::DRIVING), "Published DRIVING"),
