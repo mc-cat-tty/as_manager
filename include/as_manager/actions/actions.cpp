@@ -54,7 +54,7 @@ namespace hal::actions {
   }
 
   void brake_with_maxon(){
-    hal::send_brake_pressure_percentage(20);
+    hal::send_brake_pressure_percentage(0.008f);
   }
 
   void switch_off_assi_B(){
@@ -89,7 +89,8 @@ namespace hal::actions {
       exit(255);
     }
     if (!newNodePid) {
-      int ret = execlp("ros2", "ros2", "launch", nodeName, nodeName + "_launch.py", (char*)NULL);
+      auto launchFile = nodeName + "_launch.py";
+      int ret = execlp("ros2", "ros2", "launch", nodeName.c_str(), launchFile.c_str() , (char*)NULL);
       if (ret == -1) {
         std::cerr << "Exec failed with error number: " << ret << std::endl;
         exit(4);

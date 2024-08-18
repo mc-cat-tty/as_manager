@@ -1,6 +1,7 @@
 #ifdef TEST
 
 #include <as_manager/hal/hal.hpp>
+#include <as_manager/as_manager.hpp>
 
 namespace hal{
         static double random_number() {
@@ -97,11 +98,11 @@ namespace hal{
         }
 
         uint8_t read_res_bit_vector(){
-            return 0x00;
+            return 0x01;
         }
 
         bool read_asms_status(){
-          return false;
+          return true;
         }
 
         bool read_stop_message(){
@@ -129,11 +130,11 @@ namespace hal{
 
         }
         void send_current_state(as::AsState state){
-
+            AsManagerNode::sendASState(state);
         }
 
         bool is_autonomous_mission(){
-            return false;
+            return true;
         }
 
     void set_gear(uint8_t gear) {};
