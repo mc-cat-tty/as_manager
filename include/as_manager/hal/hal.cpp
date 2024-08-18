@@ -42,7 +42,7 @@ namespace hal {
   bool read_go_message() {return false;}
   bool is_autonomous_mission()  {return AsManagerNode::getAutonomousMission(); }
 
-  uint8_t read_motors_bit_vector() {return 1;}
+  uint8_t read_motors_bit_vector() { return AsManagerNode::getMaxonMotorsState(); }
 
   void send_brake_pressure_percentage(float percentage) {
     AsManagerNode::sendBrakePercentage(percentage);
