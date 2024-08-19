@@ -39,6 +39,11 @@ namespace as::ebs_supervisor {
       "Started CAN Open Bridge"
     );
 
+    constexpr auto START_CONTROL_NODE = doActionNode(
+      std::bind(hal::actions::startNode, "control_node"),
+      "Started CAN Open Bridge"
+    );
+
     constexpr auto WAIT_MISSION_NODE=waitUntilNode(
       []{return mission_signal.get_value();}, 
       "Mission selected", "Waiting mission", [] {}

@@ -22,7 +22,8 @@ namespace as::ebs_supervisor {
           // OFF
           INIT_PINS_NODE,
           // WAIT_ASMS_NODE,
-          // START_CANOPEN_NODE,
+          START_CANOPEN_NODE,
+          START_CONTROL_NODE,
           // WAIT_MISSION_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
@@ -48,7 +49,7 @@ namespace as::ebs_supervisor {
 
           ENABLE_MOTORS_NODE,
 
-          WAIT_BRAKE_MOTOR_ENABLED,
+          // WAIT_BRAKE_MOTOR_ENABLED,
           // UNBRAKE_ACT1_NODE,
           // ASSERT_NO_BRAKE_PRESSURE_NODE,
           // BRAKE_WITH_MAXON_MOTOR_NODE,
