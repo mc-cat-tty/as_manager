@@ -51,7 +51,7 @@ namespace as::ebs_supervisor {
           WAIT_BRAKE_MOTOR_ENABLED,
           // UNBRAKE_ACT1_NODE,
           // ASSERT_NO_BRAKE_PRESSURE_NODE,
-          BRAKE_WITH_MAXON_MOTOR_NODE,
+          // BRAKE_WITH_MAXON_MOTOR_NODE,
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR,
 
           // CLOSE_SDC_NODE,
