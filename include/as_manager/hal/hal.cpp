@@ -3,6 +3,7 @@
 #include <as_manager/hal/hal.hpp>
 #include <as_manager/as_manager.hpp>
 #include <as_manager/hal/pin_implementation.hpp>
+#include <iostream>
 
 namespace hal {
   SdcState read_sdc() {return pin::sdcSensPin.getValue() ? SdcState::OPEN : SdcState::CLOSE;}
@@ -41,6 +42,7 @@ namespace hal {
   bool read_stop_message()  {return false;}
   bool read_go_message() {return false;}
   bool is_autonomous_mission()  {return AsManagerNode::getAutonomousMission(); }
+  bool read_orin_on() {std::cout<<"HAL RICHIAMATA"<<std::endl; return AsManagerNode::getOrinOn(); }
 
   uint8_t read_motors_bit_vector() { return AsManagerNode::getMaxonMotorsState(); }
 

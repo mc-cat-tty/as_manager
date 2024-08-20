@@ -59,6 +59,11 @@ AsManagerNode::AsManagerNode() :
     AsManagerNode::inputSubscriptions.stopMessageSubscription= this->create_subscription<std_msgs::msg::Bool>(
       this->stopMessageTopic, 1, std::bind(&AsManagerNode::stopMessageCb, this, _1)
     );
+
+    // Reliable 1 keep last
+    AsManagerNode::inputSubscriptions.orinOnSubscription= this->create_subscription<std_msgs::msg::Bool>(
+      this->orinOnTopic, 1, std::bind(&AsManagerNode::orinOnCb, this, _1)
+    );
   }
 
 AsManagerNode::~AsManagerNode() {
@@ -89,6 +94,7 @@ void AsManagerNode::loadParameters(){
   declare_parameter("topics.maxonMotorsTopic", "");
   declare_parameter("topics.missionSelectedTopic", "");
   declare_parameter("topics.stopMessageTopic", "");
+  declare_parameter("topics.orinOnTopic", "");
 
   declare_parameter("thresholds.ebsTankPressureThreshold", 5);
   declare_parameter("thresholds.brakePressureOneActuatorThreshold", 20);
@@ -116,6 +122,7 @@ void AsManagerNode::loadParameters(){
   get_parameter("topics.maxonMotorsTopic", this->maxonMotorsTopic);
   get_parameter("topics.missionSelectedTopic", this->missionSelectedTopic);
   get_parameter("topics.stopMessageTopic", this->stopMessageTopic);
+  get_parameter("topics.orinOnTopic", this->orinOnTopic);
 
   using namespace params;
   get_parameter("generic.debug", Parameters::getInstance().debug);

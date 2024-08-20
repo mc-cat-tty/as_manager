@@ -14,6 +14,7 @@ namespace as::ebs_supervisor {
 
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
+          WAIT_ORIN_ON,
           // CANBUS BRIDGE as the first thing
           START_CANBUS_NODE,
 

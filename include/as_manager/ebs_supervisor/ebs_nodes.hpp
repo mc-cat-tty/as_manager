@@ -5,6 +5,7 @@
 #include <as_manager/hal/pin_implementation.hpp>
 #include <as_manager/params/parameters.hpp>
 #include <as_manager/common/common_types.hpp>
+#include <iostream>
 
 
 namespace as::ebs_supervisor {
@@ -22,6 +23,12 @@ namespace as::ebs_supervisor {
         sdcCtrlPin.setValue(KriaPin::Value::OFF);
       },
       "Initialized pins"
+    );
+
+    constexpr auto WAIT_ORIN_ON=waitUntilNode(
+      []{std::cout<<"VALORE DI ORIN ON: "<<orin_on_signal.get_value()<<std::endl; 
+         return orin_on_signal.get_value();}, 
+      "ORIN is ON", "Waiting ORIN", [] {}
     );
 
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(

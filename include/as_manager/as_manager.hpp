@@ -33,6 +33,7 @@ struct ROSInputState {
   float brakePressureFront, brakePressureRear;
   float ebsPressure1, ebsPressure2;
   bool stopMessage;
+  bool orinOn;
   int8_t autonomousMission;
 };
 
@@ -50,6 +51,7 @@ struct ROSSubscribers {
   rclcpp::Subscription<mmr_base::msg::ActuatorStatus>::SharedPtr maxonMotorsSubscription;
   rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr missionSelectedSubscription;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr stopMessageSubscription;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr orinOnSubscription;
 };
 
 class AsManagerNode : public EDFNode {
@@ -67,7 +69,7 @@ class AsManagerNode : public EDFNode {
   static ROSPublishers outputPublishers;
 
   // Topics
-  std::string brakeTopic, asStateTopic, gearUpTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic;
+  std::string brakeTopic, asStateTopic, gearUpTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic, orinOnTopic;
 
   // Callbacks
   void ecuStatusCb(const mmr_base::msg::EcuStatus::SharedPtr msg) {
@@ -94,6 +96,11 @@ class AsManagerNode : public EDFNode {
     inputState.stopMessage = msg->data;
   }
 
+  void orinOnCb(const std_msgs::msg::Bool::SharedPtr msg) {
+    std::cout<<"MESS RICEVUTO: "<<msg->data<<std::endl;
+    inputState.orinOn = msg->data;
+  }
+
   public:
   AsManagerNode();
   ~AsManagerNode();
@@ -109,6 +116,7 @@ class AsManagerNode : public EDFNode {
   static inline float getEbsPressure2() { return inputState.ebsPressure2; }
   static inline bool getStopMessage() { return inputState.stopMessage; }
   static inline bool getAutonomousMission() { return inputState.autonomousMission != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL; }
+  static inline bool getOrinOn() { return inputState.orinOn; }
 
   // Output state setters
   static inline void sendASState(as::AsState state) {
