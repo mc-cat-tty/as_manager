@@ -50,7 +50,7 @@ namespace as::ebs_supervisor {
 
           WAIT_CANOPEN_ON,
           ENABLE_MOTORS_NODE,
-          // WAIT_BRAKE_MOTOR_ENABLED,
+          WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED,
           // UNBRAKE_ACT1_NODE,
           // ASSERT_NO_BRAKE_PRESSURE_NODE,
           // BRAKE_WITH_MAXON_MOTOR_NODE,

@@ -17,7 +17,7 @@ as_manager_node:
       maxonMotorsTopic: "/actuator/status"
       missionSelectedTopic: "/mission/selected"
       stopMessageTopic: "/mission/stop"
-      orinOnTopic: "orin/on"
+      orinOnTopic: "/orin/on"
 
     thresholds:
       ebsTankPressureThreshold: 5

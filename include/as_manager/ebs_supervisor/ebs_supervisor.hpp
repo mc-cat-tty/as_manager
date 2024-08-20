@@ -20,6 +20,6 @@ namespace as::ebs_supervisor {
             EbsSupervisor(const EbsSupervisor&) = delete;
             EbsSupervisor(EbsSupervisor&&) = delete;
             EbsSupervisor& operator=(const EbsSupervisor&) = delete;
-            fsm::Manager<18> ebsFsm;
+            fsm::Manager<19> ebsFsm;
     };
 }

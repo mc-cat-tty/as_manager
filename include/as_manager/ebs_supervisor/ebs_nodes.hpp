@@ -162,10 +162,10 @@ namespace as::ebs_supervisor {
     constexpr auto BRAKE_ACT2_NODE = doActionNode(brake_act2, "Brake Act2");
     constexpr auto UNBRAKE_ACT2_NODE = doActionNode(unbrake_act2, "Unbrake Act2");
 
-    constexpr auto WAIT_BRAKE_MOTOR_ENABLED = waitUntilNode(
+    constexpr auto WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED = waitUntilNode(
       []{
-        return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::CLUTCH);
-      }, "Brake motor enabled", "Waiting brake motor enabled", [] {});
+        return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::CLUTCH | (unsigned)hal::MaxonMotors::BRAKE);
+      }, "Brake and clutch motors enabled", "Waiting brake and clutch motor enabled", [] {});
 
     constexpr auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with MAXON motor");
 

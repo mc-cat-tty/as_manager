@@ -99,7 +99,6 @@ class AsManagerNode : public EDFNode {
   }
 
   void orinOnCb(const std_msgs::msg::Bool::SharedPtr msg) {
-    std::cout<<"MESS RICEVUTO: "<<msg->data<<std::endl;
     inputState.orinOn = msg->data;
   }
 
