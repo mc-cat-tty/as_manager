@@ -78,6 +78,7 @@ namespace hal::actions {
   }
 
   void enableMotors() {
+    usleep(1000);
     hal::enable_motors();
   }
 
