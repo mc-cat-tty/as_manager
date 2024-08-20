@@ -47,7 +47,6 @@ namespace as::ebs_supervisor {
           // UNBRAKE_ACT2_NODE,
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
 
-          ENABLE_MOTORS_NODE,
 
           // WAIT_BRAKE_MOTOR_ENABLED,
           // UNBRAKE_ACT1_NODE,
@@ -64,6 +63,7 @@ namespace as::ebs_supervisor {
             assi_manager::AssiManager::getInstance().ready();
           }, "Published READY and ASSI to READY"),
           WAIT_GO_SIGNAL,
+          ENABLE_MOTORS_NODE,
           doActionNode([]{
             assi_manager::AssiManager::getInstance().driving();
           },
