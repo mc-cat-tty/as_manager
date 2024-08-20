@@ -34,6 +34,7 @@ struct ROSInputState {
   float ebsPressure1, ebsPressure2;
   bool stopMessage;
   bool orinOn;
+  bool canOpenOn=false;
   int8_t autonomousMission;
 };
 
@@ -85,6 +86,7 @@ class AsManagerNode : public EDFNode {
   }
   
   void maxonMotorsCb(const mmr_base::msg::ActuatorStatus::SharedPtr msg) {
+    inputState.canOpenOn=true;
     inputState.maxonMotorsState = hal::utils::motorsComposeBv(msg->clutch_status, msg->steer_status, msg->brake_status);
   }
   
@@ -117,6 +119,7 @@ class AsManagerNode : public EDFNode {
   static inline bool getStopMessage() { return inputState.stopMessage; }
   static inline bool getAutonomousMission() { return inputState.autonomousMission != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL; }
   static inline bool getOrinOn() { return inputState.orinOn; }
+  static inline bool getCanOpenOn() { return inputState.canOpenOn; }
 
   // Output state setters
   static inline void sendASState(as::AsState state) {

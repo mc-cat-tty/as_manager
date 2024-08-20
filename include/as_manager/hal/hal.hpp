@@ -29,6 +29,7 @@ namespace hal {
   bool read_go_message();
   bool is_autonomous_mission();
   bool read_orin_on();
+  bool read_can_open_on();
   uint8_t read_motors_bit_vector();
 
   void send_brake_pressure_percentage(float percentage);

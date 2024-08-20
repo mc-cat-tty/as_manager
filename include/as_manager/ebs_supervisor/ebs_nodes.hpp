@@ -33,6 +33,11 @@ namespace as::ebs_supervisor {
       "ORIN is ON", "Waiting ORIN", [] {}
     );
 
+    constexpr auto WAIT_CANOPEN_ON=waitUntilNode(
+      []{ return can_open_on_singal.get_value();}, 
+      "CANOPEN is ON", "Waiting CANOPEN", [] {}
+    );
+
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
       []{return asms_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(ASMS_THRESHOLD);}, 
       "ASMS is ON", "Waiting ASMS", [] {}
