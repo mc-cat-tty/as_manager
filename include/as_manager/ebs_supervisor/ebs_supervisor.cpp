@@ -16,6 +16,7 @@ namespace as::ebs_supervisor {
         {
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
           
+          START_CONTROL_NODE,
           WAIT_ORIN_ON,
           // CANBUS BRIDGE is the first thing
           START_CANBUS_NODE,
@@ -24,7 +25,6 @@ namespace as::ebs_supervisor {
           INIT_PINS_NODE,
           // WAIT_ASMS_NODE,
           START_CANOPEN_NODE,
-          START_CONTROL_NODE,
           // WAIT_MISSION_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
