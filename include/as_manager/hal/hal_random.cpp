@@ -18,6 +18,10 @@ namespace hal{
             return false;
         }
 
+        bool read_can_open_on() {
+            return false;
+        }
+
         float read_ebs1_pressure(){
             if ( random_number() > 1.8)
                 return 1.0f;
