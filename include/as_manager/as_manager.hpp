@@ -131,28 +131,15 @@ class AsManagerNode : public EDFNode {
     outputPublishers.brakePublisher->publish(msg);
   }
 
-  static inline void enableMotors(bool brake, bool clutch, bool steer){
-    if(brake){
+  static inline void enableMotors(bool brake, bool clutch){
       auto msgBrake=mmr_base::msg::CmdMotor();
       msgBrake.enable=brake;
       outputPublishers.brakePublisher->publish(msgBrake);
-    }
 
-    if(clutch){
       auto msgClutch=mmr_base::msg::CmdMotor();
       msgClutch.enable=clutch;
       outputPublishers.clutchPublisher->publish(msgClutch);
-    } 
-
-    if(steer){
-      auto msgSteerHoming=mmr_base::msg::CmdMotor();
-      msgSteerHoming.homing=steer;
-      outputPublishers.steerPublisher->publish(msgSteerHoming);
-      
-      auto msgSteerEnable=mmr_base::msg::CmdMotor();
-      msgSteerEnable.enable=steer;
-      outputPublishers.steerPublisher->publish(msgSteerEnable);
-    }
+    
   }
 
   static inline void sendGearUp(){

@@ -62,7 +62,7 @@ namespace hal {
   }
 
   void enable_motors(){
-    AsManagerNode::enableMotors(true,true,false);
+    AsManagerNode::enableMotors(true,true);
   }
 }
 
