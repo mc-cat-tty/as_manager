@@ -14,11 +14,11 @@ namespace as::ebs_supervisor {
 
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
-          WAIT_ORIN_ON,
-          // CANBUS BRIDGE as the first thing
-          START_CANBUS_NODE,
-
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
+          
+          WAIT_ORIN_ON,
+          // CANBUS BRIDGE is the first thing
+          START_CANBUS_NODE,
           
           // OFF
           INIT_PINS_NODE,
@@ -57,7 +57,7 @@ namespace as::ebs_supervisor {
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR,
 
           // CLOSE_SDC_NODE,
-          // WAIT_TS_ACTIVE,
+          WAIT_TS_ACTIVE,
 
           // READY
           doActionNode([]{

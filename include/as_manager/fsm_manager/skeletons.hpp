@@ -29,21 +29,27 @@ namespace as::fsm {
     std::string_view timeoutMsg
   ){
     static auto timer = timing::TimerAsync();
+    static auto isWaitMsgLogged = false;
     timer.start(ms);
 
     if (predicate()) {
       std::cout << successfulMsg << std::endl;
       timer.stop();
+      isWaitMsgLogged = false;
       return NodeFlowCtrl::NEXT;
     }
     
     if(timer.has_expired()) {
         std::cout << timeoutMsg << std::endl;
         timer.stop();
+        isWaitMsgLogged = false;
         throw EmergencyException();
     }
 
-    std::cout << waitingMsg << std::endl;
+    if (not isWaitMsgLogged) {
+      std::cout << waitingMsg << std::endl;
+      isWaitMsgLogged = true;
+    }
 
     return NodeFlowCtrl::CURRENT;
   };
@@ -84,8 +90,11 @@ namespace as::fsm {
     std::string_view waitingMsg,
     std::invocable auto continousMonitoring = []{}
   ) {
+    static auto isWaitMsgLogged = false;
+
     if (predicate()) {
       std::cout << successfulMsg << std::endl;
+      isWaitMsgLogged = false;
       return NodeFlowCtrl::NEXT;  // Next
     }
     
@@ -94,7 +103,11 @@ namespace as::fsm {
       std::cout << "Monitoring" << std::endl;
     }
     
-    std::cout << waitingMsg << std::endl;
+    if (not isWaitMsgLogged) {
+      std::cout << waitingMsg << std::endl;
+      isWaitMsgLogged = true;
+    }
+
     return NodeFlowCtrl::CURRENT;
   }
 

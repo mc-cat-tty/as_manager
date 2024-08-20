@@ -28,8 +28,7 @@ namespace as::ebs_supervisor {
     );
 
     constexpr auto WAIT_ORIN_ON=waitUntilNode(
-      []{std::cout<<"VALORE DI ORIN ON: "<<orin_on_signal.get_value()<<std::endl; 
-         return orin_on_signal.get_value();}, 
+      []{ return orin_on_signal.get_value(); }, 
       "ORIN is ON", "Waiting ORIN", [] {}
     );
 
@@ -189,7 +188,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_TS_ACTIVE = waitUntilNode(
       []{
-        return rpm_signal.get_value()>2000;
+        return rpm_signal.get_value()>3000;
       }, 
       "TS Activated", "Waiting for crank", [] {}
     );

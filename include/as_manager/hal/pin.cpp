@@ -11,7 +11,7 @@ KriaPin::KriaPin(Pin pin, Direction dir, Value initialValue)
 
     // Export the pin
     if (!writeToFile(exportPath, std::to_string(static_cast<uint32_t>(pinNumber)))) {
-        //throw std::runtime_error("Failed to export GPIO pin");
+        throw std::runtime_error("Failed to export GPIO pin");
     }
 
     // Set the direction

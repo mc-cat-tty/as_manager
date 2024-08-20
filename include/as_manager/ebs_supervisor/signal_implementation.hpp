@@ -41,5 +41,5 @@ namespace as::ebs_supervisor{
     auto stop_signal= Signal<bool>(hal::read_stop_message,&updater, DEFAULT_ALPHA);
     auto res_emergency_signal= Signal<hal::ResState>(hal::read_res_state,&updater, DEFAULT_ALPHA);
     auto res_bit_vector_signal = Signal<uint8_t>(hal::read_res_bit_vector, &updater, DEFAULT_ALPHA);
-    auto rpm_signal= Signal<float>(hal::read_rpm,&updater, std::ref(Parameters::getInstance().rpmAlpha));
+    auto rpm_signal= Signal<float>(hal::read_rpm,&updater, DEFAULT_ALPHA);
 }
