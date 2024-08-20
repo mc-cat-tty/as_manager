@@ -5,6 +5,7 @@
 #include <as_manager/hal/pin_implementation.hpp>
 #include <as_manager/params/parameters.hpp>
 #include <as_manager/common/common_types.hpp>
+#include <as_manager/timing/timer.hpp>
 #include <iostream>
 
 
@@ -12,6 +13,7 @@ namespace as::ebs_supervisor {
     using namespace hal::actions;
     using namespace watchdog;
     using namespace params;
+    using namespace std::chrono_literals;
 
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
@@ -34,6 +36,54 @@ namespace as::ebs_supervisor {
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
       []{return asms_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(ASMS_THRESHOLD);}, 
       "ASMS is ON", "Waiting ASMS", [] {}
+    );
+
+    constexpr auto WAIT_500_MS=waitUntilNode(
+      []{
+        static timing::TimerAsync timer;
+        timer.start(500ms);
+        if( timer.has_expired() ){
+          timer.stop();
+          return true;
+        }else { return false; } 
+      }, 
+      "500ms are expired", "Waiting 500ms", [] {}
+    );
+
+    constexpr auto WAIT_1000_MS=waitUntilNode(
+      []{
+        static timing::TimerAsync timer;
+        timer.start(1000ms);
+        if( timer.has_expired() ){
+          timer.stop();
+          return true;
+        }else { return false; } 
+      }, 
+      "1000ms are expired", "Waiting 1000ms", [] {}
+    );
+
+    constexpr auto WAIT_1500_MS=waitUntilNode(
+      []{
+        static timing::TimerAsync timer;
+        timer.start(1500ms);
+        if( timer.has_expired() ){
+          timer.stop();
+          return true;
+        }else { return false; } 
+      }, 
+      "1500ms are expired", "Waiting 1500ms", [] {}
+    );
+
+    constexpr auto WAIT_2000_MS=waitUntilNode(
+      []{
+        static timing::TimerAsync timer;
+        timer.start(2000ms);
+        if( timer.has_expired() ){
+          timer.stop();
+          return true;
+        }else { return false; } 
+      }, 
+      "2000ms are expired", "Waiting 2000ms", [] {}
     );
 
     constexpr auto START_CANBUS_NODE = doActionNode(
