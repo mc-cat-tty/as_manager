@@ -17,8 +17,6 @@ namespace as::ebs_supervisor {
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
 
           INIT_PINS_NODE,
-          TOGGLING_WATCHDOG_NODE,
-          CLOSE_SDC_NODE,
 
           START_CONTROL_NODE,
           

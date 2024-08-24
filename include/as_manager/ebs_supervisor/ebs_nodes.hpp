@@ -17,14 +17,14 @@ namespace as::ebs_supervisor {
 
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
-        using namespace hal::pin;
-        buzzerPin.setValue(KriaPin::Value::OFF);
-        watchdogPin.setValue(KriaPin::Value::OFF);
-        ebs1Pin.setValue(KriaPin::Value::ON);
-        ebs1Pin.setValue(KriaPin::Value::ON);
-        sdcCtrlPin.setValue(KriaPin::Value::OFF);
+        using namespace hal;
+        set_buzzer_state(BuzzerState::OFF);
+        toggle_actuator1_state(ActuatorState::UNBRAKING);
+        toggle_actuator2_state(ActuatorState::UNBRAKING);
+        toggle_sdc_state(SdcState::CLOSE);
+        Watchdog::getInstance().set_toggling();
       },
-      "Initialized pins to safe state"
+      "Initialized pins"
     );
 
     constexpr auto WAIT_ORIN_ON=waitUntilNode(
