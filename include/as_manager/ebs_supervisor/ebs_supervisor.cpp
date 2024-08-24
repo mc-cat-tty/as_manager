@@ -33,7 +33,7 @@ namespace as::ebs_supervisor {
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE,
 
           // ASSERT_SDC_OPEN_NODE,
-          // TOGGLING_WATCHDOG_NODE,
+          TOGGLING_WATCHDOG_NODE,
           CLOSE_SDC_NODE,
           // ASSERT_SDC_CLOSE_NODE,
           // STOP_TOGGLING_WATCHDOG_NODE,
