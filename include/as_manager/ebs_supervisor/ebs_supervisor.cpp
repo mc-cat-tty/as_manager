@@ -15,16 +15,19 @@ namespace as::ebs_supervisor {
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
-          
+
+          INIT_PINS_NODE,
+          TOGGLING_WATCHDOG_NODE,
+          CLOSE_SDC_NODE,
+
           START_CONTROL_NODE,
+          
           WAIT_ORIN_ON,
-          // CANBUS BRIDGE is the first thing
           START_CANBUS_NODE,
           
-          // OFF
-          INIT_PINS_NODE,
           // WAIT_ASMS_NODE,
           START_CANOPEN_NODE,
+          
           // WAIT_MISSION_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
@@ -33,8 +36,8 @@ namespace as::ebs_supervisor {
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE,
 
           // ASSERT_SDC_OPEN_NODE,
-          TOGGLING_WATCHDOG_NODE,
-          CLOSE_SDC_NODE,
+          // TOGGLING_WATCHDOG_NODE,
+          // CLOSE_SDC_NODE,
           // ASSERT_SDC_CLOSE_NODE,
           // STOP_TOGGLING_WATCHDOG_NODE,
           // ASSERT_SDC_OPEN_NODE,

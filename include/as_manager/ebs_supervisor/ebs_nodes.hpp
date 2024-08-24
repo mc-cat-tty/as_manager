@@ -24,7 +24,7 @@ namespace as::ebs_supervisor {
         ebs1Pin.setValue(KriaPin::Value::ON);
         sdcCtrlPin.setValue(KriaPin::Value::OFF);
       },
-      "Initialized pins"
+      "Initialized pins to safe state"
     );
 
     constexpr auto WAIT_ORIN_ON=waitUntilNode(
