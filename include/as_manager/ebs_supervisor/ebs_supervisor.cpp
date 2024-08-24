@@ -34,7 +34,7 @@ namespace as::ebs_supervisor {
 
           // ASSERT_SDC_OPEN_NODE,
           // TOGGLING_WATCHDOG_NODE,
-          // CLOSE_SDC_NODE,
+          CLOSE_SDC_NODE,
           // ASSERT_SDC_CLOSE_NODE,
           // STOP_TOGGLING_WATCHDOG_NODE,
           // ASSERT_SDC_OPEN_NODE,
