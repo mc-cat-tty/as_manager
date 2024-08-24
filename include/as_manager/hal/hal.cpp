@@ -9,10 +9,10 @@ namespace hal {
   bool read_asms_status() {return pin::asmsPin.getValue() ? false : true ;}
 
   void toggle_actuator1_state(ActuatorState state) {
-    pin::ebs1Pin.setValue(state == ActuatorState::BRAKING ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::ebs1Pin.setValue(state == ActuatorState::BRAKING ? KriaPin::Value::OFF : KriaPin::Value::ON);
   }
   void toggle_actuator2_state(ActuatorState state) {
-    pin::ebs2Pin.setValue(state == ActuatorState::BRAKING ? KriaPin::Value::ON : KriaPin::Value::OFF);
+    pin::ebs2Pin.setValue(state == ActuatorState::BRAKING ? KriaPin::Value::OFF : KriaPin::Value::ON);
   }
 
   void write_watchdog_state(bool pinState) {
