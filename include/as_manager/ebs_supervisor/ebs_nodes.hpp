@@ -134,9 +134,14 @@ namespace as::ebs_supervisor {
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureMaxonMotorsThreshold;
       }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
-    constexpr auto WAIT_GO_SIGNAL = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
+    constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
-        return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned)hal::Res::GO);
+        return !hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
+      }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
+
+    constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
+      []{
+        return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
       }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
     constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::DISABLE>(

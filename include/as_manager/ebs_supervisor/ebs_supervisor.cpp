@@ -66,7 +66,8 @@ namespace as::ebs_supervisor {
             assi_manager::AssiManager::getInstance().ready();
           }, "Published READY and ASSI to READY"),
           WAIT_5_S_NODE,
-          WAIT_GO_SIGNAL,
+          WAIT_GO_SIGNAL_OFF_NODE,  // Edge detector
+          WAIT_GO_SIGNAL_ON_NODE,
           doActionNode([]{
             assi_manager::AssiManager::getInstance().driving();
           },
