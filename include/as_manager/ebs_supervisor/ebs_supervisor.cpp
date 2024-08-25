@@ -20,7 +20,7 @@ namespace as::ebs_supervisor {
 
           START_CONTROL_NODE,
           
-          WAIT_ORIN_ON,
+          WAIT_ORIN_ON_NODE,
           START_CANBUS_NODE,
           
           // WAIT_ASMS_NODE,
@@ -49,22 +49,23 @@ namespace as::ebs_supervisor {
           // UNBRAKE_ACT2_NODE,
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
 
-          WAIT_CANOPEN_ON,
+          WAIT_CANOPEN_ON_NODE,
           ENABLE_MOTORS_NODE,
-          WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED,
+          WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED_NODE,
           // UNBRAKE_ACT1_NODE,
           // ASSERT_NO_BRAKE_PRESSURE_NODE,
           // BRAKE_WITH_MAXON_MOTOR_NODE,
           // ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR,
 
           // CLOSE_SDC_NODE,
-          WAIT_TS_ACTIVE,
+          WAIT_TS_ACTIVE_NODE,
 
           // READY
           doActionNode([]{
             hal::send_current_state(AsState::READY);
             assi_manager::AssiManager::getInstance().ready();
           }, "Published READY and ASSI to READY"),
+          WAIT_5_S_NODE,
           WAIT_GO_SIGNAL,
           doActionNode([]{
             assi_manager::AssiManager::getInstance().driving();

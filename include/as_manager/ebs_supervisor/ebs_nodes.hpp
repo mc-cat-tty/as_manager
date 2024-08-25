@@ -1,6 +1,7 @@
 #pragma once
 #include <as_manager/fsm_manager/nodes_factory.hpp>
 #include <as_manager/ebs_supervisor/signal_implementation.hpp>
+#include <as_manager/ebs_supervisor/ebs_nodes_helpers.hpp>
 #include <as_manager/actions/actions.hpp>
 #include <as_manager/hal/pin_implementation.hpp>
 #include <as_manager/params/parameters.hpp>
@@ -15,6 +16,12 @@ namespace as::ebs_supervisor {
     using namespace params;
     using namespace std::chrono_literals;
 
+    constexpr auto WAIT_500_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(500ms);
+    constexpr auto WAIT_1000_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(1000ms);
+    constexpr auto WAIT_1500_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(1500ms);
+    constexpr auto WAIT_2000_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(2000ms);
+    constexpr auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(5000ms);
+
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
         using namespace hal;
@@ -27,12 +34,12 @@ namespace as::ebs_supervisor {
       "Initialized pins"
     );
 
-    constexpr auto WAIT_ORIN_ON=waitUntilNode(
+    constexpr auto WAIT_ORIN_ON_NODE=waitUntilNode(
       []{ return orin_on_signal.get_value(); }, 
       "ORIN is ON", "Waiting ORIN", [] {}
     );
 
-    constexpr auto WAIT_CANOPEN_ON=waitUntilNode(
+    constexpr auto WAIT_CANOPEN_ON_NODE=waitUntilNode(
       []{ return can_open_on_singal.get_value();}, 
       "CANOPEN is ON", "Waiting CANOPEN", [] {}
     );
@@ -40,54 +47,6 @@ namespace as::ebs_supervisor {
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
       []{return asms_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(ASMS_THRESHOLD);}, 
       "ASMS is ON", "Waiting ASMS", [] {}
-    );
-
-    constexpr auto WAIT_500_MS=waitUntilNode(
-      []{
-        static timing::TimerAsync timer;
-        timer.start(500ms);
-        if( timer.has_expired() ){
-          timer.stop();
-          return true;
-        }else { return false; } 
-      }, 
-      "500ms are expired", "Waiting 500ms", [] {}
-    );
-
-    constexpr auto WAIT_1000_MS=waitUntilNode(
-      []{
-        static timing::TimerAsync timer;
-        timer.start(1000ms);
-        if( timer.has_expired() ){
-          timer.stop();
-          return true;
-        }else { return false; } 
-      }, 
-      "1000ms are expired", "Waiting 1000ms", [] {}
-    );
-
-    constexpr auto WAIT_1500_MS=waitUntilNode(
-      []{
-        static timing::TimerAsync timer;
-        timer.start(1500ms);
-        if( timer.has_expired() ){
-          timer.stop();
-          return true;
-        }else { return false; } 
-      }, 
-      "1500ms are expired", "Waiting 1500ms", [] {}
-    );
-
-    constexpr auto WAIT_2000_MS=waitUntilNode(
-      []{
-        static timing::TimerAsync timer;
-        timer.start(2000ms);
-        if( timer.has_expired() ){
-          timer.stop();
-          return true;
-        }else { return false; } 
-      }, 
-      "2000ms are expired", "Waiting 2000ms", [] {}
     );
 
     constexpr auto START_CANBUS_NODE = doActionNode(
@@ -162,7 +121,7 @@ namespace as::ebs_supervisor {
     constexpr auto BRAKE_ACT2_NODE = doActionNode(brake_act2, "Brake Act2");
     constexpr auto UNBRAKE_ACT2_NODE = doActionNode(unbrake_act2, "Unbrake Act2");
 
-    constexpr auto WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED = waitUntilNode(
+    constexpr auto WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED_NODE = waitUntilNode(
       []{
         return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::CLUTCH | (unsigned)hal::MaxonMotors::BRAKE);
       }, "Brake and clutch motors enabled", "Waiting brake and clutch motor enabled", [] {});
@@ -186,7 +145,7 @@ namespace as::ebs_supervisor {
       }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
     );
 
-    constexpr auto WAIT_TS_ACTIVE = waitUntilNode(
+    constexpr auto WAIT_TS_ACTIVE_NODE = waitUntilNode(
       []{
         return rpm_signal.get_value()>3000;
       }, 
