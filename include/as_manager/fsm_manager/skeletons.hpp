@@ -131,8 +131,15 @@ namespace as::fsm {
     std::function<void()> fn,
     std::string_view msg
   ) {
+    static auto isMsgLogged = false;
+
     fn();
-    std::cout << msg << std::endl;
+    
+    if (not isMsgLogged) {
+      std::cout << msg << std::endl;
+      isMsgLogged = true;
+    }
+    
     return NodeFlowCtrl::CURRENT;
   }
 }
