@@ -137,12 +137,12 @@ namespace as::ebs_supervisor {
     constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return !hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
-      }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
+      }, "GO signal OFF received", "Waiting for GO signal OFF", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
     constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
-      }, "GO signal received", "Waiting for GO signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
+      }, "GO signal ON received", "Waiting for GO signal ON", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
     constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
