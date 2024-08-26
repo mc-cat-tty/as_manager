@@ -38,7 +38,7 @@ namespace as::ebs_supervisor{
     auto breake_pressure_front_signal = Signal<float>(hal::read_brake_pressure_front,&updater, std::ref(Parameters::getInstance().brakePressureFrontAlpha));
     auto breake_pressure_rear_signal = Signal<float>(hal::read_brake_pressure_rear,&updater, std::ref(Parameters::getInstance().brakePressureRearAlpha));
     auto motors_bit_vector_singal = Signal<uint8_t>(hal::read_motors_bit_vector,&updater, DEFAULT_ALPHA);
-    auto stop_signal= Signal<bool>(hal::read_stop_message,&updater, DEFAULT_ALPHA);
+    auto stop_signal= Signal<bool>(hal::read_stop_message, &updater, DEFAULT_ALPHA);
     auto res_emergency_signal= Signal<hal::ResState>(hal::read_res_state,&updater, DEFAULT_ALPHA);
     auto res_bit_vector_signal = Signal<uint8_t>(hal::read_res_bit_vector, &updater, DEFAULT_ALPHA);
     auto rpm_signal= Signal<float>(hal::read_rpm,&updater, DEFAULT_ALPHA);
