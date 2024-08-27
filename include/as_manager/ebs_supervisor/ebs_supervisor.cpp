@@ -19,9 +19,9 @@ namespace as::ebs_supervisor {
           INIT_PINS_NODE,
 
           START_CONTROL_NODE,
+          START_CANBUS_NODE,
           
           WAIT_ORIN_ON_NODE,
-          START_CANBUS_NODE,
           
           // WAIT_ASMS_NODE,
           START_CANOPEN_NODE,
