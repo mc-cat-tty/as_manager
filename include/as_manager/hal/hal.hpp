@@ -26,7 +26,6 @@ namespace hal {
   float read_ebs1_pressure() ;
   float read_ebs2_pressure() ;
   bool read_stop_message() ;
-  bool read_go_message();
   bool is_autonomous_mission();
   bool read_orin_on();
   bool read_can_open_on();

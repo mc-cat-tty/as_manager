@@ -116,10 +116,7 @@ namespace hal{
         bool read_stop_message(){
           return false;
         }
-
-        bool read_go_message(){
-          return false;
-        }
+        
 
         bool read_mission_status(){
             return false;

@@ -39,7 +39,6 @@ namespace hal {
   float read_ebs1_pressure()  {return AsManagerNode::getEbsPressure1(); }
   float read_ebs2_pressure() {return AsManagerNode::getEbsPressure2(); }
   bool read_stop_message()  {return AsManagerNode::getStopMessage();}
-  bool read_go_message() {return false;}
   bool is_autonomous_mission()  {return AsManagerNode::getAutonomousMission(); }
   bool read_orin_on() { return AsManagerNode::getOrinOn(); }
   bool read_can_open_on() { return AsManagerNode::getCanOpenOn(); } 
