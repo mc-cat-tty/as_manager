@@ -30,5 +30,5 @@ namespace hal::actions {
     void setFirstGear();
     void enableMotors();
 
-    void startNode(std::string nodeName);
+    void startNode(std::string nodeName, std::string prefix);
 }

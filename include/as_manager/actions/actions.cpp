@@ -81,15 +81,17 @@ namespace hal::actions {
     hal::enable_motors();
   }
 
-  void startNode(std::string nodeName) {
+  void startNode(std::string nodeName, std::string prefix) {
     pid_t newNodePid = fork();
+
+    if (prefix != "") prefix += "_";
 
     if (newNodePid < 0) {
       std::cerr << "Fork failed with error number: " << newNodePid << std::endl;
       exit(255);
     }
     if (!newNodePid) {
-      auto launchFile = nodeName + "_launch.py";
+      auto launchFile = prefix + nodeName + "_launch.py";
       int ret = execlp("ros2", "ros2", "launch", nodeName.c_str(), launchFile.c_str() , (char*)NULL);
       if (ret == -1) {
         std::cerr << "Exec failed with error number: " << ret << std::endl;

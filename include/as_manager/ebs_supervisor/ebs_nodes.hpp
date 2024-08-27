@@ -50,17 +50,17 @@ namespace as::ebs_supervisor {
     );
 
     constexpr auto START_CANBUS_NODE = doActionNode(
-      std::bind(hal::actions::startNode, "canbus_bridge"),
+      std::bind(hal::actions::startNode, "canbus_bridge", ""),
       "Started CAN Bus Bridge"
     );
 
     constexpr auto START_CANOPEN_NODE = doActionNode(
-      std::bind(hal::actions::startNode, "canopen_bridge"),
+      std::bind(hal::actions::startNode, "canopen_bridge", ""),
       "Started CAN Open Bridge"
     );
 
-    constexpr auto START_CONTROL_NODE = doActionNode(
-      std::bind(hal::actions::startNode, "control_node"),
+    auto START_CONTROL_NODE = doActionNode(
+      std::bind(hal::actions::startNode, "control_node", static_cast<std::string>(COCKPIT::CockpitMissionLookup.at(static_cast<COCKPIT::MMR_MISSION_VALUE>(AsManagerNode::getMission())))),
       "Started CAN Open Bridge"
     );
 
