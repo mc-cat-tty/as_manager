@@ -116,7 +116,11 @@ class AsManagerNode : public EDFNode {
   static inline float getEbsPressure1() { return inputState.ebsPressure1; }
   static inline float getEbsPressure2() { return inputState.ebsPressure2; }
   static inline bool getStopMessage() { return inputState.stopMessage; }
-  static inline bool getAutonomousMission() { return static_cast<COCKPIT::MMR_MISSION_VALUE>(inputState.autonomousMission) != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL; }
+  static inline bool getAutonomousMission() {
+    auto mis = static_cast<COCKPIT::MMR_MISSION_VALUE>(inputState.autonomousMission);
+    return mis != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL &&
+           mis != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_IDLE;
+    }
   static inline int8_t getMission() { return inputState.autonomousMission; }
   static inline bool getOrinOn() { return inputState.orinOn; }
   static inline bool getCanOpenOn() { return inputState.canOpenOn; }

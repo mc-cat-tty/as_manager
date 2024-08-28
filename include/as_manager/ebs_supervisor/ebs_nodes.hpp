@@ -60,7 +60,12 @@ namespace as::ebs_supervisor {
     );
 
     auto START_CONTROL_NODE = doActionNode(
-      std::bind(hal::actions::startNode, "control_node", static_cast<std::string>(COCKPIT::CockpitMissionLookup.at(static_cast<COCKPIT::MMR_MISSION_VALUE>(AsManagerNode::getMission())))),
+      [] {
+        hal::actions::startNode(
+          "control_node",
+          static_cast<std::string>(COCKPIT::CockpitMissionLookup.at(static_cast<COCKPIT::MMR_MISSION_VALUE>(AsManagerNode::getMission())))
+        );
+      },
       "Started CAN Open Bridge"
     );
 
