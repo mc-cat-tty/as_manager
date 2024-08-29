@@ -9,33 +9,34 @@ namespace as::assi_manager {
     using namespace std::chrono_literals;
 
     class AssiManager {
+      
          private:
-            bool enalbeAssiY,enalbeAssiB, strobeAssiY, strobeAssiB, enabledBuzzer, buzzerState, assiYState, assiBState;
+            bool enableAssiY,enableAssiB, strobeAssiY, strobeAssiB, enabledBuzzer, buzzerState, assiYState, assiBState;
             TimerAsync timer, buzzerTimer, assiYTimer, assiBTimer;
             int buzzerDurationCounter;
-            AssiManager() : enalbeAssiY(false), enalbeAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
+            AssiManager() : enableAssiY(false), enableAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
 
             AssiManager(const AssiManager&) = delete;
             AssiManager(AssiManager&&) = delete;
             AssiManager& operator=(const AssiManager&) = delete;
 
             void enableAssiY() {
-                enalbeAssiY=true;
-                enalbeAssiB=false;
+                enableAssiY=true;
+                enableAssiB=false;
                 strobeAssiB=false;
                 strobeAssiY=false;
             }
 
             void enableAssiB() {
-                enalbeAssiY=false;
-                enalbeAssiB=true;
+                enableAssiY=false;
+                enableAssiB=true;
                 strobeAssiB=false;
                 strobeAssiY=false;
             }
 
             void enableStrobeAssiY() {
-                enalbeAssiY=false;
-                enalbeAssiB=false;
+                enableAssiY=false;
+                enableAssiB=false;
                 strobeAssiB=false;
                 strobeAssiY=true;
                 assiYTimer.start(500ms);
@@ -45,8 +46,8 @@ namespace as::assi_manager {
             }
 
             void enableStrobeAssiB() {
-                enalbeAssiY=false;
-                enalbeAssiB=false;
+                enableAssiY=false;
+                enableAssiB=false;
                 strobeAssiB=true;
                 strobeAssiY=false;
                 assiBTimer.start(200ms);
@@ -60,7 +61,7 @@ namespace as::assi_manager {
                 buzzerTimer.start(500ms);
                 hal::actions::active_buzzer();
                 buzzerState = !buzzerState;
-                //std::cout<<"[ASSI_MANAGER][BUZZER] enalbe"<<std::endl;
+                //std::cout<<"[ASSI_MANAGER][BUZZER] enable"<<std::endl;
             }
 
         public:
@@ -69,37 +70,28 @@ namespace as::assi_manager {
                 return instance;
             }
 
-            inline void resetState() {
-              this->disableAssiB();
-              this->disableAssiY();
-            }
-
             inline void ready() {
-              this->resetState();
               this->enableAssiY();
             };
             
             inline void driving() {
-              this->resetState();
               this->enableStrobeAssiY();
             };
             
             inline void finished() {
-              this->resetState();
               this->enableAssiB();
             };
             
             inline void emergency() {
-              this->resetState();
               this->enableStrobeAssiB();
               this->enableBuzzer();
             };
 
             void run() {
-                if (enalbeAssiY) {
+                if (enableAssiY) {
                     hal::actions::switch_on_assi_Y();
                     //std::cout<<"[ASSI_MANAGER] enableAssiY"<<std::endl;
-                }else if(enalbeAssiB){
+                }else if(enableAssiB){
                     hal::actions::switch_on_assi_B();
                     //std::cout<<"[ASSI_MANAGER] enableAssiB"<<std::endl;
                 }else if(strobeAssiY && assiYTimer.has_expired()) {
@@ -109,7 +101,7 @@ namespace as::assi_manager {
                         //std::cout<<"[ASSI_MANAGER][STROBE] disableAssiY"<<std::endl;
                     } else {
                         hal::actions::switch_on_assi_Y();
-                        //std::cout<<"[ASSI_MANAGER][STROBE] enalbeAssiY"<<std::endl;
+                        //std::cout<<"[ASSI_MANAGER][STROBE] enableAssiY"<<std::endl;
                     }
                     assiYState = !assiYState;
                     assiYTimer.start(500ms);
@@ -120,7 +112,7 @@ namespace as::assi_manager {
                         //std::cout<<"[ASSI_MANAGER][STROBE] disableAssiB"<<std::endl;
                     } else {
                         hal::actions::switch_on_assi_B();
-                        //std::cout<<"[ASSI_MANAGER][STROBE] enalbeAssiB"<<std::endl;
+                        //std::cout<<"[ASSI_MANAGER][STROBE] enableAssiB"<<std::endl;
                     }
                     assiBState = !assiBState;
                     assiBTimer.start(200ms);
@@ -133,7 +125,7 @@ namespace as::assi_manager {
                         //std::cout<<"[ASSI_MANAGER][BUZZER] disable"<<std::endl;
                     } else {
                         hal::actions::active_buzzer();
-                        //std::cout<<"[ASSI_MANAGER][BUZZER] enalbe"<<std::endl;
+                        //std::cout<<"[ASSI_MANAGER][BUZZER] enable"<<std::endl;
                     }
                     buzzerState = !buzzerState;
                     buzzerTimer.start(500ms);
