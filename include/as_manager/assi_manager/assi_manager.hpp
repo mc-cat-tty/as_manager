@@ -70,19 +70,28 @@ namespace as::assi_manager {
                 return instance;
             }
 
+            inline void resetState() {
+              hal::actions::switch_off_assi_Y();
+              hal::actions::switch_off_assi_B();
+            }
+
             inline void ready() {
+              this->resetState();
               this->enableAssiY();
             };
             
             inline void driving() {
+              this->resetState();
               this->enableStrobeAssiY();
             };
             
             inline void finished() {
+              this->resetState();
               this->enableAssiB();
             };
             
             inline void emergency() {
+              this->resetState();
               this->enableStrobeAssiB();
               this->enableBuzzer();
             };
