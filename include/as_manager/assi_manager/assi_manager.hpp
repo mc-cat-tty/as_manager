@@ -71,18 +71,22 @@ namespace as::assi_manager {
 
             inline void ready() {
               this->enableAssiY();
+              this->disableAssiB();
             };
             
             inline void driving() {
               this->enableStrobeAssiY();
+              this->disableAssiB();
             };
             
             inline void finished() {
+              this->disableAssiY();
               this->enableAssiB();
             };
             
             inline void emergency() {
               this->enableStrobeAssiB();
+              this->disableAssiY();
               this->enableBuzzer();
             };
 
