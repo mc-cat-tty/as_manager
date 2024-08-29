@@ -69,24 +69,29 @@ namespace as::assi_manager {
                 return instance;
             }
 
-            inline void ready() {
-              this->enableAssiY();
+            inline void resetState() {
               this->disableAssiB();
+              this->disableAssiY();
+            }
+
+            inline void ready() {
+              this->resetState();
+              this->enableAssiY();
             };
             
             inline void driving() {
+              this->resetState();
               this->enableStrobeAssiY();
-              this->disableAssiB();
             };
             
             inline void finished() {
-              this->disableAssiY();
+              this->resetState();
               this->enableAssiB();
             };
             
             inline void emergency() {
+              this->resetState();
               this->enableStrobeAssiB();
-              this->disableAssiY();
               this->enableBuzzer();
             };
 

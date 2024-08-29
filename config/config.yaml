@@ -5,6 +5,7 @@ as_manager_node:
       period: 10000000 # ns
       deadline: 10000000
       debug: true
+      safetyFeatures: true
 
     topics:
       asStateTopic: "/as/status"
