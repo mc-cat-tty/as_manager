@@ -70,7 +70,6 @@ namespace as::ebs_supervisor {
           
           doActionNode([]{
             assi_manager::AssiManager::getInstance().driving();
-            throw EmergencyException();
           },
             "ASSI to DRIVING"
           ),
