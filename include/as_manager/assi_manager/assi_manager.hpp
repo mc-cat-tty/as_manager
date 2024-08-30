@@ -14,13 +14,13 @@ namespace as::assi_manager {
       private:
         enum class AssiState {STATIC, STROBING};
         enum class BuzzerState {OFF, BEEPING};
-        enum class ManagerState {READY, DRIVING, FINISHED, EMERGENCY};
+        enum class ManagerState {UNINIT, READY, DRIVING, FINISHED, EMERGENCY};
 
         static constexpr std::chrono::milliseconds STROBE_TIME = 500ms;
-        static constexpr std::chrono::milliseconds BEEP_TIME = 200ms;
+        static constexpr std::chrono::milliseconds BEEP_TIME = 1000ms;
         static constexpr std::chrono::milliseconds EMERGENCY_BUZZER_TIME = 10000ms;
 
-        ManagerState currentAssiState;
+        ManagerState currentAssiState = ManagerState::UNINIT;
         AssiState stateAssiY, stateAssiB;
         BuzzerState stateBuzzer;
 
