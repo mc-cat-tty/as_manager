@@ -14,11 +14,13 @@ namespace as::assi_manager {
       private:
         enum class AssiState {STATIC, STROBING};
         enum class BuzzerState {OFF, BEEPING};
+        enum class ManagerState {READY, DRIVING, FINISHED, EMERGENCY};
 
         static constexpr std::chrono::milliseconds STROBE_TIME = 500ms;
         static constexpr std::chrono::milliseconds BEEP_TIME = 200ms;
         static constexpr std::chrono::milliseconds EMERGENCY_BUZZER_TIME = 10000ms;
 
+        ManagerState currentAssiState;
         AssiState stateAssiY, stateAssiB;
         BuzzerState stateBuzzer;
 
@@ -65,21 +67,29 @@ namespace as::assi_manager {
       }
 
       inline void ready() {
+        if (currentAssiState == ManagerState::READY) return;
+        currentAssiState = ManagerState::READY;
         resetAssi();
         hal::actions::switch_on_assi_Y();
       }
       
       inline void driving() {
+        if (currentAssiState == ManagerState::DRIVING) return;
+        currentAssiState = ManagerState::DRIVING;
         this->resetAssi();
         this->enableStrobeAssiY();
       };
       
       inline void finished() {
+        if (currentAssiState == ManagerState::FINISHED) return;
+        currentAssiState = ManagerState::FINISHED;
         this->resetAssi();
         hal::actions::switch_on_assi_B();
       }
       
       inline void emergency() {
+        if (currentAssiState == ManagerState::EMERGENCY) return;
+        currentAssiState = ManagerState::EMERGENCY;
         this->resetAssi();
         this->enableStrobeAssiB();
         this->enableBuzzer();
