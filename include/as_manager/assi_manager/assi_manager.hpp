@@ -15,9 +15,9 @@ namespace as::assi_manager {
         enum class AssiState {STATIC, STROBING};
         enum class BuzzerState {OFF, BEEPING};
 
-        static constexpr auto STROBE_TIME = 500ms;
-        static constexpr auto BEEP_TIME = 200ms;
-        static constexpr auto EMERGENCY_BUZZER_TIME = 1s;
+        static constexpr std::chrono::milliseconds STROBE_TIME = 500ms;
+        static constexpr std::chrono::milliseconds BEEP_TIME = 200ms;
+        static constexpr std::chrono::milliseconds EMERGENCY_BUZZER_TIME = 10000ms;
 
         AssiState stateAssiY, stateAssiB;
         BuzzerState stateBuzzer;
@@ -41,20 +41,20 @@ namespace as::assi_manager {
 
         void enableStrobeAssiY() {
           stateAssiY = AssiState::STROBING;
-          strobeTimer.start(STROBE_TIME);
+          strobeTimer.restart(STROBE_TIME);
           hal::actions::switch_on_assi_Y();
         }
 
         void enableStrobeAssiB() {
           stateAssiB = AssiState::STROBING;
-          strobeTimer.start(STROBE_TIME);
+          strobeTimer.restart(STROBE_TIME);
           hal::actions::switch_on_assi_B();
         }
 
         void enableBuzzer() {
           stateBuzzer = BuzzerState::BEEPING;
-          beepTimer.start(BEEP_TIME);
-          emergencyBuzzerTimer.start(EMERGENCY_BUZZER_TIME);
+          beepTimer.restart(BEEP_TIME);
+          emergencyBuzzerTimer.restart(EMERGENCY_BUZZER_TIME);
           hal::actions::active_buzzer();
         }
 
@@ -87,25 +87,23 @@ namespace as::assi_manager {
 
       void run() {
         if(stateAssiY == AssiState::STROBING && strobeTimer.has_expired()) {
-          strobeTimer.stop();
           hal::set_assi_Y_state(!hal::pin::assiyPin.getValue());
-          strobeTimer.start(STROBE_TIME);
+          strobeTimer.restart();
         }
         else if(stateAssiB == AssiState::STROBING && strobeTimer.has_expired()) {
-          strobeTimer.stop();
           hal::set_assi_B_state(!hal::pin::assibPin.getValue());
-          strobeTimer.start(STROBE_TIME);
+          strobeTimer.restart();
         }
 
-        if (emergencyBuzzerTimer.has_expired()) {
+        if (stateBuzzer == BuzzerState::BEEPING && emergencyBuzzerTimer.has_expired()) {
           hal::actions::disabled_buzzer();
           stateBuzzer = BuzzerState::OFF;
+          emergencyBuzzerTimer.stop();
         }
 
         if (stateBuzzer == BuzzerState::BEEPING && beepTimer.has_expired()) {
-          beepTimer.stop();
           hal::set_buzzer_state(!hal::pin::buzzerPin.getValue());
-          beepTimer.start(BEEP_TIME);
+          beepTimer.restart();
         }
     }
 

@@ -51,7 +51,7 @@ bool KriaPin::writeToFile(const std::string& path, const std::string& value) con
         }
         file << value;
         return file.good();
-    #else 
+    #else
         return true;
     #endif
 }
