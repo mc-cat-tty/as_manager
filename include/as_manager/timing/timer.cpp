@@ -11,6 +11,16 @@ namespace timing{
     }
   }
 
+  void TimerAsync::restart(milliseconds duration) {
+    stop();
+    start(duration);
+  }
+
+  void TimerAsync::restart() {
+    stop();
+    start(this->duration);
+  }
+
   void TimerAsync::stop() {
     is_started = false;
   }
