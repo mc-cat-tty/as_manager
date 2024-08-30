@@ -25,7 +25,7 @@ namespace as::ebs_supervisor {
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
         using namespace hal;
-        set_buzzer_state(BuzzerState::OFF);
+        set_buzzer_state(KriaPin::Value::OFF);
         toggle_actuator1_state(ActuatorState::UNBRAKING);
         toggle_actuator2_state(ActuatorState::UNBRAKING);
         toggle_sdc_state(SdcState::CLOSE);

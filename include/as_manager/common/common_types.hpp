@@ -47,18 +47,6 @@ namespace hal {
     UNBRAKING
   };
 
-  // out
-  enum class AssiState{
-    ON,
-    STROBE,
-    OFF
-  };
-
-  enum class BuzzerState{
-    ON,
-    OFF
-  };
-
   enum class ResState {
     IDLE,
     OPERATIONAL,

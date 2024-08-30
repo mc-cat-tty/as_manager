@@ -27,9 +27,9 @@ bool KriaPin::setValue(Value value) const {
     return writeToFile(valuePath, value == Value::ON ? "1" : "0");
 }
 
-bool KriaPin::getValue() const {
+KriaPin::Value KriaPin::getValue() const {
     std::string valueStr = readFromFile(valuePath);
-    return valueStr == "1";
+    return static_cast<Value>(valueStr == "1");
 }
 
 bool KriaPin::setDirection(Direction dir) {

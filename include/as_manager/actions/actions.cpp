@@ -36,21 +36,19 @@ namespace hal::actions {
   }
 
   void active_buzzer(){
-    hal::set_buzzer_state(BuzzerState::ON);
+    hal::set_buzzer_state(KriaPin::Value::ON);
   }
 
   void disabled_buzzer(){
-    hal::set_buzzer_state(BuzzerState::OFF);
+    hal::set_buzzer_state(KriaPin::Value::OFF);
   }
 
   void switch_off_assi_Y(){
-    hal::set_assi_Y_state(AssiState::OFF);
+    hal::set_assi_Y_state(KriaPin::Value::OFF);
   }
+
   void switch_on_assi_Y(){
-    hal::set_assi_Y_state(AssiState::ON);
-  }
-  void strobe_assi_Y(){
-    hal::set_assi_Y_state(AssiState::STROBE);
+    hal::set_assi_Y_state(KriaPin::Value::ON);
   }
 
   void brake_with_maxon(){
@@ -58,15 +56,11 @@ namespace hal::actions {
   }
 
   void switch_off_assi_B(){
-    hal::set_assi_B_state(AssiState::OFF);
+    hal::set_assi_B_state(KriaPin::Value::OFF);
   }
 
   void switch_on_assi_B(){
-    hal::set_assi_B_state(AssiState::ON);
-  }
-  
-  void strobe_assi_B(){
-    hal::set_assi_B_state(AssiState::STROBE);
+    hal::set_assi_B_state(KriaPin::Value::ON);
   }
 
   void pullClutch() {

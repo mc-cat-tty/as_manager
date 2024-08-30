@@ -10,16 +10,17 @@ namespace watchdog {
 
     class Watchdog {
         private:
-            bool isToggling, pinState;
+            bool isToggling;
+            KriaPin::Value pinState;
             TimerAsync timer;
-            Watchdog() : isToggling(false), pinState(false), timer() {}
+            Watchdog() : isToggling(false), pinState(KriaPin::Value::OFF), timer() {}
 
             Watchdog(const Watchdog&) = delete;
             Watchdog(Watchdog&&) = delete;
             Watchdog& operator=(const Watchdog&) = delete;
 
             inline void togglePinState(){
-                pinState ^= true;
+                pinState = !pinState;
             }
 
         public:
