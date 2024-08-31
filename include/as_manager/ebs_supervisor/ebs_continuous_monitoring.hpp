@@ -8,8 +8,6 @@
 #include <as_manager/as_manager.hpp>
 
 
-
-
 namespace as::ebs_supervisor {
   using namespace std::chrono_literals;
   using namespace as::fsm;
@@ -42,7 +40,7 @@ namespace as::ebs_supervisor {
       
       continousMonitoringAssert(
         []{
-          return res_emergency_signal.get_value();
+          return static_cast<hal::ResState>(res_emergency_signal.get_value()) == hal::ResState::OPERATIONAL;
         },
          50ms, resEmergencyTimer,
          "Res emergency waiting continous monitoring", "Res emergency timeout continous monitoring"
