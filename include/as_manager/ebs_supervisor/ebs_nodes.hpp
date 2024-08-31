@@ -20,7 +20,7 @@ namespace as::ebs_supervisor {
     constexpr auto WAIT_1000_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(1000ms);
     constexpr auto WAIT_1500_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(1500ms);
     constexpr auto WAIT_2000_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(2000ms);
-    constexpr auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::ENABLE>(5000ms);
+    constexpr auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(5000ms);
 
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
@@ -139,17 +139,17 @@ namespace as::ebs_supervisor {
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureMaxonMotorsThreshold;
       }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
-    constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return !hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
       }, "GO signal OFF received", "Waiting for GO signal OFF", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
-    constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
       }, "GO signal ON received", "Waiting for GO signal ON", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
-    constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
+    constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
         return stop_signal.get_value();
       }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
