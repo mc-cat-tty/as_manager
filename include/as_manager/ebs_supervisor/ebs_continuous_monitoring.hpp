@@ -47,15 +47,6 @@ namespace as::ebs_supervisor {
          50ms, resEmergencyTimer,
          "Res emergency waiting continous monitoring", "Res emergency timeout continous monitoring"
       );
-      
-      continousMonitoringAssert(
-        []{
-          using namespace hal::utils;
-          return mask(motors_bit_vector_singal.get_value(), hal::MaxonMotors::CLUTCH | hal::MaxonMotors::STEER | hal::MaxonMotors::BRAKE);
-        }, 
-        50ms, motorsTimer,
-        "Motors waiting continous monitoring" , "Motors timeout continous monitoring"
-      );
     }
 
   private:
