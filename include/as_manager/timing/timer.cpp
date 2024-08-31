@@ -26,7 +26,7 @@ namespace timing{
   }
 
   bool TimerAsync::has_expired() const {
-    return Clock::get_time<milliseconds>() >= endtime;
+    return is_started and Clock::get_time<milliseconds>() >= endtime;
   }
 };
 

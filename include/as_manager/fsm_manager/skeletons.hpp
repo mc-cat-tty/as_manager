@@ -65,9 +65,11 @@ namespace as::fsm {
     std::string_view timeoutMsg
   ){
     timer.start(ms);
-
+    std::cout << waitingMsg << std::endl;
+    
     if (predicate()) {
       timer.stop();
+      return;
     }
     
     if(timer.has_expired()) {
@@ -75,8 +77,6 @@ namespace as::fsm {
         timer.stop();
         throw EmergencyException();
     }
-
-    std::cout << waitingMsg << std::endl;
   };
 
   /**
