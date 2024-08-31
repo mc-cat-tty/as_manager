@@ -21,7 +21,7 @@ namespace as::ebs_supervisor {
       }, 
       "Time expired",
       "Waiting",
-      []{}
+      [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
     );
   }
 }
