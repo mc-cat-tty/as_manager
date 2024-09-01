@@ -18,7 +18,7 @@ namespace hal{
   bool read_stop_message() { return false; }
   bool read_mission_status() { return false; }
   uint8_t read_motors_bit_vector() { return 0x07; }
-  bool is_autonomous_mission() { AsManagerNode::isAutonomousMission(); }
+  bool is_autonomous_mission() { return AsManagerNode::isAutonomousMission(); }
 
   void toggle_watchdog_state(bool pinState) { std::cerr << "wdg: " << pinState << std::endl; }
   void toggle_actuator1_state(ActuatorState state) { std::cerr << "act1 toggled" << std::endl; }
