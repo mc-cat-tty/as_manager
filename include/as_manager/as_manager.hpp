@@ -100,6 +100,10 @@ class AsManagerNode : public EDFNode {
 
   void orinOnCb(const std_msgs::msg::Bool::SharedPtr msg) {
     inputState.orinOn = msg->data;
+    RCLCPP_INFO(
+        this->get_logger(), "[ INFO ] ORIN ON RECEIVED, [ msg.data ]: %d, [ inputState.orinOn ]: %d ", 
+                msg->data, inputState.orinOn 
+    );
   }
 
   public:
