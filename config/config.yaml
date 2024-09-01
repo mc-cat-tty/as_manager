@@ -1,14 +1,14 @@
 as_manager_node:
   ros__parameters:
-    generic:
+    scheduler:
       WCET: 5000000  # ns
       period: 10000000  # ns
       deadline: 10000000  # ns
-      safetyFeatures: true
     
     debug:
+      safetyFeatures: true
       verboseCallbacks: false
-      verboseHal: false
+      verboseHalReads: false
 
     topics:
       asStateTopic: "/as/status"
@@ -23,14 +23,15 @@ as_manager_node:
       stopMessageTopic: "/mission/stop"
       orinOnTopic: "/orin/on"
 
-    thresholds:
-      ebsTankPressureThreshold: 4
-      brakePressureOneActuatorThreshold: 10
-      brakePressureBothActuatorsThreshold: 20
-      brakePressureMaxonMotorsThreshold: 6
-      unbrakePressureThreshold: 5
+    ebsSupervisor:
+      thresholds:
+        ebsTankPressureThreshold: 4
+        brakePressureOneActuatorThreshold: 10
+        brakePressureBothActuatorsThreshold: 20
+        brakePressureMaxonMotorsThreshold: 6
+        unbrakePressureThreshold: 5
 
-    filtering:
-      brakePressureFrontAlpha: 0.8
-      brakePressureRearAlpha: 0.8
-      rpmAlpha: 0.8
+      filtering:
+        brakePressureFrontAlpha: 0.8
+        brakePressureRearAlpha: 0.8
+        rpmAlpha: 0.8
