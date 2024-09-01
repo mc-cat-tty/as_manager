@@ -20,7 +20,8 @@ AsManagerNode::AsManagerNode() :
     ebsSupervisor = &as::ebs_supervisor::EbsSupervisor::getInstance();
     signalUpdater = &signals::utils::Updater<5>::getInstance();
 
-    auto &transientLocalQOS = rclcpp::QoS(1)
+    const auto bestEffortQOS = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
+    const auto transientLocalQOS = rclcpp::QoS(1)
       .reliable()
       .keep_last(1)
       .transient_local();
@@ -32,8 +33,6 @@ AsManagerNode::AsManagerNode() :
     AsManagerNode::outputPublishers.steerPublisher = this->create_publisher<mmr_base::msg::CmdMotor>(this->steerTopic, 1);
 
     using namespace std::placeholders;
-
-    const auto &bestEffortQOS = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
 
     // Best effort 1 keep last
     AsManagerNode::inputSubscriptions.ecuStatusSubscription= this->create_subscription<mmr_base::msg::EcuStatus>(
