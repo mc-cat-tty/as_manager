@@ -1,11 +1,14 @@
 as_manager_node:
   ros__parameters:
     generic:
-      WCET: 5000000 # ns
-      period: 10000000 # ns
-      deadline: 10000000
-      debug: true
+      WCET: 5000000  # ns
+      period: 10000000  # ns
+      deadline: 10000000  # ns
       safetyFeatures: true
+    
+    debug:
+      verboseCallbacks: false
+      verboseHal: false
 
     topics:
       asStateTopic: "/as/status"
@@ -27,7 +30,7 @@ as_manager_node:
       brakePressureMaxonMotorsThreshold: 6
       unbrakePressureThreshold: 5
 
-    alpha:
+    filtering:
       asmsAlpha: 0.8
       sdcAlpha: 0.8
       brakePressureFrontAlpha: 0.8
