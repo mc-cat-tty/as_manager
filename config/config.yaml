@@ -31,8 +31,6 @@ as_manager_node:
       unbrakePressureThreshold: 5
 
     filtering:
-      asmsAlpha: 0.8
-      sdcAlpha: 0.8
       brakePressureFrontAlpha: 0.8
       brakePressureRearAlpha: 0.8
       rpmAlpha: 0.8
