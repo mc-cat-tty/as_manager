@@ -42,7 +42,7 @@ namespace as::ebs_supervisor {
     );
 
     constexpr auto WAIT_ORIN_ON_NODE=waitUntilNode(
-      []{ return hal::read_orin_on(); }, 
+      []{ return orin_on_signal.get_value(); }, 
       "ORIN is ON", "Waiting ORIN", [] {}
     );
 
