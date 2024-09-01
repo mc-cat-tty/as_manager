@@ -73,6 +73,26 @@ class AsManagerNode : public EDFNode {
   std::string brakeTopic, asStateTopic, gearUpTopic, clutchTopic, steerTopic, ecuStatusTopic, resStatusTopic, maxonMotorsTopic, missionSelectedTopic, stopMessageTopic, orinOnTopic;
 
   // Callbacks
+  inline void logInputState() const {
+    if (not params::Parameters::getInstance().verboseCallbacks) return;
+    RCLCPP_INFO(this->get_logger(), "[resOn | MaxonMotors | engineRpm | brakePressureFront | brakePressureRear | ebsPressure1 | ebsPressure2 | stopMessage | orinOn | canOpenOn | mission]");
+    RCLCPP_INFO(
+      this->get_logger(),
+      "[  %d  |     %x   |    %d   |         %.1f        |        %.1f        |      %.1f     |      %.1f     |      %d      |    %d   |     %d     |    %d   ]",
+      inputState.resState,
+      inputState.maxonMotorsState,
+      inputState.engineRpm,
+      inputState.brakePressureFront,
+      inputState.brakePressureRear,
+      inputState.ebsPressure1,
+      inputState.ebsPressure2,
+      inputState.stopMessage,
+      inputState.orinOn,
+      inputState.canOpenOn,
+      inputState.mission
+    );
+  }
+
   void ecuStatusCb(const mmr_base::msg::EcuStatus::SharedPtr msg) {
     inputState.engineRpm = msg->nmot;
     inputState.brakePressureRear = msg->p_brake_rear;
@@ -100,10 +120,6 @@ class AsManagerNode : public EDFNode {
 
   void orinOnCb(const std_msgs::msg::Bool::SharedPtr msg) {
     inputState.orinOn = msg->data;
-    RCLCPP_INFO(
-        this->get_logger(), "[ INFO ] ORIN ON RECEIVED, [ msg.data ]: %d, [ inputState.orinOn ]: %d ", 
-                msg->data, inputState.orinOn 
-    );
   }
 
   public:
