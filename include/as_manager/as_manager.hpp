@@ -153,7 +153,7 @@ class AsManagerNode : public EDFNode {
     
   }
 
-  static inline void sendGearUp(){
+  static inline void sendFirstGear(){
     auto msg = mmr_base::msg::CmdEcu();
     msg.gear_target = 1;
     outputPublishers.gearPublisher->publish(msg);

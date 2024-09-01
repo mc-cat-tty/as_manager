@@ -80,7 +80,7 @@ void AsManagerNode::superloop() {
 
 void AsManagerNode::loadParameters() {
   using namespace params;
-  auto &params = Parameters::getInstance();
+  decltype(auto) params = Parameters::getInstance();
 
   auto schedulerParamsProxy = ParametersProxy("scheduler", this);
   auto debugParamsProxy = ParametersProxy("debug", this);
@@ -104,9 +104,9 @@ void AsManagerNode::loadParameters() {
     .rpmAlpha = filteringParamsProxy.get<float>("rpmAlpha")
   };
 
-  this->m_nWCET = schedulerParamsProxy.get<int>("WCET");
-  this->m_nPeriod = schedulerParamsProxy.get<int>("period");
-  this->m_nDeadline = schedulerParamsProxy.get<int>("deadline");
+  this->m_nWCET = schedulerParamsProxy.get("WCET", 5000000);
+  this->m_nPeriod = schedulerParamsProxy.get("period", 10000000);
+  this->m_nDeadline = schedulerParamsProxy.get("deadline", 10000000);
 
   this->asStateTopic = topicsParamsProxy.get<std::string>("asStateTopic");
   this->gearUpTopic = topicsParamsProxy.get<std::string>("gearUpTopic");

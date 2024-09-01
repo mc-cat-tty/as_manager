@@ -12,6 +12,8 @@ find_package(can_msgs REQUIRED)
 find_package(mmr_base REQUIRED)
 find_package(mmr_edf REQUIRED)
 
+add_compile_definitions(TEST)
+
 include_directories(include)
 
 file(GLOB_RECURSE SOURCES include/*.cpp)
