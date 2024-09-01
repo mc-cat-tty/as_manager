@@ -40,7 +40,11 @@ namespace hal {
   float read_ebs2_pressure() {return AsManagerNode::getEbsPressure2(); }
   bool read_stop_message()  {return AsManagerNode::getStopMessage();}
   bool is_autonomous_mission()  {return AsManagerNode::getAutonomousMission(); }
-  bool read_orin_on() { return AsManagerNode::getOrinOn(); }
+  bool read_orin_on() {
+    bool v = AsManagerNode::getOrinOn();
+    std::cout << "/orin/on value is " << v << std::endl;
+    return v;
+  }
   bool read_can_open_on() { return AsManagerNode::getCanOpenOn(); } 
 
   uint8_t read_motors_bit_vector() { return AsManagerNode::getMaxonMotorsState(); }
