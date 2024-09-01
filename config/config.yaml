@@ -24,7 +24,7 @@ as_manager_node:
       orinOnTopic: "/orin/on"
 
     thresholds:
-      ebsTankPressureThreshold: 5
+      ebsTankPressureThreshold: 4
       brakePressureOneActuatorThreshold: 10
       brakePressureBothActuatorsThreshold: 20
       brakePressureMaxonMotorsThreshold: 6
