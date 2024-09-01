@@ -4,147 +4,35 @@
 #include <as_manager/as_manager.hpp>
 
 namespace hal{
-        static double random_number() {
-            // Crea un generatore di numeri casuali
-            std::random_device rd; // Seed random
-            std::mt19937 gen(rd()); // Generatore Mersenne Twister
+  bool read_orin_on() { return false; }
+  bool read_can_open_on() { return false; }
+  float read_ebs1_pressure() { return 6.0; }
+  float read_ebs2_pressure() { return 6.0; }
+  float read_brake_pressure_front() { return 50.0; }
+  float read_brake_pressure_rear() { return 50.0; }
+  SdcState read_sdc() { return SdcState::CLOSE; }
+  unsigned read_rpm() { return 3500; }
+  ResState read_res_state() { return ResState::OPERATIONAL; }
+  uint8_t read_res_bit_vector() { return 0x01; }
+  bool read_asms_status() { return true; }
+  bool read_stop_message() { return false; }
+  bool read_mission_status() { return false; }
+  uint8_t read_motors_bit_vector() { return 0x07; }
+  bool is_autonomous_mission() { AsManagerNode::isAutonomousMission(); }
 
-            std::uniform_real_distribution<> dis(0.0, 2.0);
-            return dis(gen);
-            
-        }
-
-        bool read_orin_on(){
-            return false;
-        }
-
-        bool read_can_open_on() {
-            return false;
-        }
-
-        float read_ebs1_pressure(){
-            if ( random_number() > 1.8)
-                return 1.0f;
-            else
-                return 20.0f;
-
-        }
-
-        float read_ebs2_pressure(){
-            if ( random_number() > 1.8)
-                return 1.0f;
-            else
-                return 20.0f;
-
-        }
-
-        float  read_brake_pressure_front(){
-            if ( random_number() > 1.2)
-                return 3.0;
-            else
-                return 26.0;
-
-        }
-
-
-        float read_brake_pressure_rear(){
-            if ( random_number() > 1.2)
-                return 1.0;
-            else
-                return 23.0;
-
-        }
-
-        void toggle_watchdog_state(bool pinState){
-        }
-
-        SdcState read_sdc(){
-            if (random_number() > 1.0)
-                return SdcState::OPEN;
-            else
-                return SdcState::CLOSE;
-        }
-
-        unsigned read_rpm(){
-            if (random_number() > 0.8)
-                return 4000;
-            else
-                return 0;
-        }
-
-
-        ResState read_res_state(){
-            if (random_number() > 1.8)
-                return ResState::OPERATIONAL;
-            else
-                return ResState::ERROR;
-        }
-
-        void  toggle_actuator1_state(ActuatorState state){
-
-        }
-        void  toggle_actuator2_state(ActuatorState state){
-
-        }
-
-        void toggle_sdc_state(SdcState state){
-        
-        }
-
-        void set_assi_Y_state(AssiState state){
-
-        }
-        void set_assi_B_state(AssiState state){
-            
-        }
-        void set_buzzer_state(BuzzerState state){
-            
-        }
-
-        void write_watchdog_state(bool pinState){
-            
-        }
-
-        uint8_t read_res_bit_vector(){
-            return 0x01;
-        }
-
-        bool read_asms_status(){
-          return true;
-        }
-
-        bool read_stop_message(){
-          return false;
-        }
-        
-
-        bool read_mission_status(){
-            return false;
-        }
-
-        uint8_t read_motors_bit_vector(){
-            double value = random_number();
-            if (value < 0.6){
-                return 0x07;
-            }else if (value > 0.6 && value < 1.2){
-                return 0x07;
-            }else{
-                return 0x07;}
-        }
-        void send_brake_pressure_percentage(float percentage){
-
-        }
-        void send_current_state(as::AsState state){
-            AsManagerNode::sendASState(state);
-        }
-
-        bool is_autonomous_mission(){
-            return true;
-        }
-
-    void set_gear(uint8_t gear) {};
-    void pull_clutch() {};
-    void enable_motors(){};
+  void toggle_watchdog_state(bool pinState) { std::cerr << "wdg: " << pinState << std::endl; }
+  void toggle_actuator1_state(ActuatorState state) { std::cerr << "act1 toggled" << std::endl; }
+  void toggle_actuator2_state(ActuatorState state) { std::cerr << "act1 toggled" << std::endl; }
+  void toggle_sdc_state(SdcState state) { std::cerr << "sdc toggled" << std::endl; }
+  void set_assi_Y_state(KriaPin::Value pinState) { std::cerr << "assiY toggled" << std::endl; }
+  void set_assi_B_state(KriaPin::Value pinState) { std::cerr << "assiB toggled" << std::endl; }
+  void set_buzzer_state(KriaPin::Value pinState) { std::cerr << "buzzer toggled" << std::endl; }
+  void write_watchdog_state(KriaPin::Value pinState) { std::cerr << "wdg: " << (bool) pinState << std::endl; }
+  void send_brake_pressure_percentage(float percentage) { AsManagerNode::sendBrakePercentage(percentage); }
+  void send_current_state(as::AsState state) { AsManagerNode::sendASState(state); }
+  void pull_clutch() { std::cerr << "Clutch pulled" << std::endl; }
+  void enable_motors() { std::cerr << "Enable motors" << std::endl; }
+  void set_gear(uint8_t gear) { std::cerr << "Shift to gear: " << gear << std::endl; }
 }
 
-#endif  // TEST
+#endif
