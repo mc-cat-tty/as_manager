@@ -32,10 +32,10 @@ struct ROSInputState {
   unsigned engineRpm;
   float brakePressureFront, brakePressureRear;
   float ebsPressure1, ebsPressure2;
-  bool stopMessage;
-  bool orinOn;
-  bool canOpenOn=false;
-  int8_t autonomousMission;
+  bool stopMessage = false;
+  bool orinOn = false;
+  bool canOpenOn = false;
+  int8_t mission = static_cast<int8_t>(COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_IDLE);
 };
 
 struct ROSPublishers {
@@ -91,7 +91,7 @@ class AsManagerNode : public EDFNode {
   }
   
   void missionSelectedCb(const std_msgs::msg::Int8::SharedPtr mission) {
-    inputState.autonomousMission = mission->data;
+    inputState.mission = mission->data;
   }
   
   void stopMessageCb(const std_msgs::msg::Bool::SharedPtr msg) {
@@ -116,14 +116,14 @@ class AsManagerNode : public EDFNode {
   static inline float getEbsPressure1() { return inputState.ebsPressure1; }
   static inline float getEbsPressure2() { return inputState.ebsPressure2; }
   static inline bool getStopMessage() { return inputState.stopMessage; }
-  static inline bool getAutonomousMission() {
-    auto mis = static_cast<COCKPIT::MMR_MISSION_VALUE>(inputState.autonomousMission);
-    return mis != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL &&
-           mis != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_IDLE;
-    }
-  static inline int8_t getMission() { return inputState.autonomousMission; }
+  static inline int8_t getMission() { return inputState.mission; }
   static inline bool getOrinOn() { return inputState.orinOn; }
   static inline bool getCanOpenOn() { return inputState.canOpenOn; }
+  static inline bool isAutonomousMission() {
+    auto mis = static_cast<COCKPIT::MMR_MISSION_VALUE>(inputState.mission);
+    return mis != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_MANUAL &&
+           mis != COCKPIT::MMR_MISSION_VALUE::MMR_MISSION_IDLE;
+  }
 
   // Output state setters
   static inline void sendASState(as::AsState state) {
