@@ -78,7 +78,7 @@ class AsManagerNode : public EDFNode {
     RCLCPP_INFO(this->get_logger(), "[resOn | MaxonMotors | engineRpm | brakePressureFront | brakePressureRear | ebsPressure1 | ebsPressure2 | stopMessage | orinOn | canOpenOn | mission]");
     RCLCPP_INFO(
       this->get_logger(),
-      "[  %d  |     %x   |    %d   |         %.1f        |        %.1f        |      %.1f     |      %.1f     |      %d      |    %d   |     %d     |    %d   ]",
+      "[  %d   |      %x      |     %d     |         %.1f        |        %.1f        |      %.1f     |      %.1f     |      %d      |    %d   |     %d     |    %d   ]",
       inputState.resState,
       inputState.maxonMotorsState,
       inputState.engineRpm,
