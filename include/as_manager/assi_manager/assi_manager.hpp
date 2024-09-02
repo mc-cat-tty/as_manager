@@ -17,7 +17,7 @@ namespace as::assi_manager {
         enum class ManagerState {UNINIT, READY, DRIVING, FINISHED, EMERGENCY};
 
         static constexpr std::chrono::milliseconds STROBE_TIME = 500ms;
-        static constexpr std::chrono::milliseconds BEEP_TIME = 1000ms;
+        static constexpr std::chrono::milliseconds BEEP_TIME = 400ms;
         static constexpr std::chrono::milliseconds EMERGENCY_BUZZER_TIME = 10000ms;
 
         ManagerState currentAssiState = ManagerState::UNINIT;
