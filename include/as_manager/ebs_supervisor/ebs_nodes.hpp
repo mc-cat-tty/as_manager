@@ -30,29 +30,29 @@ namespace as::ebs_supervisor {
         Watchdog::getInstance().set_toggling();
 
         if (Parameters::getInstance().safetyFeatures) {
-          toggle_actuator1_state(ActuatorState::UNBRAKING);
-          toggle_actuator2_state(ActuatorState::UNBRAKING);
-        }
-        else {
           toggle_actuator1_state(ActuatorState::BRAKING);
           toggle_actuator2_state(ActuatorState::BRAKING);
+        }
+        else {
+          toggle_actuator1_state(ActuatorState::UNBRAKING);
+          toggle_actuator2_state(ActuatorState::UNBRAKING);
         }
       },
       "Initialized pins"
     );
 
-    constexpr auto WAIT_ORIN_ON_NODE=waitUntilNode(
-      []{ return orin_on_signal.get_value(); }, 
+    constexpr auto WAIT_ORIN_ON_NODE = waitUntilNode(
+      hal::read_orin_on,
       "ORIN is ON", "Waiting ORIN", [] {}
     );
 
-    constexpr auto WAIT_CANOPEN_ON_NODE=waitUntilNode(
-      []{ return can_open_on_singal.get_value();}, 
+    constexpr auto WAIT_CANOPEN_ON_NODE = waitUntilNode(
+      hal::read_can_open_on, 
       "CANOPEN is ON", "Waiting CANOPEN", [] {}
     );
 
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
-      []{return asms_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(ASMS_THRESHOLD);}, 
+      hal::read_asms_status, 
       "ASMS is ON", "Waiting ASMS", [] {}
     );
 
@@ -77,7 +77,7 @@ namespace as::ebs_supervisor {
     );
 
     constexpr auto WAIT_MISSION_NODE=waitUntilNode(
-      []{return mission_signal.get_value();}, 
+      hal::is_autonomous_mission, 
       "Mission selected", "Waiting mission", [] {}
     );
 
@@ -102,13 +102,13 @@ namespace as::ebs_supervisor {
 
     constexpr auto ASSERT_SDC_OPEN_NODE = assertWithTimeoutNode(
       []{
-        return sdc_signal.get_value_with_threhold<ValueRespectTreshold::BIGGER>(SDC_TRESHOLD_OPEN);
+        return hal::read_sdc() == hal::SdcState::OPEN;
       },
        500ms, "SDC open", "Waiting SDC opening", "SDC opening timeout");
 
     constexpr auto ASSERT_SDC_CLOSE_NODE = assertWithTimeoutNode(
       []{
-        return sdc_signal.get_value_with_threhold(SDC_TRESHOLD_CLOSE);
+        return hal::read_sdc() == hal::SdcState::CLOSE;
       }, 500ms, "SDC close", "Waiting SDC closing", "SDC closing timeout");
         
     constexpr auto TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().set_toggling();}, "Start toggling watchdog");
@@ -135,7 +135,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED_NODE = waitUntilNode(
       []{
-        return hal::utils::mask(motors_bit_vector_singal.get_value(), (unsigned)hal::MaxonMotors::CLUTCH | (unsigned)hal::MaxonMotors::BRAKE);
+        return hal::utils::mask(hal::read_motors_bit_vector(), (unsigned)hal::MaxonMotors::CLUTCH | (unsigned)hal::MaxonMotors::BRAKE);
       }, "Brake and clutch motors enabled", "Waiting brake and clutch motor enabled", [] {});
 
     constexpr auto BRAKE_WITH_MAXON_MOTOR_NODE = doActionNode(brake_with_maxon, "Brake with MAXON motor");
@@ -148,23 +148,21 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
-        return !hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
+        return !hal::utils::mask(hal::read_res_bit_vector(), (unsigned) hal::Res::GO);
       }, "GO signal OFF received", "Waiting for GO signal OFF", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
     constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
       []{
-        return hal::utils::mask(res_bit_vector_signal.get_value(), (unsigned) hal::Res::GO);
+        return hal::utils::mask(hal::read_res_bit_vector(), (unsigned) hal::Res::GO);
       }, "GO signal ON received", "Waiting for GO signal ON", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
     constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
-      []{
-        return stop_signal.get_value();
-      }, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
+      hal::read_stop_message, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
     );
 
     constexpr auto WAIT_TS_ACTIVE_NODE = waitUntilNode(
       []{
-        return rpm_signal.get_value()>3000;
+        return rpm_signal.get_value() > 3000;
       }, 
       "TS Activated", "Waiting for crank", [] {}
     );

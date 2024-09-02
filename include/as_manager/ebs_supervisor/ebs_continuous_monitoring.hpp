@@ -32,7 +32,7 @@ namespace as::ebs_supervisor {
       
       continousMonitoringAssert(
         []{
-          return sdc_signal.get_value_with_threhold(SDC_TRESHOLD_CLOSE);
+          return hal::read_sdc() == hal::SdcState::CLOSE;
         },
         50ms, sdcTimer,
         "SDC waiting continous monitoring", "SDC timeout continous monitoring"
@@ -40,7 +40,7 @@ namespace as::ebs_supervisor {
       
       continousMonitoringAssert(
         []{
-          return static_cast<hal::ResState>(res_emergency_signal.get_value()) == hal::ResState::OPERATIONAL;
+          return hal::read_res_state() == hal::ResState::OPERATIONAL;
         },
          50ms, resEmergencyTimer,
          "Res emergency waiting continous monitoring", "Res emergency timeout continous monitoring"
