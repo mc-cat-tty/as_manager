@@ -19,7 +19,7 @@ namespace as::ebs_supervisor {
           INIT_PINS_NODE,
           START_CANBUS_NODE,
           
-          WAIT_ORIN_ON_NODE,          
+          WAIT_ORIN_ON_NODE,
           WAIT_ASMS_NODE,
           
           START_CANOPEN_NODE,
@@ -32,6 +32,8 @@ namespace as::ebs_supervisor {
           safetyNodeDecorator(ASSERT_EBS_PRESSURE_NODE),
           safetyNodeDecorator(ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE),
 
+          safetyNodeDecorator(STOP_TOGGLING_WATCHDOG_NODE),
+          safetyNodeDecorator(OPEN_SDC_NODE),
           safetyNodeDecorator(ASSERT_SDC_OPEN_NODE),
           safetyNodeDecorator(TOGGLING_WATCHDOG_NODE),
           safetyNodeDecorator(CLOSE_SDC_NODE),
