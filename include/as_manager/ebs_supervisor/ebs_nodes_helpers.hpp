@@ -26,8 +26,8 @@ namespace as::ebs_supervisor {
   }
 
   constexpr auto safetyNodeDecorator(std::invocable auto node) {
-    return [&node]() {
-      if (not Parameters::getInstance().safetyFeatures) return NodeFlowCtrl::NEXT;;
+    return [node]() {
+      if (not Parameters::getInstance().safetyFeatures) return NodeFlowCtrl::NEXT;
       return node();
     };
   }
