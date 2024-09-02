@@ -99,27 +99,33 @@ class AsManagerNode : public EDFNode {
     inputState.brakePressureFront = msg->p_brake_front;
     inputState.ebsPressure1 = msg->p_ebs_1;
     inputState.ebsPressure2 = msg->p_ebs_2;
+    logInputState();
   }
 
   void resStatusCb(const mmr_base::msg::ResStatus::SharedPtr msg) {
     inputState.resState = hal::utils::resComposeBv(msg->go_signal, msg->bag, msg->emergency);
+    logInputState();
   }
   
   void maxonMotorsCb(const mmr_base::msg::ActuatorStatus::SharedPtr msg) {
     inputState.canOpenOn=true;
     inputState.maxonMotorsState = hal::utils::motorsComposeBv(msg->clutch_status, msg->steer_status, msg->brake_status);
+    logInputState();
   }
   
   void missionSelectedCb(const std_msgs::msg::Int8::SharedPtr mission) {
     inputState.mission = mission->data;
+    logInputState();
   }
   
   void stopMessageCb(const std_msgs::msg::Bool::SharedPtr msg) {
     inputState.stopMessage = msg->data;
+    logInputState();
   }
 
   void orinOnCb(const std_msgs::msg::Bool::SharedPtr msg) {
     inputState.orinOn = msg->data;
+    logInputState();
   }
 
   public:
