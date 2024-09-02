@@ -4,7 +4,7 @@
 #include <as_manager/fsm_manager/nodes_factory.hpp>
 
 namespace as::ebs_supervisor {
-  template<SafetyMonitoringSwitch monitorSwitch>
+  template<SafetyMonitoringSwitch monitorSwitch = SafetyMonitoringSwitch::DISABLE>
   constexpr auto sleepNode(std::chrono::milliseconds ms) {
     return waitUntilNode<monitorSwitch>(
       [ms] {

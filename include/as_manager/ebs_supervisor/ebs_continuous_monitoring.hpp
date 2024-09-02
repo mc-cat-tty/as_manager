@@ -20,7 +20,9 @@ namespace as::ebs_supervisor {
       return instance;
     }
 
-    inline void continuousMonitoring(){
+    inline void continuousMonitoring() {
+      if (not Parameters::getInstance().safetyFeatures) return;
+      
       continousMonitoringAssert(
         []{
           return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold and

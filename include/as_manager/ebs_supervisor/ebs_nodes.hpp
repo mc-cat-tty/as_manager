@@ -16,11 +16,11 @@ namespace as::ebs_supervisor {
     using namespace params;
     using namespace std::chrono_literals;
 
-    constexpr auto WAIT_500_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(500ms);
-    constexpr auto WAIT_1000_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(1000ms);
-    constexpr auto WAIT_1500_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(1500ms);
-    constexpr auto WAIT_2000_MS_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(2000ms);
-    constexpr auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::DISABLE>(5000ms);
+    constexpr auto WAIT_500_MS_NODE = sleepNode(500ms);
+    constexpr auto WAIT_1000_MS_NODE = sleepNode(1000ms);
+    constexpr auto WAIT_1500_MS_NODE = sleepNode(1500ms);
+    constexpr auto WAIT_2000_MS_NODE = sleepNode(2000ms);
+    constexpr auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::ENABLE>(5000ms);
 
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
@@ -87,7 +87,7 @@ namespace as::ebs_supervisor {
         return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold
           and ebs2_signal.get_value() >=  Parameters::getInstance().ebsTankPressureThreshold;
       },
-      500ms, "Sufficient EBS tank pressure", "Waiting for sufficient EBS pressure", "EBS pressure timeout"
+      200ms, "Sufficient EBS tank pressure", "Waiting for sufficient EBS pressure", "EBS pressure timeout"
     );
 
     constexpr auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE = assertWithTimeoutNode(
@@ -95,7 +95,8 @@ namespace as::ebs_supervisor {
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() >= Parameters::getInstance().brakePressureBothActuatorsThreshold
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureBothActuatorsThreshold;
-      }, 500ms, "Sufficient BRAKE pressure on both actuators", "Waiting sufficient BRAKE pressure on both actuators", "BRAKE pressure on both actuators timeout");
+      },
+      200ms, "Sufficient BRAKE pressure on both actuators", "Waiting sufficient BRAKE pressure on both actuators", "BRAKE pressure on both actuators timeout");
 
     constexpr auto OPEN_SDC_NODE = doActionNode(open_sdc, "Open SDC");
     constexpr auto CLOSE_SDC_NODE = doActionNode(close_sdc, "Close SDC");
@@ -104,12 +105,13 @@ namespace as::ebs_supervisor {
       []{
         return hal::read_sdc() == hal::SdcState::OPEN;
       },
-       500ms, "SDC open", "Waiting SDC opening", "SDC opening timeout");
+      100ms, "SDC open", "Waiting SDC opening", "SDC opening timeout");
 
     constexpr auto ASSERT_SDC_CLOSE_NODE = assertWithTimeoutNode(
       []{
         return hal::read_sdc() == hal::SdcState::CLOSE;
-      }, 500ms, "SDC close", "Waiting SDC closing", "SDC closing timeout");
+      },
+      100ms, "SDC close", "Waiting SDC closing", "SDC closing timeout");
         
     constexpr auto TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().set_toggling();}, "Start toggling watchdog");
     constexpr auto STOP_TOGGLING_WATCHDOG_NODE = doActionNode([]{Watchdog::getInstance().stop_toggling();}, "Stop toggling watchdog");
@@ -119,14 +121,16 @@ namespace as::ebs_supervisor {
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() >= Parameters::getInstance().brakePressureOneActuatorThreshold
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureOneActuatorThreshold;
-      }, 500ms, "Sufficient BRAKE pressure", "Waiting sufficient BRAKE pressure", "BRAKE pressure timeout");
+      },
+      200ms, "Sufficient BRAKE pressure", "Waiting sufficient BRAKE pressure", "BRAKE pressure timeout");
 
     constexpr auto ASSERT_NO_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
         std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
         return breake_pressure_rear_signal.get_value() <=  Parameters::getInstance().unbrakePressureThreshold
           and breake_pressure_front_signal.get_value() <=  Parameters::getInstance().unbrakePressureThreshold;
-      }, 500ms, "No brake pressure", "Waiting no brake pressure", "Brake pressure timeout");
+      },
+      500ms, "No brake pressure", "Waiting no brake pressure", "Brake pressure timeout");
 
     constexpr auto UNBRAKE_ACT1_NODE = doActionNode(unbrake_act1, "Unbrake Act1");
     constexpr auto BRAKE_ACT1_NODE = doActionNode(brake_act1, "Brake Act1");
@@ -144,19 +148,20 @@ namespace as::ebs_supervisor {
       []{
         return breake_pressure_rear_signal.get_value() >= Parameters::getInstance().brakePressureMaxonMotorsThreshold
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureMaxonMotorsThreshold;
-      }, 500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
+      },
+      500ms, "Sufficient BRAKE pressure with MAXON", "Waiting sufficient brake pressure with MAXON", "Brake pressure MAXON timeout");
 
-    constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
+    constexpr auto WAIT_GO_SIGNAL_OFF_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
       []{
         return !hal::utils::mask(hal::read_res_bit_vector(), (unsigned) hal::Res::GO);
       }, "GO signal OFF received", "Waiting for GO signal OFF", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
-    constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
+    constexpr auto WAIT_GO_SIGNAL_ON_NODE = waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
       []{
         return hal::utils::mask(hal::read_res_bit_vector(), (unsigned) hal::Res::GO);
       }, "GO signal ON received", "Waiting for GO signal ON", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); });
 
-    constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::DISABLE>(
+    constexpr auto WAIT_STOP_SIGNAL =  waitUntilNode<SafetyMonitoringSwitch::ENABLE>(
       hal::read_stop_message, "STOP signal received", "Waiting for STOP signal", [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
     );
 
