@@ -53,7 +53,7 @@ namespace as::ebs_supervisor {
 
     constexpr auto WAIT_ASMS_NODE=waitUntilNode(
       hal::read_asms_status, 
-      "ASMS is ON", "Waiting ASMS", [] {}
+      "ASMS is ON", "Waiting ASMS ON", [] {}
     );
 
     constexpr auto START_CANBUS_NODE = doActionNode(
