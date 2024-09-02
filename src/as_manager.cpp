@@ -85,7 +85,9 @@ void AsManagerNode::loadParameters() {
   auto debugParamsProxy = ParametersProxy("debug", this);
   auto topicsParamsProxy = ParametersProxy("topics", this);
   auto thresholdsParamsProxy = ParametersProxy("ebsSupervisor.thresholds", this);
+  auto timeoutsParamsProxy = ParametersProxy("ebsSupervisor.timeouts", this);
   auto filteringParamsProxy = ParametersProxy("ebsSupervisor.filtering", this);
+
 
   params = {
     .safetyFeatures = debugParamsProxy.get("safetyFeatures", true),
@@ -97,6 +99,16 @@ void AsManagerNode::loadParameters() {
     .brakePressureBothActuatorsThreshold = thresholdsParamsProxy.get<int>("brakePressureBothActuatorsThreshold"),
     .brakePressureMaxonMotorsThreshold = thresholdsParamsProxy.get<int>("brakePressureMaxonMotorsThreshold"),
     .unbrakePressureThreshold = thresholdsParamsProxy.get<int>("unbrakePressureThreshold"),
+    .rpmTsActiveThreshold = thresholdsParamsProxy.get<int>("rpmTsActiveThreshold"),
+
+    .assertEbsPressureTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertEbsPressureTimeoutMs", 500),
+    .assertAllBrakesPressureTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertAllBrakesPressureTimeoutMs", 500),
+    .assertOneBrakePressureTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertOneBrakePressureTimeoutMs", 500),
+    .assertNoBrakePressureTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertNoBrakePressureTimeoutMs", 500),
+    .assertMaxonBrakePressureTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertMaxonBrakePressureTimeoutMs", 500),
+    .assertSdcOpenTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertSdcOpenTimeoutMs", 500),
+    .assertSdcCloseTimeoutMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("assertSdcCloseTimeoutMs", 500),
+    .continousMonitoringTimeoutsMs = timeoutsParamsProxy.get<int, std::chrono::milliseconds>("continousMonitoringTimeoutsMs", 100),
     
     .brakePressureFrontAlpha = filteringParamsProxy.get<float>("brakePressureFrontAlpha"),
     .brakePressureRearAlpha = filteringParamsProxy.get<float>("brakePressureRearAlpha"),

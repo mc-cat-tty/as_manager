@@ -1,7 +1,7 @@
 #pragma once
 #include <rclcpp/rclcpp.hpp>
 #include <string_view>
-
+#include <chrono>
 
 namespace params {
   class Parameters {
@@ -17,7 +17,17 @@ namespace params {
       brakePressureOneActuatorThreshold, 
       brakePressureBothActuatorsThreshold,
       brakePressureMaxonMotorsThreshold,
-      unbrakePressureThreshold;
+      unbrakePressureThreshold,
+      rpmTsActiveThreshold;
+    
+    std::chrono::milliseconds assertEbsPressureTimeoutMs,
+      assertAllBrakesPressureTimeoutMs,
+      assertOneBrakePressureTimeoutMs,
+      assertNoBrakePressureTimeoutMs,
+      assertMaxonBrakePressureTimeoutMs,
+      assertSdcOpenTimeoutMs,
+      assertSdcCloseTimeoutMs,
+      continousMonitoringTimeoutsMs;
     
     float brakePressureFrontAlpha,
       brakePressureRearAlpha,
@@ -41,17 +51,22 @@ namespace params {
     ParametersProxy(std::string_view prefix, rclcpp::Node* node) : node(*node), prefix(prefix) {};
 
     template<typename T>
-    T get(std::string_view paramName, std::optional<T> def_val = std::nullopt) const {
+    T get(std::string_view paramName, std::optional<T> defVal = std::nullopt) const {
       auto _paramName = getName(paramName);
 
       try {
-        if (not node.has_parameter(_paramName)) node.declare_parameter(_paramName, def_val.value_or(T{}));
+        if (not node.has_parameter(_paramName)) node.declare_parameter(_paramName, defVal.value_or(T{}));
         return node.get_parameter(_paramName).get_value<T>();
       }
       catch (...) {
         RCLCPP_ERROR(node.get_logger(), "Erorr while parsing parameter '%s'", _paramName.c_str());
         throw;      
       }
+    }
+
+    template<typename T, typename CastType>
+    CastType get(std::string_view paramName, std::optional<T> defVal = std::nullopt) const {
+      return CastType{get(paramName, defVal)};
     }
 
     template<typename T>

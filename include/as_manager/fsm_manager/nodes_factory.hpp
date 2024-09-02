@@ -7,14 +7,14 @@
 namespace as::fsm {
   constexpr inline auto assertWithTimeoutNode(
     std::predicate auto predicate,
-    std::chrono::milliseconds ms,
+    std::chrono::milliseconds& ms,
     std::string_view successfulMsg,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ) {
     return [
       predicate,
-      ms,
+      &ms,
       successfulMsg,
       waitingMsg,
       timeoutMsg
@@ -25,15 +25,15 @@ namespace as::fsm {
 
   constexpr inline auto continousMonitoringAssertNode(
     std::invocable auto predicate,
-    std::chrono::milliseconds ms,
+    std::chrono::milliseconds& ms,
     timing::TimerAsync& timer,
     std::string_view waitingMsg,
     std::string_view timeoutMsg
   ) {
     return [
       predicate,
-      ms,
-      timer,
+      &ms,
+      &timer,
       waitingMsg,
       timeoutMsg
     ] {
