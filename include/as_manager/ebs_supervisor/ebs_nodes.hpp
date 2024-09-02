@@ -26,14 +26,15 @@ namespace as::ebs_supervisor {
       []{
         using namespace hal;
         set_buzzer_state(KriaPin::Value::OFF);
-        toggle_sdc_state(SdcState::CLOSE);
         Watchdog::getInstance().set_toggling();
 
         if (Parameters::getInstance().safetyFeatures) {
+          toggle_sdc_state(SdcState::OPEN);
           toggle_actuator1_state(ActuatorState::BRAKING);
           toggle_actuator2_state(ActuatorState::BRAKING);
         }
         else {
+          toggle_sdc_state(SdcState::CLOSE);
           toggle_actuator1_state(ActuatorState::UNBRAKING);
           toggle_actuator2_state(ActuatorState::UNBRAKING);
         }
