@@ -8,6 +8,7 @@ namespace timing{
     if( !is_started ) {
       endtime = Clock::get_time<milliseconds>() + duration;
       is_started = true;
+      this->duration = duration;
     }
   }
 
