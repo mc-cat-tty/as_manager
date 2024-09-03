@@ -34,16 +34,16 @@ as_manager_node:
       
       timeouts:
         assertEbsPressureTimeoutMs: 500  # ms
-        assertAllBrakesPressureTimeoutMs: 500  # ms
-        assertOneBrakePressureTimeoutMs: 500  # ms
-        assertNoBrakePressureTimeoutMs: 500  # ms
-        assertMaxonBrakePressureTimeoutMs: 500  # ms
-        assertSdcOpenTimeoutMs: 200  # ms
-        assertSdcCloseTimeoutMs: 200  # ms
-        continousMonitoringTimeoutsMs: 50  # ms
+        assertAllBrakesPressureTimeoutMs: 1000  # ms
+        assertOneBrakePressureTimeoutMs: 1000  # ms
+        assertNoBrakePressureTimeoutMs: 2000  # ms
+        assertMaxonBrakePressureTimeoutMs: 1000  # ms
+        assertSdcOpenTimeoutMs: 500  # ms
+        assertSdcCloseTimeoutMs: 500  # ms
+        continousMonitoringTimeoutsMs: 100  # ms
 
       filtering:
-        brakePressureFrontAlpha: 0.8
-        brakePressureRearAlpha: 0.8
-        rpmAlpha: 0.8
+        brakePressureFrontAlpha: 0.9
+        brakePressureRearAlpha: 0.9
+        rpmAlpha: 0.9
       
