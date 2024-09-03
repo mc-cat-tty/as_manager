@@ -47,3 +47,5 @@ as_manager_node:
         brakePressureRearAlpha: 0.9
         rpmAlpha: 0.9
       
+      launch:
+        maxonBrakePressure: 0.8

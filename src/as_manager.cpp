@@ -87,7 +87,7 @@ void AsManagerNode::loadParameters() {
   auto thresholdsParamsProxy = ParametersProxy("ebsSupervisor.thresholds", this);
   auto timeoutsParamsProxy = ParametersProxy("ebsSupervisor.timeouts", this);
   auto filteringParamsProxy = ParametersProxy("ebsSupervisor.filtering", this);
-
+  auto launchParamsProxy = ParametersProxy("launch", this);
 
   params = {
     .safetyFeatures = debugParamsProxy.get("safetyFeatures", true),
@@ -112,7 +112,9 @@ void AsManagerNode::loadParameters() {
     
     .brakePressureFrontAlpha = filteringParamsProxy.get<float>("brakePressureFrontAlpha"),
     .brakePressureRearAlpha = filteringParamsProxy.get<float>("brakePressureRearAlpha"),
-    .rpmAlpha = filteringParamsProxy.get<float>("rpmAlpha")
+    .rpmAlpha = filteringParamsProxy.get<float>("rpmAlpha"),
+
+    .maxonBrakePressure = launchParamsProxy.get("maxonBrakePressure", 1.0f)
   };
 
   this->m_nWCET = schedulerParamsProxy.get("WCET", 5000000);

@@ -1,4 +1,5 @@
 #include <as_manager/actions/actions.hpp>
+#include <as_manager/params/parameters.hpp>
 #include <iostream>
 
 namespace hal::actions {
@@ -52,7 +53,8 @@ namespace hal::actions {
   }
 
   void brake_with_maxon(){
-    hal::send_brake_pressure_percentage(0.15f);
+    const auto pressure = params::Parameters::getInstance().maxonBrakePressure; 
+    hal::send_brake_pressure_percentage(pressure);
   }
 
   void switch_off_assi_B(){

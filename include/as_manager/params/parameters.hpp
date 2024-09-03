@@ -32,6 +32,8 @@ namespace params {
     float brakePressureFrontAlpha,
       brakePressureRearAlpha,
       rpmAlpha;
+    
+    float maxonBrakePressure;
 
     static Parameters& getInstance() {
       static Parameters instance;
