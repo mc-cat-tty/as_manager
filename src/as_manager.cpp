@@ -114,7 +114,7 @@ void AsManagerNode::loadParameters() {
     .brakePressureRearAlpha = filteringParamsProxy.get<float>("brakePressureRearAlpha"),
     .rpmAlpha = filteringParamsProxy.get<float>("rpmAlpha"),
 
-    .maxonBrakePressure = launchParamsProxy.get<float>("maxonBrakePressure", 1.0f)
+    .maxonBrakePressure = launchParamsProxy.get<float>("maxonBrakePressure", 0.08f)
   };
 
   this->m_nWCET = schedulerParamsProxy.get("WCET", 5000000);
