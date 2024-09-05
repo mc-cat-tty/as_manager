@@ -15,11 +15,11 @@ namespace as::ebs_supervisor {
     using namespace params;
     using namespace std::chrono_literals;
 
-    constexpr auto WAIT_500_MS_NODE = sleepNode(500ms);
-    constexpr auto WAIT_1000_MS_NODE = sleepNode(1000ms);
-    constexpr auto WAIT_1500_MS_NODE = sleepNode(1500ms);
-    constexpr auto WAIT_2000_MS_NODE = sleepNode(2000ms);
-    constexpr auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::ENABLE>(5000ms);
+    auto WAIT_500_MS_NODE = sleepNode(500ms);
+    auto WAIT_1000_MS_NODE = sleepNode(1000ms);
+    auto WAIT_1500_MS_NODE = sleepNode(1500ms);
+    auto WAIT_2000_MS_NODE = sleepNode(2000ms);
+    auto WAIT_5_S_NODE = sleepNode<SafetyMonitoringSwitch::ENABLE>(5000ms);
 
     constexpr auto INIT_PINS_NODE = doActionNode(
       []{
