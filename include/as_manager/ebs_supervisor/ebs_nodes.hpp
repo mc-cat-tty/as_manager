@@ -67,6 +67,11 @@ namespace as::ebs_supervisor {
       "Started CAN Open Bridge"
     );
 
+    constexpr auto START_DATALOGGER_NODE = doActionNode(
+      std::bind(hal::actions::startNode, "mmr_data_logger", ""),
+      "Started Data Logger"
+    );
+
     auto START_CONTROL_NODE = doActionNode(
       [] {
         hal::actions::startNode(
