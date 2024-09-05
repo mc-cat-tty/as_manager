@@ -4,7 +4,7 @@
 #include <as_manager/as_manager.hpp>
 
 namespace hal{
-  bool read_orin_on() { return false; }
+  bool read_orin_on() { return AsManagerNode::getOrinOn(); }
   bool read_can_open_on() { return AsManagerNode::getCanOpenOn(); }
   float read_ebs1_pressure() { return 6.0; }
   float read_ebs2_pressure() { return 6.0; }
