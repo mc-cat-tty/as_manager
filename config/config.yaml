@@ -48,4 +48,4 @@ as_manager_node:
         rpmAlpha: 0.9
       
       launch:
-        maxonBrakePressure: 0.8
+        maxonBrakePressure: 0.08

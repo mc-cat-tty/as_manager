@@ -26,15 +26,17 @@ namespace as::ebs_supervisor {
         using namespace hal;
         set_buzzer_state(KriaPin::Value::OFF);
         Watchdog::getInstance().set_toggling();
-        toggle_sdc_state(SdcState::CLOSE);
+        
 
         if (Parameters::getInstance().safetyFeatures) {
           toggle_actuator1_state(ActuatorState::BRAKING);
           toggle_actuator2_state(ActuatorState::BRAKING);
+          toggle_sdc_state(SdcState::OPEN);
         }
         else {
           toggle_actuator1_state(ActuatorState::UNBRAKING);
           toggle_actuator2_state(ActuatorState::UNBRAKING);
+          toggle_sdc_state(SdcState::CLOSE);
         }
       },
       "Initialized pins"
