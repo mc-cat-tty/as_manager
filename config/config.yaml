@@ -28,7 +28,7 @@ as_manager_node:
         ebsTankPressureThreshold: 4
         brakePressureOneActuatorThreshold: 10
         brakePressureBothActuatorsThreshold: 20
-        brakePressureMaxonMotorsThreshold: 6
+        brakePressureMaxonMotorsThreshold: 4
         unbrakePressureThreshold: 5
         rpmTsActiveThreshold: 3000
       
@@ -48,4 +48,4 @@ as_manager_node:
         rpmAlpha: 0.9
       
       launch:
-        maxonBrakePressure: 0.08
+        maxonBrakePressure: 0.10
