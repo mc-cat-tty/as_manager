@@ -19,11 +19,11 @@ namespace as::ebs_supervisor {
           INIT_PINS_NODE,
           START_CANBUS_NODE,
           
-          WAIT_ORIN_ON_NODE,
+          // WAIT_ORIN_ON_NODE,
           WAIT_ASMS_NODE,
           
           START_CANOPEN_NODE,
-          
+        
           WAIT_MISSION_NODE,
           START_CONTROL_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
