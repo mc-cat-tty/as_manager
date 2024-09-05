@@ -26,7 +26,7 @@ namespace as::ebs_supervisor {
           return hal::read_sdc() == hal::SdcState::CLOSE;
         },
         Parameters::getInstance().continousMonitoringTimeoutsMs, sdcTimer,
-        "Waiting SDC for continous monitoring", "SDC timeout continous monitoring"
+        "CONTINOUS MONITORING: checking SDC is closed", "SDC timeout continous monitoring"
       );
 
       if (not Parameters::getInstance().safetyFeatures) return;
@@ -37,7 +37,7 @@ namespace as::ebs_supervisor {
           ebs2_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold;
         }, 
         Parameters::getInstance().continousMonitoringTimeoutsMs, ebsTimer,
-        "Waiting PEBS for continous monitoring", "PEBS timeout continous monitoring"
+        "CONTINOUS MONITORING: checking PEBS is above threshold", "PEBS timeout continous monitoring"
       );
       
       continousMonitoringAssert(
@@ -45,7 +45,7 @@ namespace as::ebs_supervisor {
           return hal::read_res_state() == hal::ResState::OPERATIONAL;
         },
          Parameters::getInstance().continousMonitoringTimeoutsMs, resEmergencyTimer,
-         "Waiting RES emergency for continous monitoring", "Res emergency timeout continous monitoring"
+         "CONTINOUS MONITORING: checking RES is operational", "Res operational timeout continous monitoring"
       );
     }
 

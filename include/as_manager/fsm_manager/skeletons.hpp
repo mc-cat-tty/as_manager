@@ -65,8 +65,13 @@ namespace as::fsm {
     std::string_view timeoutMsg
   ){
     timer.start(ms);
-    std::cout << waitingMsg << std::endl;
+    static auto isWaitLogged = false
     
+    if (not isWaitLogged) {
+      std::cout << waitingMsg << std::endl;
+      isWaitLogged = true;
+    }
+
     if (predicate()) {
       timer.stop();
       return;
