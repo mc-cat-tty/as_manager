@@ -33,6 +33,15 @@ namespace as::ebs_supervisor {
       
       continousMonitoringAssert(
         []{
+          if (Parameters::getInstance().verboseHalReads) {
+            std::cout << "[PEBS]"
+            << " EBS1: " << ebs1_signal.get_value()
+            << " >= " << Parameters::getInstance().ebsTankPressureThreshold
+            << " EBS2: " << ebs2_signal.get_value()
+            << " >= " << Parameters::getInstance().ebsTankPressureThreshold
+            << std::endl;
+          }
+          
           return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold and
           ebs2_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold;
         }, 
