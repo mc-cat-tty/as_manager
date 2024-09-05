@@ -29,6 +29,12 @@ namespace as::ebs_supervisor {
         "CONTINOUS MONITORING: checking SDC is closed", "SDC timeout continous monitoring"
       );
 
+      continousMonitoringAssert(
+        hal::read_asms_status,
+        Parameters::getInstance().continousMonitoringTimeoutsMs, asTimer,
+        "CONTINOUS MONITORING: checking AS is ON", "AS timeout continous monitoring"
+      );
+
       if (not Parameters::getInstance().safetyFeatures) return;
       
       continousMonitoringAssert(
@@ -59,11 +65,11 @@ namespace as::ebs_supervisor {
     }
 
   private:
-    EbsContinousMonitoring(): ebsTimer(), sdcTimer(), resEmergencyTimer(), motorsTimer() {}
+    EbsContinousMonitoring(): ebsTimer(), sdcTimer(), asTimer(), resEmergencyTimer(), motorsTimer() {}
 
     ~EbsContinousMonitoring() = default;
     EbsContinousMonitoring(const EbsContinousMonitoring &) = delete;
     EbsContinousMonitoring &operator=(const EbsContinousMonitoring &) = delete;
-    timing::TimerAsync ebsTimer, sdcTimer, resEmergencyTimer, motorsTimer;
+    timing::TimerAsync ebsTimer, sdcTimer, resEmergencyTimer, motorsTimer, asTimer;
   };
 }
