@@ -82,7 +82,15 @@ namespace as::ebs_supervisor {
 
     auto ASSERT_EBS_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        std::cout<<"PBRAKE: "<<ebs1_signal.get_value()<<" "<<ebs2_signal.get_value()<<std::endl;
+        if (Parameters::getInstance().verboseHalReads) {
+          std::cout << "[PEBS]"
+            << " EBS1: " << ebs1_signal.get_value()
+            << " >= " << Parameters::getInstance().ebsTankPressureThreshold
+            << " EBS2: " << ebs2_signal.get_value()
+            << " >= " << Parameters::getInstance().ebsTankPressureThreshold
+            << std::endl;
+        }
+
         return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold
           and ebs2_signal.get_value() >=  Parameters::getInstance().ebsTankPressureThreshold;
       },
@@ -92,7 +100,15 @@ namespace as::ebs_supervisor {
 
     auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE = assertWithTimeoutNode(
       []{
-        std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
+        if (Parameters::getInstance().verboseHalReads) {
+          std::cout << "[PBRAKE]"
+            << " Rear: " << breake_pressure_rear_signal.get_value()
+            << " >= " << Parameters::getInstance().brakePressureBothActuatorsThreshold
+            << " Front: " << breake_pressure_front_signal.get_value()
+            << " >= " << Parameters::getInstance().brakePressureBothActuatorsThreshold
+            << std::endl;
+        }
+
         return breake_pressure_rear_signal.get_value() >= Parameters::getInstance().brakePressureBothActuatorsThreshold
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureBothActuatorsThreshold;
       },
@@ -124,7 +140,15 @@ namespace as::ebs_supervisor {
 
     auto ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
+        if (Parameters::getInstance().verboseHalReads) {
+          std::cout << "[PBRAKE]"
+            << " Rear: " << breake_pressure_rear_signal.get_value()
+            << " >= " << Parameters::getInstance().brakePressureOneActuatorThreshold
+            << " Front: " << breake_pressure_front_signal.get_value()
+            << " >= " << Parameters::getInstance().brakePressureOneActuatorThreshold
+            << std::endl;
+        }
+
         return breake_pressure_rear_signal.get_value() >= Parameters::getInstance().brakePressureOneActuatorThreshold
           and breake_pressure_front_signal.get_value() >= Parameters::getInstance().brakePressureOneActuatorThreshold;
       },
@@ -134,7 +158,15 @@ namespace as::ebs_supervisor {
 
     auto ASSERT_NO_BRAKE_PRESSURE_NODE = assertWithTimeoutNode(
       []{
-        std::cout<<"PBRAKE: "<<breake_pressure_rear_signal.get_value()<<" "<<breake_pressure_front_signal.get_value()<<std::endl;
+        if (Parameters::getInstance().verboseHalReads) {
+          std::cout << "[PBRAKE]"
+            << " Rear: " << breake_pressure_rear_signal.get_value()
+            << " <= " << Parameters::getInstance().unbrakePressureThreshold
+            << " Front: " << breake_pressure_front_signal.get_value()
+            << " <= " << Parameters::getInstance().unbrakePressureThreshold
+            << std::endl;
+        }
+        
         return breake_pressure_rear_signal.get_value() <=  Parameters::getInstance().unbrakePressureThreshold
           and breake_pressure_front_signal.get_value() <=  Parameters::getInstance().unbrakePressureThreshold;
       },
