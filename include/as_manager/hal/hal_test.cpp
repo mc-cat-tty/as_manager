@@ -32,7 +32,7 @@ namespace hal{
   void send_current_state(as::AsState state) { AsManagerNode::sendASState(state); }
   void pull_clutch() { std::cerr << "Clutch pulled" << std::endl; }
   void enable_motors() { AsManagerNode::enableMotors(true, true); }
-  void set_gear(uint8_t gear) { std::cerr << "Shift to gear: " << gear << std::endl; }
+  void set_gear(uint8_t gear) { std::cerr << "Shift to gear: " << (int) gear << std::endl; }
 }
 
 #endif
