@@ -5,7 +5,7 @@
 
 namespace hal{
   bool read_orin_on() { return false; }
-  bool read_can_open_on() { return false; }
+  bool read_can_open_on() { return AsManagerNode::getCanOpenOn(); }
   float read_ebs1_pressure() { return 6.0; }
   float read_ebs2_pressure() { return 6.0; }
   float read_brake_pressure_front() { return 50.0; }
@@ -31,7 +31,7 @@ namespace hal{
   void send_brake_pressure_percentage(float percentage) { AsManagerNode::sendBrakePercentage(percentage); }
   void send_current_state(as::AsState state) { AsManagerNode::sendASState(state); }
   void pull_clutch() { std::cerr << "Clutch pulled" << std::endl; }
-  void enable_motors() { std::cerr << "Enable motors" << std::endl; }
+  void enable_motors() { AsManagerNode::enableMotors(true, true); }
   void set_gear(uint8_t gear) { std::cerr << "Shift to gear: " << gear << std::endl; }
 }
 
