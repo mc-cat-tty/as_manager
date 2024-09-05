@@ -19,7 +19,6 @@ namespace signals::utils{
           }
 
           void update() override {
-              //std::cout<<"[UPDATER] update"<<std::endl;
               for (int i = 0; i < numSubscribers; ++i) {
                   subscribers[i]->update();
               }

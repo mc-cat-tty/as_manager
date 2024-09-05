@@ -33,7 +33,6 @@ namespace watchdog {
                 isToggling = true;
                 togglePinState();
                 hal::write_watchdog_state(pinState);
-                //std::cout<<"[WATCHDOG] set pin to: "<<pinState<<std::endl;
             }
 
             void stop_toggling() {
@@ -50,10 +49,8 @@ namespace watchdog {
                 if( timer.has_expired()){
                     togglePinState();
                     hal::write_watchdog_state(pinState);
-                    //std::cout<<"[WATCHDOG] set pin to: "<<pinState<<std::endl;
                     timer.stop();
                 }
-               // //std::cout<<"[WATCHDOG] idle "<<std::endl;
                     
             }
         };
