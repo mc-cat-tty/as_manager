@@ -100,7 +100,6 @@ namespace as::fsm {
     
     if constexpr (doSafetyMonitoring == SafetyMonitoringSwitch::ENABLE) {
       continousMonitoring();
-      std::cout << "Monitoring" << std::endl;
     }
     
     if (not isWaitMsgLogged) {
