@@ -11,11 +11,11 @@ namespace hal{
   float read_brake_pressure_front() { return 50.0; }
   float read_brake_pressure_rear() { return 50.0; }
   SdcState read_sdc() { return SdcState::CLOSE; }
-  unsigned read_rpm() { return 3500; }
+  unsigned read_rpm() {return AsManagerNode::getEngineRpm(); }
   ResState read_res_state() { return ResState::OPERATIONAL; }
-  uint8_t read_res_bit_vector() { return 0x01; }
+  uint8_t read_res_bit_vector() {return AsManagerNode::getResState();}
   bool read_asms_status() { return true; }
-  bool read_stop_message() { return false; }
+  bool read_stop_message()  {return AsManagerNode::getStopMessage();}
   bool read_mission_status() { return false; }
   uint8_t read_motors_bit_vector() { return 0x07; }
   bool is_autonomous_mission() { return AsManagerNode::isAutonomousMission(); }
