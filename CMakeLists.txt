@@ -50,6 +50,8 @@ if (APPLE)
   add_link_options(-lstdc++)
 endif()
 
+add_compile_definitions(TEST)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()

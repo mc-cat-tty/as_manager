@@ -6,7 +6,7 @@ as_manager_node:
       deadline: 10000000  # ns
     
     debug:
-      safetyFeatures: true
+      safetyFeatures: false
       verboseCallbacks: false
       verboseHalReads: false
 

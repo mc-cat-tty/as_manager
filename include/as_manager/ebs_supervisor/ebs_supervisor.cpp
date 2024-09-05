@@ -25,7 +25,7 @@ namespace as::ebs_supervisor {
           START_CANOPEN_NODE,
           
           WAIT_MISSION_NODE,
-          START_CONTROL_NODE,
+          //START_CONTROL_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
           // EBS CHECK
