@@ -6,7 +6,7 @@
 
 namespace as::ebs_supervisor {
   template<SafetyMonitoringSwitch monitorSwitch = SafetyMonitoringSwitch::DISABLE>
-  auto sleepNode(std::chrono::milliseconds ms) {
+  constexpr auto sleepNode(std::chrono::milliseconds ms) {
     return waitUntilNode<monitorSwitch>(
       [ms] {
         static timing::TimerAsync timer;
@@ -20,8 +20,8 @@ namespace as::ebs_supervisor {
           return false;
         } 
       }, 
-      std::to_string(ms.count()) + "ms expired",
-      "Waiting " + std::to_string(ms.count()) + "ms",
+      "Ending sleep",
+      "Sleeping",
       [] { EbsContinousMonitoring::getInstance().continuousMonitoring(); }
     );
   }
