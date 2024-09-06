@@ -18,7 +18,7 @@ namespace as::ebs_supervisor {
 
           INIT_PINS_NODE,
           START_CANBUS_NODE,
-          START_DATALOGGER_NODE,
+          safetyNodeDecorator(START_DATALOGGER_NODE),
           
           // WAIT_ORIN_ON_NODE,
           WAIT_ASMS_NODE,
