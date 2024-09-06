@@ -20,7 +20,7 @@ namespace as::ebs_supervisor {
           START_CANBUS_NODE,
           safetyNodeDecorator(START_DATALOGGER_NODE),
           
-          // WAIT_ORIN_ON_NODE,
+          WAIT_ORIN_ON_NODE,
           WAIT_ASMS_NODE,
           
           START_CANOPEN_NODE,
