@@ -20,15 +20,13 @@ namespace hal::actions {
 
     void switch_off_assi_Y();
     void switch_on_assi_Y();
-    void strobe_assi_Y();
 
     void switch_off_assi_B();
     void switch_on_assi_B();
-    void strobe_assi_B();
 
     void pullClutch();
     void setFirstGear();
-    void setUpMotors();
+    void enableMotors();
 
-    void startNode(std::string nodeName);
+    void startNode(std::string nodeName, std::string prefix);
 }

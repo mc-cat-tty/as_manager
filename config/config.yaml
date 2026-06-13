@@ -1,10 +1,14 @@
 as_manager_node:
-  ros_parameters:
-    generic:
-      WCET: 5000000 # ns
-      period: 10000000 # ns
-      deadline: 10000000
-      debug: true
+  ros__parameters:
+    scheduler:
+      WCET: 5000000  # ns
+      period: 10000000  # ns
+      deadline: 10000000  # ns
+    
+    debug:
+      safetyFeatures: true
+      verboseCallbacks: false
+      verboseHalReads: false
 
     topics:
       asStateTopic: "/as/status"
@@ -17,17 +21,31 @@ as_manager_node:
       maxonMotorsTopic: "/actuator/status"
       missionSelectedTopic: "/mission/selected"
       stopMessageTopic: "/mission/stop"
+      orinOnTopic: "/orin/on"
 
-    thresholds:
-      ebsTankPressureThreshold: 5
-      brakePressureOneActuatorThreshold: 10
-      brakePressureBothActuatorsThreshold: 20
-      brakePressureMaxonMotorsThreshold: 6
-      unbrakePressureThreshold: 5
+    ebsSupervisor:
+      thresholds:
+        ebsTankPressureThreshold: 4
+        brakePressureOneActuatorThreshold: 10
+        brakePressureBothActuatorsThreshold: 20
+        brakePressureMaxonMotorsThreshold: 6
+        unbrakePressureThreshold: 5
+        rpmTsActiveThreshold: 3000
+      
+      timeouts:
+        assertEbsPressureTimeoutMs: 500  # ms
+        assertAllBrakesPressureTimeoutMs: 1000  # ms
+        assertOneBrakePressureTimeoutMs: 1000  # ms
+        assertNoBrakePressureTimeoutMs: 2000  # ms
+        assertMaxonBrakePressureTimeoutMs: 1000  # ms
+        assertSdcOpenTimeoutMs: 500  # ms
+        assertSdcCloseTimeoutMs: 500  # ms
+        continousMonitoringTimeoutsMs: 100  # ms
 
-    alpha:
-      asmsAlpha: 0.8
-      sdcAlpha: 0.8
-      brakePressureFrontAlpha: 0.8
-      brakePressureRearAlpha: 0.8
-      rpmAlpha: 0.8
+      filtering:
+        brakePressureFrontAlpha: 0.9
+        brakePressureRearAlpha: 0.9
+        rpmAlpha: 0.9
+      
+      launch:
+        maxonBrakePressure: 0.8

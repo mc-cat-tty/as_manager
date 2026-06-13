@@ -9,6 +9,8 @@ namespace timing {
     TimerAsync();
     bool has_expired() const;
     void start(std::chrono::milliseconds duration);
+    void restart(std::chrono::milliseconds duration);
+    void restart();
     void stop();
 
   private:

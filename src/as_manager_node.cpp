@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     executor.add_node(node);
 
     while (true) {
-      executor.spin_all(30ms);
+      executor.spin_all(50ms);
       node->superloop();
       sched_yield();
     }

@@ -8,8 +8,6 @@
 #include <as_manager/as_manager.hpp>
 
 
-
-
 namespace as::ebs_supervisor {
   using namespace std::chrono_literals;
   using namespace as::fsm;
@@ -22,41 +20,50 @@ namespace as::ebs_supervisor {
       return instance;
     }
 
-    inline void continuousMonitoring(){
+    inline void continuousMonitoring() {
       continousMonitoringAssert(
         []{
-            return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold and
-            ebs2_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold;
-        }, 
-        50ms, ebsTimer, "PEBS waiting continous monitoring", "PEBS timeout continous monitoring");
-      continousMonitoringAssert(
-        []{
-          return sdc_signal.get_value_with_threhold(SDC_TRESHOLD_CLOSE);
+          return hal::read_sdc() == hal::SdcState::CLOSE;
         },
-        50ms, sdcTimer, "SDC waiting continous monitoring", "SDC timeout continous monitoring");
+        Parameters::getInstance().continousMonitoringTimeoutsMs, sdcTimer,
+        "CONTINOUS MONITORING: checking SDC is closed", "SDC timeout continous monitoring"
+      );
+
+      if (not Parameters::getInstance().safetyFeatures) return;
+      
       continousMonitoringAssert(
         []{
-          return res_emergency_signal.get_value();
-        },
-         50ms, resEmergencyTimer, "Res emergency waiting continous monitoring", "Res emergency timeout continous monitoring");
-      continousMonitoringAssert(
-        []{
-          using namespace hal::utils;
-          return mask(motors_bit_vector_singal.get_value(), hal::MaxonMotors::CLUTCH | hal::MaxonMotors::STEER | hal::MaxonMotors::BRAKE);
+          if (Parameters::getInstance().verboseHalReads) {
+            std::cout << "[PEBS]"
+            << " EBS1: " << ebs1_signal.get_value()
+            << " >= " << Parameters::getInstance().ebsTankPressureThreshold
+            << " EBS2: " << ebs2_signal.get_value()
+            << " >= " << Parameters::getInstance().ebsTankPressureThreshold
+            << std::endl;
+          }
+          
+          return ebs1_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold and
+          ebs2_signal.get_value() >= Parameters::getInstance().ebsTankPressureThreshold;
         }, 
-        50ms, motorsTimer, "Motors waiting continous monitoring" , "Motors timeout continous monitoring");
+        Parameters::getInstance().continousMonitoringTimeoutsMs, ebsTimer,
+        "CONTINOUS MONITORING: checking PEBS is above threshold", "PEBS timeout continous monitoring"
+      );
+      
+      continousMonitoringAssert(
+        []{
+          return hal::read_res_state() == hal::ResState::OPERATIONAL;
+        },
+         Parameters::getInstance().continousMonitoringTimeoutsMs, resEmergencyTimer,
+         "CONTINOUS MONITORING: checking RES is operational", "Res operational timeout continous monitoring"
+      );
     }
 
   private:
     EbsContinousMonitoring(): ebsTimer(), sdcTimer(), resEmergencyTimer(), motorsTimer() {}
-    
 
     ~EbsContinousMonitoring() = default;
     EbsContinousMonitoring(const EbsContinousMonitoring &) = delete;
     EbsContinousMonitoring &operator=(const EbsContinousMonitoring &) = delete;
-    timing::TimerAsync ebsTimer;
-    timing::TimerAsync sdcTimer;
-    timing::TimerAsync resEmergencyTimer;
-    timing::TimerAsync motorsTimer;
+    timing::TimerAsync ebsTimer, sdcTimer, resEmergencyTimer, motorsTimer;
   };
 }

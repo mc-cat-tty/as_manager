@@ -6,7 +6,7 @@
 
 class KriaPin {
 public:
-    enum class Direction{
+    enum class Direction {
         OUT = 0,
         IN = 1
     };
@@ -24,7 +24,7 @@ public:
     };
 
 
-    enum class Value: bool{
+    enum class Value {
         ON  = 1,
         OFF = 0
     };
@@ -32,7 +32,7 @@ public:
     KriaPin(Pin pin, Direction dir, Value initialValue = KriaPin::Value::OFF);
 
     bool setValue(KriaPin::Value value) const;
-    bool getValue() const;
+    KriaPin::Value getValue() const;
     bool setDirection(Direction dir);
     Direction getDirection() const;
 
@@ -47,3 +47,9 @@ private:
     std::string readFromFile(const std::string& path) const;
 };
 
+
+inline KriaPin::Value operator!(KriaPin::Value v) {
+  return static_cast<KriaPin::Value>(
+    !static_cast<bool>(v)
+  );
+}

@@ -1,4 +1,6 @@
 #include <as_manager/actions/actions.hpp>
+#include <as_manager/params/parameters.hpp>
+#include <iostream>
 
 namespace hal::actions {
   void open_sdc(){
@@ -35,37 +37,32 @@ namespace hal::actions {
   }
 
   void active_buzzer(){
-    hal::set_buzzer_state(BuzzerState::ON);
+    hal::set_buzzer_state(KriaPin::Value::ON);
   }
 
   void disabled_buzzer(){
-    hal::set_buzzer_state(BuzzerState::OFF);
+    hal::set_buzzer_state(KriaPin::Value::OFF);
   }
 
   void switch_off_assi_Y(){
-    hal::set_assi_Y_state(AssiState::OFF);
+    hal::set_assi_Y_state(KriaPin::Value::OFF);
   }
+
   void switch_on_assi_Y(){
-    hal::set_assi_Y_state(AssiState::ON);
-  }
-  void strobe_assi_Y(){
-    hal::set_assi_Y_state(AssiState::STROBE);
+    hal::set_assi_Y_state(KriaPin::Value::ON);
   }
 
   void brake_with_maxon(){
-    hal::send_brake_pressure_percentage(20);
+    const auto pressure = params::Parameters::getInstance().maxonBrakePressure; 
+    hal::send_brake_pressure_percentage(pressure);
   }
 
   void switch_off_assi_B(){
-    hal::set_assi_B_state(AssiState::OFF);
+    hal::set_assi_B_state(KriaPin::Value::OFF);
   }
 
   void switch_on_assi_B(){
-    hal::set_assi_B_state(AssiState::ON);
-  }
-  
-  void strobe_assi_B(){
-    hal::set_assi_B_state(AssiState::STROBE);
+    hal::set_assi_B_state(KriaPin::Value::ON);
   }
 
   void pullClutch() {
@@ -76,18 +73,27 @@ namespace hal::actions {
     hal::set_gear(1);
   }
 
-  void setUpMotors() {
-    hal::set_up_all_motors();
+  void enableMotors() {
+    hal::enable_motors();
   }
 
-  void startNode(std::string nodeName) {
+  void startNode(std::string nodeName, std::string prefix) {
     pid_t newNodePid = fork();
 
-    /* TODO: better management of the error */
-    if (newNodePid < 0) { exit(255); }
+    if (prefix != "") prefix += "_";
+
+    if (newNodePid < 0) {
+      std::cerr << "Fork failed with error number: " << newNodePid << std::endl;
+      exit(255);
+    }
     if (!newNodePid) {
-      execlp("ros2", "ros2", "launch", nodeName.c_str(), nodeName.c_str() + "_launch.py", (char*)NULL);
-      exit(4);
-    } else return;
+      auto launchFile = prefix + nodeName + "_launch.py";
+      int ret = execlp("ros2", "ros2", "launch", nodeName.c_str(), launchFile.c_str() , (char*)NULL);
+      if (ret == -1) {
+        std::cerr << "Exec failed with error number: " << ret << std::endl;
+        exit(4);
+      }
+    }
+    else return;
   }
 }

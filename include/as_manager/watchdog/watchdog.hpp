@@ -10,16 +10,17 @@ namespace watchdog {
 
     class Watchdog {
         private:
-            bool isToggling, pinState;
+            bool isToggling;
+            KriaPin::Value pinState;
             TimerAsync timer;
-            Watchdog() : isToggling(false), pinState(false), timer() {}
+            Watchdog() : isToggling(false), pinState(KriaPin::Value::OFF), timer() {}
 
             Watchdog(const Watchdog&) = delete;
             Watchdog(Watchdog&&) = delete;
             Watchdog& operator=(const Watchdog&) = delete;
 
             inline void togglePinState(){
-                pinState ^= true;
+                pinState = !pinState;
             }
 
         public:
@@ -32,7 +33,6 @@ namespace watchdog {
                 isToggling = true;
                 togglePinState();
                 hal::write_watchdog_state(pinState);
-                //std::cout<<"[WATCHDOG] set pin to: "<<pinState<<std::endl;
             }
 
             void stop_toggling() {
@@ -49,10 +49,8 @@ namespace watchdog {
                 if( timer.has_expired()){
                     togglePinState();
                     hal::write_watchdog_state(pinState);
-                    //std::cout<<"[WATCHDOG] set pin to: "<<pinState<<std::endl;
                     timer.stop();
                 }
-               // //std::cout<<"[WATCHDOG] idle "<<std::endl;
                     
             }
         };

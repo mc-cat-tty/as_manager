@@ -1,144 +1,121 @@
 #pragma once
 #include <as_manager/timing/timer.hpp>
 #include <as_manager/actions/actions.hpp>
+#include <as_manager/hal/pin.hpp>
+#include <as_manager/hal/pin_implementation.hpp>
+#include <as_manager/hal/hal.hpp>
 #include <iostream>
 
 namespace as::assi_manager {
+  using namespace timing;
+  using namespace std::chrono_literals;
 
-    using namespace timing;
-    using namespace std::chrono_literals;
+  class AssiManager {
+      private:
+        enum class AssiState {STATIC, STROBING};
+        enum class BuzzerState {OFF, BEEPING};
+        enum class ManagerState {UNINIT, READY, DRIVING, FINISHED, EMERGENCY};
 
-    class AssiManager {
-         private:
-            bool enalbeAssiY,enalbeAssiB, strobeAssiY, strobeAssiB, enabledBuzzer, buzzerState, assiYState, assiBState;
-            TimerAsync timer, buzzerTimer, assiYTimer, assiBTimer;
-            int buzzerDurationCounter;
-            AssiManager() : enalbeAssiY(false), enalbeAssiB(false), strobeAssiY(false), strobeAssiB(false), enabledBuzzer(false), buzzerState(false), assiYState(false), assiBState(false), buzzerTimer(), timer(), assiYTimer(), assiBTimer(), buzzerDurationCounter(0) {}
+        static constexpr std::chrono::milliseconds STROBE_TIME = 500ms;
+        static constexpr std::chrono::milliseconds BEEP_TIME = 400ms;
+        static constexpr std::chrono::milliseconds EMERGENCY_BUZZER_TIME = 10000ms;
 
-            AssiManager(const AssiManager&) = delete;
-            AssiManager(AssiManager&&) = delete;
-            AssiManager& operator=(const AssiManager&) = delete;
+        ManagerState currentAssiState = ManagerState::UNINIT;
+        AssiState stateAssiY, stateAssiB;
+        BuzzerState stateBuzzer;
 
-            void enableAssiY() {
-                enalbeAssiY=true;
-                enalbeAssiB=false;
-                strobeAssiB=false;
-                strobeAssiY=false;
-            }
+        TimerAsync strobeTimer, beepTimer, emergencyBuzzerTimer;
+        
+        AssiManager() :
+          stateAssiY(AssiState::STATIC),
+          stateAssiB(AssiState::STATIC),
+          stateBuzzer(BuzzerState::OFF) {}
 
-            void enableAssiB() {
-                enalbeAssiY=false;
-                enalbeAssiB=true;
-                strobeAssiB=false;
-                strobeAssiY=false;
-            }
+        AssiManager(const AssiManager&) = delete;
+        AssiManager(AssiManager&&) = delete;
+        AssiManager& operator=(const AssiManager&) = delete;
+        
+        inline void resetAssi() {
+          stateAssiY = stateAssiB = AssiState::STATIC;
+          hal::actions::switch_off_assi_B();
+          hal::actions::switch_off_assi_Y();
+        }
 
-            void enableStrobeAssiY() {
-                enalbeAssiY=false;
-                enalbeAssiB=false;
-                strobeAssiB=false;
-                strobeAssiY=true;
-                assiYTimer.start(500ms);
-                hal::actions::switch_on_assi_Y();
-                assiYState = !assiYState;
-                //std::cout<<"[ASSI_MANAGER][STROBE] enableAssiY"<<std::endl;
-            }
+        void enableStrobeAssiY() {
+          stateAssiY = AssiState::STROBING;
+          strobeTimer.restart(STROBE_TIME);
+          hal::actions::switch_on_assi_Y();
+        }
 
-            void enableStrobeAssiB() {
-                enalbeAssiY=false;
-                enalbeAssiB=false;
-                strobeAssiB=true;
-                strobeAssiY=false;
-                assiBTimer.start(200ms);
-                hal::actions::switch_on_assi_B();
-                assiBState = !assiBState;
-                //std::cout<<"[ASSI_MANAGER][STROBE] enableAssiB"<<std::endl;
-            }
+        void enableStrobeAssiB() {
+          stateAssiB = AssiState::STROBING;
+          strobeTimer.restart(STROBE_TIME);
+          hal::actions::switch_on_assi_B();
+        }
 
-            void enableBuzzer() {
-                enabledBuzzer=true;
-                buzzerTimer.start(500ms);
-                hal::actions::active_buzzer();
-                buzzerState = !buzzerState;
-                //std::cout<<"[ASSI_MANAGER][BUZZER] enalbe"<<std::endl;
-            }
+        void enableBuzzer() {
+          stateBuzzer = BuzzerState::BEEPING;
+          beepTimer.restart(BEEP_TIME);
+          emergencyBuzzerTimer.restart(EMERGENCY_BUZZER_TIME);
+          hal::actions::active_buzzer();
+        }
 
-        public:
-            static AssiManager& getInstance() {
-                static AssiManager instance;
-                return instance;
-            }
+    public:
+      static AssiManager& getInstance() {
+        static AssiManager instance;
+        return instance;
+      }
 
-            inline void ready() {
-              this->enableAssiY();
-            };
-            
-            inline void driving() {
-              this->enableStrobeAssiY();
-            };
-            
-            inline void finished() {
-              this->enableAssiB();
-            };
-            
-            inline void emergency() {
-              this->enableStrobeAssiB();
-              this->enableBuzzer();
-            };
+      inline void ready() {
+        if (currentAssiState == ManagerState::READY) return;
+        currentAssiState = ManagerState::READY;
+        resetAssi();
+        hal::actions::switch_on_assi_Y();
+      }
+      
+      inline void driving() {
+        if (currentAssiState == ManagerState::DRIVING) return;
+        currentAssiState = ManagerState::DRIVING;
+        this->resetAssi();
+        this->enableStrobeAssiY();
+      };
+      
+      inline void finished() {
+        if (currentAssiState == ManagerState::FINISHED) return;
+        currentAssiState = ManagerState::FINISHED;
+        this->resetAssi();
+        hal::actions::switch_on_assi_B();
+      }
+      
+      inline void emergency() {
+        if (currentAssiState == ManagerState::EMERGENCY) return;
+        currentAssiState = ManagerState::EMERGENCY;
+        this->resetAssi();
+        this->enableStrobeAssiB();
+        this->enableBuzzer();
+      };
 
-            void run() {
-                if (enalbeAssiY) {
-                    hal::actions::switch_on_assi_Y();
-                    //std::cout<<"[ASSI_MANAGER] enableAssiY"<<std::endl;
-                }else if(enalbeAssiB){
-                    hal::actions::switch_on_assi_B();
-                    //std::cout<<"[ASSI_MANAGER] enableAssiB"<<std::endl;
-                }else if(strobeAssiY && assiYTimer.has_expired()) {
-                    assiYTimer.stop();
-                    if (assiYState) {
-                        hal::actions::switch_off_assi_Y();
-                        //std::cout<<"[ASSI_MANAGER][STROBE] disableAssiY"<<std::endl;
-                    } else {
-                        hal::actions::switch_on_assi_Y();
-                        //std::cout<<"[ASSI_MANAGER][STROBE] enalbeAssiY"<<std::endl;
-                    }
-                    assiYState = !assiYState;
-                    assiYTimer.start(500ms);
-                }else if(strobeAssiB && assiBTimer.has_expired()) {
-                    assiBTimer.stop();
-                    if (assiBState) {
-                        hal::actions::switch_off_assi_B();
-                        //std::cout<<"[ASSI_MANAGER][STROBE] disableAssiB"<<std::endl;
-                    } else {
-                        hal::actions::switch_on_assi_B();
-                        //std::cout<<"[ASSI_MANAGER][STROBE] enalbeAssiB"<<std::endl;
-                    }
-                    assiBState = !assiBState;
-                    assiBTimer.start(200ms);
-                }
+      void run() {
+        if(stateAssiY == AssiState::STROBING && strobeTimer.has_expired()) {
+          hal::set_assi_Y_state(!hal::pin::assiyPin.getValue());
+          strobeTimer.restart();
+        }
+        else if(stateAssiB == AssiState::STROBING && strobeTimer.has_expired()) {
+          hal::set_assi_B_state(!hal::pin::assibPin.getValue());
+          strobeTimer.restart();
+        }
 
-                if (enabledBuzzer && buzzerTimer.has_expired()) {
-                    buzzerTimer.stop();
-                    if (buzzerState) {
-                        hal::actions::disabled_buzzer();
-                        //std::cout<<"[ASSI_MANAGER][BUZZER] disable"<<std::endl;
-                    } else {
-                        hal::actions::active_buzzer();
-                        //std::cout<<"[ASSI_MANAGER][BUZZER] enalbe"<<std::endl;
-                    }
-                    buzzerState = !buzzerState;
-                    buzzerTimer.start(500ms);
+        if (stateBuzzer == BuzzerState::BEEPING && emergencyBuzzerTimer.has_expired()) {
+          hal::actions::disabled_buzzer();
+          stateBuzzer = BuzzerState::OFF;
+          emergencyBuzzerTimer.stop();
+        }
 
-                    buzzerDurationCounter += 500; // Incrementa il contatore di durata di 500 ms
-                    if (buzzerDurationCounter >= 9000) { // Se la durata totale ha raggiunto i 10 secondi
-                        enabledBuzzer = false;
-                        buzzerState = false;
-                        buzzerDurationCounter =0 ;
-                        //std::cout<<"[ASSI_MANAGER][BUZZER] stopped"<<std::endl;
-                        hal::actions::disabled_buzzer();
-                    }
-                }
-                ////std::cout<<"[ASSI_MANAGER] IDLE"<<std::endl;
-            }
-        };
+        if (stateBuzzer == BuzzerState::BEEPING && beepTimer.has_expired()) {
+          hal::set_buzzer_state(!hal::pin::buzzerPin.getValue());
+          beepTimer.restart();
+        }
+    }
+
+  };
 };

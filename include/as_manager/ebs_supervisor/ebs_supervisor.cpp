@@ -14,55 +14,66 @@ namespace as::ebs_supervisor {
 
     EbsSupervisor::EbsSupervisor() :  ebsFsm (
         {
-          // CANBUS BRIDGE is the first things
-          START_CANBUS_NODE,
-
           doActionNode(std::bind(hal::send_current_state, AsState::OFF), "Published OFF"),
-          
-          // OFF
+
           INIT_PINS_NODE,
+          START_CANBUS_NODE,
+          
+          WAIT_ORIN_ON_NODE,
           WAIT_ASMS_NODE,
+          
           START_CANOPEN_NODE,
+          
           WAIT_MISSION_NODE,
+          START_CONTROL_NODE,
           doActionNode(std::bind(hal::send_current_state, AsState::CHECKING), "Published CHECKING"),
           
           // EBS CHECK
-          ASSERT_EBS_PRESSURE_NODE,
-          ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE,
+          safetyNodeDecorator(ASSERT_EBS_PRESSURE_NODE),
+          safetyNodeDecorator(ASSERT_SUFFICIENT_BRAKE_PRESSURE_ALL_ACT_NODE),
 
-          ASSERT_SDC_OPEN_NODE,
-          TOGGLING_WATCHDOG_NODE,
-          CLOSE_SDC_NODE,
-          ASSERT_SDC_CLOSE_NODE,
-          STOP_TOGGLING_WATCHDOG_NODE,
-          ASSERT_SDC_OPEN_NODE,
-          TOGGLING_WATCHDOG_NODE,
-          OPEN_SDC_NODE,
-          ASSERT_SDC_OPEN_NODE,
+          safetyNodeDecorator(STOP_TOGGLING_WATCHDOG_NODE),
+          safetyNodeDecorator(ASSERT_SDC_OPEN_NODE),
+          safetyNodeDecorator(TOGGLING_WATCHDOG_NODE),
+          safetyNodeDecorator(OPEN_SDC_NODE),
+          safetyNodeDecorator(WAIT_1000_MS_NODE),
+          safetyNodeDecorator(ASSERT_SDC_OPEN_NODE),
+          safetyNodeDecorator(STOP_TOGGLING_WATCHDOG_NODE),
+          safetyNodeDecorator(WAIT_1000_MS_NODE),
+          safetyNodeDecorator(ASSERT_SDC_OPEN_NODE),
+          safetyNodeDecorator(CLOSE_SDC_NODE),
+          safetyNodeDecorator(TOGGLING_WATCHDOG_NODE),
+          safetyNodeDecorator(ASSERT_SDC_CLOSE_NODE),
 
-          UNBRAKE_ACT1_NODE,
-          ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
-          BRAKE_ACT1_NODE,
-          UNBRAKE_ACT2_NODE,
-          ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE,
+          safetyNodeDecorator(UNBRAKE_ACT1_NODE),
+          safetyNodeDecorator(WAIT_2000_MS_NODE),
+          safetyNodeDecorator(ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE),
+          safetyNodeDecorator(BRAKE_ACT1_NODE),
+          safetyNodeDecorator(UNBRAKE_ACT2_NODE),
+          safetyNodeDecorator(WAIT_2000_MS_NODE),
+          safetyNodeDecorator(ASSERT_SUFFICIENT_BRAKE_PRESSURE_NODE),
 
-          SETUP_MOTORS_NODE,
+          WAIT_CANOPEN_ON_NODE,
+          ENABLE_MOTORS_NODE,
+          WAIT_BRAKE_AND_CLUCTH_MOTORS_ENABLED_NODE,
+          safetyNodeDecorator(UNBRAKE_ACT1_NODE),
+          safetyNodeDecorator(WAIT_500_MS_NODE),
+          safetyNodeDecorator(ASSERT_NO_BRAKE_PRESSURE_NODE),
+          safetyNodeDecorator(BRAKE_WITH_MAXON_MOTOR_NODE),
+          safetyNodeDecorator(ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR),
 
-          WAIT_BRAKE_MOTOR_ENALBED,
-          UNBRAKE_ACT1_NODE,
-          ASSERT_NO_BRAKE_PRESSURE_NODE,
-          BRAKE_WITH_MAXON_MOTOR_NODE,
-          ASSERT_SUFFICIENT_BRAKE_PRESSURE_WITH_MAXON_MOTOR,
-
-          CLOSE_SDC_NODE,
-          WAIT_TS_ACTIVE,
+          safetyNodeDecorator(CLOSE_SDC_NODE),
+          WAIT_TS_ACTIVE_NODE,
 
           // READY
           doActionNode([]{
             hal::send_current_state(AsState::READY);
             assi_manager::AssiManager::getInstance().ready();
           }, "Published READY and ASSI to READY"),
-          WAIT_GO_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
+          WAIT_5_S_NODE,
+          WAIT_GO_SIGNAL_OFF_NODE,  // Edge detector
+          WAIT_GO_SIGNAL_ON_NODE,
+          
           doActionNode([]{
             assi_manager::AssiManager::getInstance().driving();
           },
@@ -73,7 +84,7 @@ namespace as::ebs_supervisor {
 
           // DRIVING
           doActionNode(std::bind(&hal::send_current_state, AsState::DRIVING), "Published DRIVING"),
-          WAIT_STOP_SIGNAL_WITH_CONTINUOS_MONITORING_NODE,
+          WAIT_STOP_SIGNAL,
 
           terminalTrapNode(
             []{

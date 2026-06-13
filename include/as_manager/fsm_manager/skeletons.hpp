@@ -29,21 +29,27 @@ namespace as::fsm {
     std::string_view timeoutMsg
   ){
     static auto timer = timing::TimerAsync();
+    static auto isWaitMsgLogged = false;
     timer.start(ms);
 
     if (predicate()) {
       std::cout << successfulMsg << std::endl;
       timer.stop();
+      isWaitMsgLogged = false;
       return NodeFlowCtrl::NEXT;
     }
     
     if(timer.has_expired()) {
         std::cout << timeoutMsg << std::endl;
         timer.stop();
+        isWaitMsgLogged = false;
         throw EmergencyException();
     }
 
-    std::cout << waitingMsg << std::endl;
+    if (not isWaitMsgLogged) {
+      std::cout << waitingMsg << std::endl;
+      isWaitMsgLogged = true;
+    }
 
     return NodeFlowCtrl::CURRENT;
   };
@@ -59,9 +65,16 @@ namespace as::fsm {
     std::string_view timeoutMsg
   ){
     timer.start(ms);
+    static auto isWaitLogged = false;
+    
+    if (not isWaitLogged) {
+      std::cout << waitingMsg << std::endl;
+      isWaitLogged = true;
+    }
 
     if (predicate()) {
       timer.stop();
+      return;
     }
     
     if(timer.has_expired()) {
@@ -69,8 +82,6 @@ namespace as::fsm {
         timer.stop();
         throw EmergencyException();
     }
-
-    std::cout << waitingMsg << std::endl;
   };
 
   /**
@@ -84,17 +95,23 @@ namespace as::fsm {
     std::string_view waitingMsg,
     std::invocable auto continousMonitoring = []{}
   ) {
+    static auto isWaitMsgLogged = false;
+
     if (predicate()) {
       std::cout << successfulMsg << std::endl;
+      isWaitMsgLogged = false;
       return NodeFlowCtrl::NEXT;  // Next
     }
     
     if constexpr (doSafetyMonitoring == SafetyMonitoringSwitch::ENABLE) {
       continousMonitoring();
-      std::cout << "Monitoring" << std::endl;
     }
     
-    std::cout << waitingMsg << std::endl;
+    if (not isWaitMsgLogged) {
+      std::cout << waitingMsg << std::endl;
+      isWaitMsgLogged = true;
+    }
+
     return NodeFlowCtrl::CURRENT;
   }
 
@@ -118,8 +135,15 @@ namespace as::fsm {
     std::function<void()> fn,
     std::string_view msg
   ) {
+    static auto isMsgLogged = false;
+
     fn();
-    std::cout << msg << std::endl;
+    
+    if (not isMsgLogged) {
+      std::cout << msg << std::endl;
+      isMsgLogged = true;
+    }
+    
     return NodeFlowCtrl::CURRENT;
   }
 }
